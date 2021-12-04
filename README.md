@@ -1,1 +1,1 @@
-# BlueGPS
+# cordova-outsystems-bluegps

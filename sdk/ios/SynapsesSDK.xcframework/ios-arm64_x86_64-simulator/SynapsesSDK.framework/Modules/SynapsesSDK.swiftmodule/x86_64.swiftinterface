@@ -1,0 +1,737 @@
+// swift-interface-format-version: 1.0
+// swift-compiler-version: Apple Swift version 5.4.2 (swiftlang-1205.0.28.2 clang-1205.0.19.57)
+// swift-module-flags: -target x86_64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SynapsesSDK
+import Combine
+import CoreBluetooth
+import CoreLocation
+import Foundation
+import ObjectiveC
+import Swift
+import SystemConfiguration
+import UIKit
+import WebKit
+public protocol DynamicMapViewDelegate : AnyObject {
+  func didReceiveEvent(_ event: SynapsesSDK.MapEvent, payload: Any?)
+  func didReceiveError(_ error: Swift.Error)
+}
+@objc @_hasMissingDesignatedInitializers public class DynamicMapView : WebKit.WKWebView, WebKit.WKNavigationDelegate, UIKit.UIScrollViewDelegate, WebKit.WKScriptMessageHandler {
+  public var delegate: SynapsesSDK.DynamicMapViewDelegate?
+  @objc dynamic public init(frame: CoreGraphics.CGRect)
+  @objc override dynamic public func traitCollectionDidChange(_ previousTraitCollection: UIKit.UITraitCollection?)
+  @objc override dynamic public func awakeFromNib()
+  public func load(_ url: Swift.String, additionalHeaders: [Swift.String : Swift.String]? = nil, credentials: SynapsesSDK.SDKCredentialsModel? = nil, configuration: SynapsesSDK.ConfigurationModel? = nil, delegate: SynapsesSDK.DynamicMapViewDelegate? = nil)
+  @objc public func userContentController(_ userContentController: WebKit.WKUserContentController, didReceive message: WebKit.WKScriptMessage)
+  @objc public func webView(_ webView: WebKit.WKWebView, didStartProvisionalNavigation navigation: WebKit.WKNavigation!)
+  @objc public func webView(_ webView: WebKit.WKWebView, didFinish navigation: WebKit.WKNavigation!)
+  @objc public func webView(_ webView: WebKit.WKWebView, didFail navigation: WebKit.WKNavigation!, withError error: Swift.Error)
+  @objc public func scrollViewDidZoom(_ scrollView: UIKit.UIScrollView)
+  public func sdkInit(_ userConfiguration: SynapsesSDK.ConfigurationModel? = nil, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func getStyle(_ completionHandler: ((SynapsesSDK.StyleConfigurationModel?, Swift.Error?) -> Swift.Void)? = nil)
+  public func setStyle(_ style: SynapsesSDK.StyleConfigurationModel, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func setStartBookingDate(_ date: Swift.String, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func setBookingDate(_ date: Swift.String, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func resetView(_ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func rotate(_ step: Swift.Int, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func rotateAbsolute(_ step: Swift.Int, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func hideRoomLayer(_ hide: Swift.Bool, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func nextFloor(_ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func showTag(_ tagId: Swift.String, follow: Swift.Bool = true, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func getFloor(_ completionHandler: (([SynapsesSDK.FloorModel]?, Swift.Error?) -> Swift.Void)? = nil)
+  public func gotoFloor(_ floor: SynapsesSDK.FloorModel, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func gotoFromMe(_ position: SynapsesSDK.MapPositionModel, navigationMode: Swift.Bool = false, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func goto(source: SynapsesSDK.MapPositionModel, dest: SynapsesSDK.MapPositionModel, navigationMode: Swift.Bool = false, _ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func removeNavigation(_ callback: ((Swift.String?, Swift.Error?) -> Swift.Void)? = nil)
+  public func unselectRooms()
+  public func selectRoom(_ roomID: Swift.Int)
+  public func rotatePin(_ degree: CoreGraphics.CGFloat)
+  public func sendPosition(_ latitude: Swift.Double, _ longitude: Swift.Double)
+  public func adjustDarkMode(_ darkMode: Swift.Bool)
+  @objc override dynamic public init(frame: CoreGraphics.CGRect, configuration: WebKit.WKWebViewConfiguration)
+  @objc deinit
+}
+@frozen public struct AnyDecodable : Swift.Decodable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+@usableFromInline
+internal protocol _AnyDecodable {
+  var value: Any { get }
+  init<T>(_ value: T?)
+}
+extension AnyDecodable : SynapsesSDK._AnyDecodable {
+}
+extension _AnyDecodable {
+  public init(from decoder: Swift.Decoder) throws
+}
+extension AnyDecodable : Swift.Equatable {
+  public static func == (lhs: SynapsesSDK.AnyDecodable, rhs: SynapsesSDK.AnyDecodable) -> Swift.Bool
+}
+extension AnyDecodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyDecodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers open class SAInfiniteSpinner : UIKit.UIView {
+  final public let circleLayer: QuartzCore.CAShapeLayer
+  open var isAnimating: Swift.Bool {
+    get
+  }
+  open var animationDuration: Swift.Double
+  @objc override dynamic public init(frame: CoreGraphics.CGRect)
+  @objc required dynamic public init?(coder aDecoder: Foundation.NSCoder)
+  open func commonInit()
+  @objc override dynamic open func layoutSubviews()
+  open func updateCircleLayer()
+  open func forceBeginRefreshing()
+  open func beginRefreshing()
+  open func endRefreshing()
+  @objc deinit
+}
+@_hasMissingDesignatedInitializers public class NavigationStatsModel : Swift.Codable {
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public struct VehiclesStats : Swift.Codable {
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ResponseMessage : Swift.Codable {
+  public var code: Swift.Int
+  public var message: Swift.String?
+  public var trace: Swift.String?
+  public var payload: SynapsesSDK.AnyCodable?
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class PathModel : Swift.Codable {
+  public var source: SynapsesSDK.MapPositionModel
+  public var dest: SynapsesSDK.MapPositionModel
+  public var path: [SynapsesSDK.SubPathModel]
+  public var step: [SynapsesSDK.PathStepModel]?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public class SubPathModel : Swift.Codable {
+  public var id: Swift.Int
+  public var name: Swift.String
+  public var x: Swift.Double
+  public var y: Swift.Double
+  public var mapId: Swift.Int
+  public var mapName: Swift.String
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public class PathStepModel : Swift.Codable {
+  public var id: Swift.Int
+  public var type: Swift.String
+  public var floor: SynapsesSDK.FloorModel
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension UIApplication {
+  public static var keyWindow: UIKit.UIWindow? {
+    get
+  }
+  public static var topMostKeyWindow: UIKit.UIWindow? {
+    get
+  }
+  public static var topMostViewController: UIKit.UIViewController? {
+    get
+  }
+}
+extension UIViewController {
+  public var visibleViewController: UIKit.UIViewController? {
+    get
+  }
+  public var isModal: Swift.Bool {
+    get
+  }
+}
+public enum MapEventType : Swift.String, Swift.Codable {
+  case nearRooms
+  case singleRoom
+  case success
+  case goto
+  case gotoFromMe
+  case error
+  case parkConf
+  case deskConf
+  case bookingResource
+  case mapClick
+  case navStats
+  case navInfo
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+@_hasMissingDesignatedInitializers public class MapEvent : Swift.Codable {
+  public var type: Swift.String?
+  public var key: Swift.String?
+  public var payload: Swift.String?
+  public var decodedPayload: Any? {
+    get
+  }
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public enum SynapsesSDKError : Swift.Error {
+  case BluetoothDisabled
+  public static func == (a: SynapsesSDK.SynapsesSDKError, b: SynapsesSDK.SynapsesSDKError) -> Swift.Bool
+  public func hash(into hasher: inout Swift.Hasher)
+  public var hashValue: Swift.Int {
+    get
+  }
+}
+@objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class BlueGPS : ObjectiveC.NSObject, CoreBluetooth.CBPeripheralManagerDelegate, Foundation.URLSessionDelegate {
+  public static let shared: SynapsesSDK.BlueGPS
+  public var environment: SynapsesSDK.EnvironmentModel!
+  public var hasConnectivity: Swift.Bool {
+    get
+  }
+  final public let peripheralManagerStatePublisher: Combine.PassthroughSubject<CoreBluetooth.CBManagerState, Swift.Never>
+  public class func setupSDK(_ env: SynapsesSDK.EnvironmentModel)
+  public func setEnvironment(_ env: SynapsesSDK.EnvironmentModel, _ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func setupLoggedUser(username: Swift.String, password: Swift.String, _ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
+  public func clearLoggedUser(_ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
+  public func checkConnection(_ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func initSDK(_ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func login(_ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func submitBooking(_ info: SynapsesSDK.MapClickInfoModel, _ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func getConfiguration(_ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
+  public func downloadSdkImage(path: Swift.String, publicFlag: Swift.Bool = false, _ callback: ((UIKit.UIImage?, Swift.Error?) -> Swift.Void)?)
+  public func showToolboxGUI(parameters: SynapsesSDK.ToolboxParametersModel? = nil, _ completionHandler: ((SynapsesSDK.ToolboxParametersModel?) -> Swift.Void)?)
+  public func startAdvertisingRegion(with conf: SynapsesSDK.NetworkResponseIOSConfiguration, completion: ((CoreBluetooth.CBPeripheralManager?, Swift.Error?) -> Swift.Void)?)
+  public func stopAdvertisingRegion()
+  @objc deinit
+}
+extension BlueGPS {
+  @objc dynamic public func peripheralManagerDidUpdateState(_ peripheral: CoreBluetooth.CBPeripheralManager)
+  @objc dynamic public func peripheralManagerDidStartAdvertising(_ peripheral: CoreBluetooth.CBPeripheralManager, error: Swift.Error?)
+}
+extension BlueGPS {
+  public func initSDK() -> Combine.AnyPublisher<SynapsesSDK.ResponseMessage, Swift.Never>
+  public func checkConnection() -> Combine.AnyPublisher<SynapsesSDK.ResponseMessage, Swift.Never>
+  public func login() -> Combine.AnyPublisher<SynapsesSDK.ResponseMessage, Swift.Never>
+}
+public struct NetworkRequestGuestLogin : Swift.Codable {
+  public var sdkKey: Swift.String
+  public var sdkSecret: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct NetworkResponseLogin : Swift.Codable {
+  public var headerParam: Swift.String
+  public var headerValuePrefix: Swift.String
+  public var token: Swift.String
+  public var expiryTsMs: Swift.Double
+  public var header: Swift.String
+  public var headerValue: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+@frozen public struct AnyEncodable : Swift.Encodable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+@usableFromInline
+internal protocol _AnyEncodable {
+  var value: Any { get }
+  init<T>(_ value: T?)
+}
+extension AnyEncodable : SynapsesSDK._AnyEncodable {
+}
+extension _AnyEncodable {
+  public func encode(to encoder: Swift.Encoder) throws
+}
+extension AnyEncodable : Swift.Equatable {
+  public static func == (lhs: SynapsesSDK.AnyEncodable, rhs: SynapsesSDK.AnyEncodable) -> Swift.Bool
+}
+extension AnyEncodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyEncodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AnyEncodable : Swift.ExpressibleByNilLiteral {
+}
+extension AnyEncodable : Swift.ExpressibleByBooleanLiteral {
+  public typealias BooleanLiteralType = Swift.Bool
+}
+extension AnyEncodable : Swift.ExpressibleByIntegerLiteral {
+  public typealias IntegerLiteralType = Swift.Int
+}
+extension AnyEncodable : Swift.ExpressibleByFloatLiteral {
+  public typealias FloatLiteralType = Swift.Double
+}
+extension AnyEncodable : Swift.ExpressibleByStringLiteral {
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+extension AnyEncodable : Swift.ExpressibleByStringInterpolation {
+  public typealias StringInterpolation = Swift.DefaultStringInterpolation
+}
+extension AnyEncodable : Swift.ExpressibleByArrayLiteral {
+  public typealias ArrayLiteralElement = Any
+}
+extension AnyEncodable : Swift.ExpressibleByDictionaryLiteral {
+  public typealias Key = Swift.AnyHashable
+  public typealias Value = Any
+}
+extension _AnyEncodable {
+  public init(nilLiteral _: ())
+  public init(booleanLiteral value: Swift.Bool)
+  public init(integerLiteral value: Swift.Int)
+  public init(floatLiteral value: Swift.Double)
+  public init(extendedGraphemeClusterLiteral value: Swift.String)
+  public init(stringLiteral value: Swift.String)
+  public init(arrayLiteral elements: Any...)
+  public init(dictionaryLiteral elements: (Swift.AnyHashable, Any)...)
+}
+public struct SDKCredentialsModel : Swift.Codable {
+  public var sdkCredential: SynapsesSDK.SynapsesCredentialModel?
+  public var loggedUser: SynapsesSDK.EnvironmentLoggedUserModel?
+  public var microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel?
+  public init(sdkCredentials: SynapsesSDK.SynapsesCredentialModel? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ToolboxModel : Swift.Codable {
+  public var mapControl: SynapsesSDK.ToolboxParametersModel
+  public var layer: SynapsesSDK.ToolboxParametersModel
+  public init(mapControl: SynapsesSDK.ToolboxParametersModel? = nil, layer: SynapsesSDK.ToolboxParametersModel? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ToolboxParametersModel : Swift.Codable {
+  public enum OrientationType : Swift.String, Swift.CaseIterable, Swift.Codable {
+    case horizontal
+    case vertical
+    public init?(rawValue: Swift.String)
+    public typealias AllCases = [SynapsesSDK.ToolboxParametersModel.OrientationType]
+    public typealias RawValue = Swift.String
+    public static var allCases: [SynapsesSDK.ToolboxParametersModel.OrientationType] {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+  }
+  public var enabled: Swift.Bool
+  public var x: Swift.Int
+  public var y: Swift.Int
+  public var buttonWidth: Swift.Int
+  public var buttonHeight: Swift.Int
+  public var buttonSpace: Swift.Int
+  public var orientation: SynapsesSDK.ToolboxParametersModel.OrientationType
+  public var rotationStep: Swift.Int?
+  public init(enabled: Swift.Bool = true, x: Swift.Int = 50, y: Swift.Int = 50, buttonWidth: Swift.Int = 40, buttonHeight: Swift.Int = 40, buttonSpace: Swift.Int = 10, orientation: SynapsesSDK.ToolboxParametersModel.OrientationType = .horizontal, rotationStep: Swift.Int? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ShowModel : Swift.Codable {
+  public var me: Swift.Bool
+  public var all: Swift.Bool
+  public var room: Swift.Bool
+  public var list: [Swift.String]?
+  public var kiosk: Swift.Int
+  public var path: Swift.Int
+  public var park: Swift.Bool?
+  public var desk: Swift.Bool?
+  public init(me: Swift.Bool = true, all: Swift.Bool = false, room: Swift.Bool = true, list: [Swift.String]? = nil, kiosk: Swift.Int = 0, path: Swift.Int = 1, park: Swift.Bool = false, desk: Swift.Bool = false)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct VisualizationModel : Swift.Codable {
+  public var followTagOnClick: Swift.Bool
+  public var centerAreaOnClick: Swift.Bool
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct ConfigurationModel : Swift.Codable {
+  public var auth: SynapsesSDK.SDKCredentialsModel
+  public var style: SynapsesSDK.StyleConfigurationModel
+  public var tagid: Swift.String
+  public var toolbox: SynapsesSDK.ToolboxModel
+  public var show: SynapsesSDK.ShowModel
+  public var callbackType: Swift.String
+  public var visualization: SynapsesSDK.VisualizationModel
+  public var customOption: [Swift.String : Swift.String]?
+  public init(auth: SynapsesSDK.SDKCredentialsModel? = nil, tagid: Swift.String? = nil, style: SynapsesSDK.StyleConfigurationModel? = nil, toolbox: SynapsesSDK.ToolboxModel? = nil, show: SynapsesSDK.ShowModel? = nil, callbackType: Swift.String? = nil, visualization: SynapsesSDK.VisualizationModel? = nil, customOption: [Swift.String : Swift.String]? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct StyleConfigurationModel : Swift.Codable {
+  public var icons: SynapsesSDK.IconsConfigurationModel
+  public var navigation: SynapsesSDK.NavigationConfigurationModel
+  public var indication: SynapsesSDK.IndicationConfigurationModel
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct IndicationConfigurationModel : Swift.Codable {
+  public var radiusMeter: Swift.Int
+  public var sourceColor: Swift.String
+  public var destColor: Swift.String
+  public var opacity: Swift.Int
+  public var iconSource: Swift.String?
+  public var iconDestination: Swift.String?
+  public var followZoom: Swift.Bool
+  public var iconVAlign: Swift.String
+  public var iconHAlign: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct NavigationConfigurationModel : Swift.Codable {
+  public var strokeWidthMeter: Swift.Double
+  public var stroke: Swift.String
+  public var strokeOpacity: Swift.Int
+  public var strokeLinecap: Swift.String
+  public var strokeLinejoin: Swift.String
+  public var jumpColor: Swift.String
+  public var jumpOpacity: Swift.Int
+  public var jumpRadiusMeter: Swift.Double
+  public var animationTime: Swift.Double
+  public var iconSource: Swift.String?
+  public var iconDestination: Swift.String?
+  public var velocityOptions: [Swift.String : Swift.Double]?
+  public var navigationStep: Swift.Double
+  public var autoZoom: Swift.Bool
+  public var showVoronoy: Swift.Bool
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct IconsConfigurationModel : Swift.Codable {
+  public var name: Swift.String
+  public var align: Swift.String
+  public var vAlign: Swift.String
+  public var followZoom: Swift.Bool
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class NavigationInfoModel : Swift.Codable {
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public class MapClickResponse : Swift.Codable {
+  public var id: Swift.Int
+  public var name: Swift.String
+  public var x: Swift.Double
+  public var y: Swift.Double
+  public var info: SynapsesSDK.MapClickInfoModel?
+  public var color: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class MapClickInfoModel : Swift.Codable {
+  public var booking: SynapsesSDK.MapClickInfoBooking?
+  public var reservation: [SynapsesSDK.MapClickInfoReservation]?
+  public var position: SynapsesSDK.MapPositionModel?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class MapClickInfoBooking : Swift.Codable {
+  public var resId: Swift.Int?
+  public var name: Swift.String?
+  public var imageUrl: Swift.String?
+  public var editable: Swift.Bool
+  public var type: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class MapClickInfoReservation : Swift.Codable, Foundation.NSCopying {
+  public var index: Swift.Int
+  public var date: Swift.String
+  public var availableQuantity: Swift.Int?
+  public var bookableStatus: SynapsesSDK.ReservationBookableStatus
+  public var isEnabled: Swift.Bool {
+    get
+  }
+  @objc public func copy(with zone: ObjectiveC.NSZone? = nil) -> Any
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public enum ReservationBookableStatus : Swift.String, Swift.Codable {
+  case BOOKABLE
+  case BOOKED_BY_ME
+  case NOT_AVAILABLE
+  case UNBOOKABLE
+  public init?(rawValue: Swift.String)
+  public typealias RawValue = Swift.String
+  public var rawValue: Swift.String {
+    get
+  }
+}
+extension Array where Element == SynapsesSDK.MapClickInfoReservation {
+  public func getReservation(_ index: Swift.Int) -> SynapsesSDK.MapClickInfoReservation?
+  public func updateReservationStatus(_ newReservation: SynapsesSDK.MapClickInfoReservation)
+  public func isUnchangedFrom(_ reservations: [SynapsesSDK.MapClickInfoReservation]) -> Swift.Bool
+}
+@frozen public struct AnyCodable : Swift.Codable {
+  public let value: Any
+  public init<T>(_ value: T?)
+}
+extension AnyCodable : SynapsesSDK._AnyEncodable, SynapsesSDK._AnyDecodable {
+}
+extension AnyCodable : Swift.Equatable {
+  public static func == (lhs: SynapsesSDK.AnyCodable, rhs: SynapsesSDK.AnyCodable) -> Swift.Bool
+}
+extension AnyCodable : Swift.CustomStringConvertible {
+  public var description: Swift.String {
+    get
+  }
+}
+extension AnyCodable : Swift.CustomDebugStringConvertible {
+  public var debugDescription: Swift.String {
+    get
+  }
+}
+extension AnyCodable : Swift.ExpressibleByNilLiteral {
+}
+extension AnyCodable : Swift.ExpressibleByBooleanLiteral {
+  public typealias BooleanLiteralType = Swift.Bool
+}
+extension AnyCodable : Swift.ExpressibleByIntegerLiteral {
+  public typealias IntegerLiteralType = Swift.Int
+}
+extension AnyCodable : Swift.ExpressibleByFloatLiteral {
+  public typealias FloatLiteralType = Swift.Double
+}
+extension AnyCodable : Swift.ExpressibleByStringLiteral {
+  public typealias ExtendedGraphemeClusterLiteralType = Swift.String
+  public typealias StringLiteralType = Swift.String
+  public typealias UnicodeScalarLiteralType = Swift.String
+}
+extension AnyCodable : Swift.ExpressibleByArrayLiteral {
+  public typealias ArrayLiteralElement = Any
+}
+extension AnyCodable : Swift.ExpressibleByDictionaryLiteral {
+  public typealias Key = Swift.AnyHashable
+  public typealias Value = Any
+}
+public struct EnvironmentModel : Swift.Codable {
+  public init(endpoint: Swift.String, key: Swift.String, secret: Swift.String, timeout: Swift.Int? = nil, token: Swift.String? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+extension EnvironmentModel {
+  public enum CodingKeys : Swift.String, Swift.CodingKey {
+    case sdkEndpoint
+    case sdkKey
+    case sdkSecret
+    case timeout
+    case sdkToken
+    case loggedUser
+    case microsoftToken
+    public init?(rawValue: Swift.String)
+    public init?(stringValue: Swift.String)
+    public init?(intValue: Swift.Int)
+    public typealias RawValue = Swift.String
+    public var intValue: Swift.Int? {
+      get
+    }
+    public var rawValue: Swift.String {
+      get
+    }
+    public var stringValue: Swift.String {
+      get
+    }
+  }
+}
+public struct SynapsesCredentialModel : Swift.Codable {
+  public var sdkKey: Swift.String
+  public var sdkSecret: Swift.String
+  public init(sdkKey: Swift.String, sdkSecret: Swift.String)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct EnvironmentLoggedUserModel : Swift.Codable {
+  public var username: Swift.String?
+  public var password: Swift.String?
+  public var token: Swift.String?
+  public init(username: Swift.String? = nil, password: Swift.String? = nil, token: Swift.String? = nil)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct EnvironmentMicrosoftTokenModel : Swift.Codable {
+  public var idToken: Swift.String
+  public var accessToken: Swift.String?
+  public init(idToken: Swift.String, accessToken: Swift.String?)
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public enum ReachabilityError : Swift.Error {
+  case failedToCreateWithAddress(Darwin.sockaddr, Swift.Int32)
+  case failedToCreateWithHostname(Swift.String, Swift.Int32)
+  case unableToSetCallback(Swift.Int32)
+  case unableToSetDispatchQueue(Swift.Int32)
+  case unableToGetFlags(Swift.Int32)
+}
+@available(*, unavailable, renamed: "Notification.Name.reachabilityChanged")
+public let ReachabilityChangedNotification: Foundation.NSNotification.Name
+extension NSNotification.Name {
+  public static let reachabilityChanged: Foundation.Notification.Name
+}
+public class Reachability {
+  public typealias NetworkReachable = (SynapsesSDK.Reachability) -> ()
+  public typealias NetworkUnreachable = (SynapsesSDK.Reachability) -> ()
+  @available(*, unavailable, renamed: "Connection")
+  public enum NetworkStatus : Swift.CustomStringConvertible, Swift.Equatable {
+    case notReachable, reachableViaWiFi, reachableViaWWAN
+    public var description: Swift.String {
+      get
+    }
+    public func hash(into hasher: inout Swift.Hasher)
+    public static func == (a: SynapsesSDK.Reachability.NetworkStatus, b: SynapsesSDK.Reachability.NetworkStatus) -> Swift.Bool
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public enum Connection : Swift.CustomStringConvertible {
+    case unavailable, wifi, cellular
+    public var description: Swift.String {
+      get
+    }
+    @available(*, deprecated, renamed: "unavailable")
+    public static let none: SynapsesSDK.Reachability.Connection
+    public static func == (a: SynapsesSDK.Reachability.Connection, b: SynapsesSDK.Reachability.Connection) -> Swift.Bool
+    public func hash(into hasher: inout Swift.Hasher)
+    public var hashValue: Swift.Int {
+      get
+    }
+  }
+  public var whenReachable: SynapsesSDK.Reachability.NetworkReachable?
+  public var whenUnreachable: SynapsesSDK.Reachability.NetworkUnreachable?
+  @available(*, deprecated, renamed: "allowsCellularConnection")
+  final public let reachableOnWWAN: Swift.Bool
+  public var allowsCellularConnection: Swift.Bool
+  public var notificationCenter: Foundation.NotificationCenter
+  @available(*, deprecated, renamed: "connection.description")
+  public var currentReachabilityString: Swift.String {
+    get
+  }
+  @available(*, unavailable, renamed: "connection")
+  public var currentReachabilityStatus: SynapsesSDK.Reachability.Connection {
+    get
+  }
+  public var connection: SynapsesSDK.Reachability.Connection {
+    get
+  }
+  required public init(reachabilityRef: SystemConfiguration.SCNetworkReachability, queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main)
+  convenience public init(hostname: Swift.String, queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main) throws
+  convenience public init(queueQoS: Dispatch.DispatchQoS = .default, targetQueue: Dispatch.DispatchQueue? = nil, notificationQueue: Dispatch.DispatchQueue? = .main) throws
+  @objc deinit
+}
+extension Reachability {
+  public func startNotifier() throws
+  public func stopNotifier()
+  @available(*, deprecated, message: "Please use `connection != .none`")
+  public var isReachable: Swift.Bool {
+    get
+  }
+  @available(*, deprecated, message: "Please use `connection == .cellular`")
+  public var isReachableViaWWAN: Swift.Bool {
+    get
+  }
+  @available(*, deprecated, message: "Please use `connection == .wifi`")
+  public var isReachableViaWiFi: Swift.Bool {
+    get
+  }
+  public var description: Swift.String {
+    get
+  }
+}
+public class MapPositionModel : Swift.Codable {
+  public var mapId: Swift.Int
+  public var tagid: Swift.String?
+  public var roomId: Swift.Int?
+  public var areaId: Swift.Int?
+  public var x: Swift.Double
+  public var y: Swift.Double
+  public var data: Swift.String?
+  public init(mapId: Swift.Int = 1, tagid: Swift.String? = nil, roomId: Swift.Int? = nil, areaId: Swift.Int? = nil, x: Swift.Double = 0.0, y: Swift.Double = 0.0, data: Swift.String? = nil)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public struct NetworkRequestConfiguration : Swift.Codable {
+  public var appId: Swift.String
+  public var uuid: Swift.String
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct NetworkResponseConfiguration : Swift.Codable {
+  public var appId: Swift.String
+  public var uuid: Swift.String
+  public var pushToken: Swift.String?
+  public var iosadvConf: SynapsesSDK.NetworkResponseIOSConfiguration
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public struct NetworkResponseIOSConfiguration : Swift.Codable {
+  public var tagid: Swift.String
+  public var byte1: Swift.UInt8
+  public var byte2: Swift.UInt8
+  public func encode(to encoder: Swift.Encoder) throws
+  public init(from decoder: Swift.Decoder) throws
+}
+public class FloorModel : Swift.Codable {
+  public var id: Swift.Int
+  public var label: Swift.String?
+  public var name: Swift.String?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+public class GenericEventResponse : Swift.Codable {
+  public var status: Swift.String?
+  public var message: Swift.String?
+  public init(status: Swift.String? = nil, message: Swift.String? = nil)
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+@_hasMissingDesignatedInitializers public class BookingConfigurationResponse : Swift.Codable {
+  public var availableDateList: [Swift.String]?
+  @objc deinit
+  public func encode(to encoder: Swift.Encoder) throws
+  required public init(from decoder: Swift.Decoder) throws
+}
+extension SynapsesSDK.MapEventType : Swift.Equatable {}
+extension SynapsesSDK.MapEventType : Swift.Hashable {}
+extension SynapsesSDK.MapEventType : Swift.RawRepresentable {}
+extension SynapsesSDK.SynapsesSDKError : Swift.Equatable {}
+extension SynapsesSDK.SynapsesSDKError : Swift.Hashable {}
+extension SynapsesSDK.ToolboxParametersModel.OrientationType : Swift.Equatable {}
+extension SynapsesSDK.ToolboxParametersModel.OrientationType : Swift.Hashable {}
+extension SynapsesSDK.ToolboxParametersModel.OrientationType : Swift.RawRepresentable {}
+extension SynapsesSDK.ReservationBookableStatus : Swift.Equatable {}
+extension SynapsesSDK.ReservationBookableStatus : Swift.Hashable {}
+extension SynapsesSDK.ReservationBookableStatus : Swift.RawRepresentable {}
+extension SynapsesSDK.EnvironmentModel.CodingKeys : Swift.Equatable {}
+extension SynapsesSDK.EnvironmentModel.CodingKeys : Swift.Hashable {}
+extension SynapsesSDK.EnvironmentModel.CodingKeys : Swift.RawRepresentable {}
+@available(*, unavailable, renamed: "Connection")
+extension SynapsesSDK.Reachability.NetworkStatus : Swift.Hashable {}
+extension SynapsesSDK.Reachability.Connection : Swift.Equatable {}
+extension SynapsesSDK.Reachability.Connection : Swift.Hashable {}

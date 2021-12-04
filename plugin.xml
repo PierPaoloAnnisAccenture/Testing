@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<plugin id="cordova-outsystems-bluegps" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+    <name>BlueGPS</name>
+    <js-module name="BlueGPS" src="www/BlueGPS.js">
+        <clobbers target="BlueGPS" />
+    </js-module>
+    <platform name="android">
+
+        <config-file parent="/*" target="res/xml/config.xml">
+            <feature name="BlueGPS">
+                <param name="android-package" value="com.outsystems.bluegps.BlueGPS" />
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+            <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+            <uses-feature android:name="android.hardware.location.gps" android:required="true" />
+        </config-file>
+
+        <hook type="after_plugin_install" src="hooks/Outsystems/android/replaceBundleId.js" />
+        <hook type="after_plugin_install" src="hooks/Outsystems/android/changeManifest.js" />
+        <hook type="before_compile" src="hooks/Outsystems/android/addStringValues.js" />
+        <hook type="after_plugin_install" src="hooks/Outsystems/android/cutActivityToMainPackage.js" />
+
+        <config-file parent="/manifest/application" target="AndroidManifest.xml">
+            <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
+        </config-file>
+
+        <resource-file src="sdk/android/bluegps_sdk-release-1.0.2-alpha.aar" target="libs/bluegps_sdk-release-1.0.2-alpha.aar"/>
+		<framework src="sdk/android/dependencies.gradle" custom="true" type="gradleReference"/>
+
+
+        <source-file src="src/android/MapActivity.java" target-dir="src/com/outsystems/bluegps" />
+        <source-file src="src/android/BlueGPS.java" target-dir="src/com/outsystems/bluegps" />
+
+
+        <resource-file src="resources/android/menu/settings_menu.xml" target="res/menu/settings_menu.xml" />
+
+        <resource-file src="resources/android/layout/activity_map.xml" target="res/layout/activity_map.xml" />
+        <resource-file src="resources/android/layout/toolbar_map_view.xml" target="res/layout/toolbar_map_view.xml" />
+
+        <resource-file src="resources/android/drawable/ic_baseline_layers_24.xml" target="res/drawable/ic_baseline_layers_24.xml" />
+        <resource-file src="resources/android/drawable/ic_baseline_layers_clear_24.xml" target="res/drawable/ic_baseline_layers_clear_24.xml" />
+        <resource-file src="resources/android/drawable/ic_baseline_navigation_24.xml" target="res/drawable/ic_baseline_navigation_24.xml" />
+        <resource-file src="resources/android/drawable/ic_baseline_next_plan_24.xml" target="res/drawable/ic_baseline_next_plan_24.xml" />
+        <resource-file src="resources/android/drawable/ic_baseline_settings_24.xml" target="res/drawable/ic_baseline_settings_24.xml" />
+        <resource-file src="resources/android/drawable/ic_baseline_view_list_24.xml" target="res/drawable/ic_baseline_view_list_24.xml" />
+        <resource-file src="resources/android/drawable/ic_zoom_out_map_24.xml" target="res/drawable/ic_zoom_out_map_24.xml" />
+        <resource-file src="resources/android/drawable/round_border.xml" target="res/drawable/round_border.xml" />
+
+
+    </platform>
+    <platform name="ios">
+        <config-file parent="/*" target="config.xml">
+            <feature name="BlueGPS">
+                <param name="ios-package" value="BlueGPS" />
+            </feature>
+        </config-file>
+
+        <preference name="USESWIFTLANGUAGEVERSION" default="5"/>
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+        <config-file target="*-Info.plist" parent="NSBluetoothAlwaysUsageDescription">
+			<string>This app needs access to the bluetooth.</string>
+		</config-file>
+
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+			<string>This app needs access to the location services.</string>
+		</config-file>
+        
+
+        <framework src="sdk/ios/SynapsesSDK.xcframework" custom="true" embed="true"/>
+		<!--source-file src="sdk/ios/SynapsesSDK.xcframework" target-dir="lib" framework="true"/-->
+
+        <source-file src="src/ios/BlueGPS.swift" />
+        <source-file src="src/ios/MapViewController.swift" />
+
+        <resource-file src="src/ios/MapView.xib" />
+
+        <source-file src="src/ios/BlueGPS-Bridging-Header.h" />
+    </platform>
+</plugin>

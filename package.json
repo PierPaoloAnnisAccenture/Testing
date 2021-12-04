@@ -1,0 +1,17 @@
+{
+  "name": "cordova-outsystems-bluegps",
+  "version": "1.0.0",
+  "description": "",
+  "cordova": {
+    "id": "cordova-outsystems-bluegps",
+    "platforms": [
+        "android",
+        "ios"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova"
+  ],
+  "author": "",
+  "license": "ISC"
+}

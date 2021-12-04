@@ -1,0 +1,4 @@
+framework module SynapsesSDK {
+  header "SynapsesSDK-Swift.h"
+  requires objc
+}
