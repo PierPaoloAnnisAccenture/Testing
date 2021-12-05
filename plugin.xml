@@ -27,7 +27,7 @@
             <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
         </config-file>
 
-        <resource-file src="sdk/android/bluegps_sdk-release-1.0.2-alpha.aar" target="libs/bluegps_sdk-release-1.0.2-alpha.aar"/>
+        <resource-file src="sdk/android/bluegps_sdk-release-1.0.3.aar" target="libs/bluegps_sdk-release-1.0.3.aar"/>
 		<framework src="sdk/android/dependencies.gradle" custom="true" type="gradleReference"/>
 
 
