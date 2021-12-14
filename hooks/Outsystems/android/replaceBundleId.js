@@ -28,6 +28,7 @@ module.exports = function (context) {
     var pluginSrc = path.join(projectRoot,constants.javaSrcPath,constants.pluginID)
 
     var pathArray = [path.join(pluginSrc,"MapActivity.java"),
+                    path.join(pluginSrc,"NavigationActivity.kt"),
                     path.join(pluginSrc,"BlueGPS.java")]
 
     pathArray.forEach((value)=>{
