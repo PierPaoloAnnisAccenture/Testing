@@ -12,6 +12,10 @@ exports.openMap = function (success, error,tagID,style,showMap) {
     exec(success, error, 'BlueGPS', 'openMap', [tagID,style,showMap]);
 };
 
+exports.navigationMap = function (success, error,tagID,style,showMap) {
+    exec(success, error, 'BlueGPS', 'navigationMap', []);
+};
+
 exports.startAdv = function (success, error) {
     exec(success, error, 'BlueGPS', 'startAdv', []);
 };

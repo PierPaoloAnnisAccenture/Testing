@@ -41,6 +41,7 @@ public class BlueGPS extends CordovaPlugin {
     private final String INIT = "initializeSDK";
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
+    private final String NAVIGATION = "navigation"
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
     public static SdkEnvironment sdkEnvironment;
@@ -272,8 +273,10 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
+            case NAVIGATION:
+                Intent mapIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
+                break;
             case STARTADV:
-
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
