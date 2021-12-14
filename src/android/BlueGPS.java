@@ -91,7 +91,7 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result = null;
         switch (action) {
-            case INIT:
+            case "initializeSDK":
                 if(!hasPermisssion()){
                     PermissionHelper.requestPermissions(this,1,permissions);
                 }
@@ -114,7 +114,7 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 result = null;
                 break;
-            case LOGIN:
+            case "login":
                 cordova.getThreadPool().execute(() -> {
                     try {
                         SdkEnvironmentLoggedUser loggedUser = new SdkEnvironmentLoggedUser();
@@ -153,7 +153,7 @@ public class BlueGPS extends CordovaPlugin {
                 });
                 status = true;
                 break;
-            case OPENMAP:
+            case "openMap":
                 Intent mapIntent = new Intent(cordova.getActivity(), MapActivity.class);
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credential = new HashMap<>();
@@ -272,13 +272,13 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
-            case STARTADV:
+            case "startAdv":
 
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
-            case STOPADV:
+            case "stopAdv":
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.stopAdv());
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
