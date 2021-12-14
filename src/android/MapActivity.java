@@ -57,7 +57,7 @@ private Position source;
          * The BlueGPSMapView component expose an initMap method for initialize the web view
          * with the required parameters and load the start url. [ *baseURL* + api/public/resource/sdk/mobile.html]
          */
-        binding.webView.initMap(BlueGPS.sdkEnvironment,BlueGPS.configurationMap);
+        binding.webView.initMap(BlueGPS.sdkEnvironment,BlueGPS.configurationMap, null);
 
         setListenerOnMapView();
         setOnNavigationModeButtonListener();
@@ -72,9 +72,10 @@ private void setListenerOnMapView() {
         binding.webView.setBlueGPSMapListener((data, typeMapCallback) -> {
             Type cType;
             switch (typeMapCallback){
-                case INIT_SDK_END:
+                /*case INIT_SDK_END:
                     Log.d(TAG,"INIT_SDK_END");
                     break;
+                 */
                 case PARK_CONF:
                     cType = new TypeToken<PayloadResponse>() {}.getType();
                     PayloadResponse payloadResponse = new Gson().fromJson(data.getPayload(),cType);

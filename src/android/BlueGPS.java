@@ -91,7 +91,7 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result = null;
         switch (action) {
-            case "initializeSDK":
+            case INIT:
                 if(!hasPermisssion()){
                     PermissionHelper.requestPermissions(this,1,permissions);
                 }
@@ -114,7 +114,7 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 result = null;
                 break;
-            case "login":
+            case LOGIN:
                 cordova.getThreadPool().execute(() -> {
                     try {
                         SdkEnvironmentLoggedUser loggedUser = new SdkEnvironmentLoggedUser();
@@ -153,7 +153,7 @@ public class BlueGPS extends CordovaPlugin {
                 });
                 status = true;
                 break;
-            case "openMap":
+            case OPENMAP:
                 Intent mapIntent = new Intent(cordova.getActivity(), MapActivity.class);
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credential = new HashMap<>();
@@ -180,7 +180,7 @@ public class BlueGPS extends CordovaPlugin {
 
                 JSONObject icons = style.getJSONObject("icons");
                 IconStyle iconsStyle = new IconStyle();
-                if (icons.has("opacity")) iconsStyle.setOpacity(icons.getInt("opacity"));
+                if (icons.has("opacity")) iconsStyle.setOpacity(icons.getDouble("opacity"));
                 if (icons.has("name")) iconsStyle.setName(icons.getString("name"));
                 if (icons.has("align")) iconsStyle.setAlign(icons.getString("align"));
                 if (icons.has("vAlign")) iconsStyle.setVAlign(icons.getString("vAlign"));
@@ -272,13 +272,13 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
-            case "startAdv":
+            case STARTADV:
 
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
-            case "stopAdv":
+            case STOPADV:
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.stopAdv());
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
