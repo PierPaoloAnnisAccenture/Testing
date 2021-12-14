@@ -85,7 +85,7 @@ private void setListenerOnMapView() {
                         }
                     }
                     break;
-                case ROOM_CLICK:
+                //case ROOM_CLICK:
                 case MAP_CLICK:
                 case TAG_CLICK:
                     cType = new TypeToken<Position>() {}.getType();
