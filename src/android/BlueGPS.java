@@ -41,7 +41,7 @@ public class BlueGPS extends CordovaPlugin {
     private final String INIT = "initializeSDK";
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
-    private final String NAVIGATION = "navigation";
+    private final String NAVIGATION = "navigationMap";
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
     public static SdkEnvironment sdkEnvironment;
