@@ -275,8 +275,8 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
-                Intent navigationIntent = new Intent(cordova.getActivity(), MainActivity.class);
-                cordova.getActivity().startActivity(mapIntent);
+                Intent navigationIntent = new Intent(cordova.getActivity(), MapActivity.class);
+                cordova.getActivity().startActivity(navigationIntent);
                 break;
             case STARTADV:
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
