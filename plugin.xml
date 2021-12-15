@@ -33,7 +33,7 @@
 		<framework src="sdk/android/dependencies.gradle" custom="true" type="gradleReference"/>
 
 
-        <source-file src="src/android/MapActivity.java" target-dir="src/com/outsystems/bluegps" />
+        <source-file src="src/android/MapActivity.kt" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/NavigationActivity.kt" target-dir="src/com/outsystems/bluegps" />
          <source-file src="src/android/SpinnerAdapter.kt" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/BlueGPS.java" target-dir="src/com/outsystems/bluegps" />
