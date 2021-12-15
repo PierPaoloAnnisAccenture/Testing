@@ -37,10 +37,10 @@ import java.util.Map;
 
 import kotlin.coroutines.CoroutineContext;
 
-public class nBlueGPS extends CordovaPlugin {
+public class BlueGPS extends CordovaPlugin {
 
         private final String INIT = "initializeSDK";
-        private fial String LOGIN = "login";
+        private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
     private final String NAVIGATION = "navigationMap";
     private final String STARTADV = "startAdv";
