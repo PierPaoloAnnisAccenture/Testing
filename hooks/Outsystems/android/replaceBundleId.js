@@ -27,7 +27,7 @@ module.exports = function (context) {
     var projectRoot = context.opts.cordova.project ? context.opts.cordova.project.root : context.opts.projectRoot;
     var pluginSrc = path.join(projectRoot,constants.javaSrcPath,constants.pluginID)
 
-    var pathArray = [path.join(pluginSrc,"MapActivity.kt"),
+    var pathArray = [path.join(pluginSrc,"MapActivity.java"),
                     path.join(pluginSrc,"NavigationActivity.kt"),
                     path.join(pluginSrc,"BlueGPS.java")]
 
