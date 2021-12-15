@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import $appId.R;
+import $appid.R;
 
 public class BaseActivity extends AppCompatActivity {
     @Override
