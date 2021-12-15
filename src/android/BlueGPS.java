@@ -38,8 +38,8 @@ import kotlin.coroutines.CoroutineContext;
 
 public class BlueGPS extends CordovaPlugin {
 
-        private final String INIT = "initializeSDK";
-        private final String LOGIN = "login";
+    private final String INIT = "initializeSDK";
+    private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
     private final String NAVIGATION = "navigationMap";
     private final String STARTADV = "startAdv";
@@ -274,7 +274,7 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
-                Intent navigationIntent = new Intent(cordova.getActivity(), MainActivity.class);
+                Intent navigationIntent = new Intent(cordova.getActivity(), MapActivity.class);
                 cordova.getActivity().startActivity(navigationIntent);
                 break;
             case STARTADV:
