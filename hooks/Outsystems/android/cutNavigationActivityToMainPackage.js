@@ -5,7 +5,7 @@ const constants={
     javaSrcPath : path.join("platforms","android","app","src","main","java"),
     kotlinSrcPath : path.join("platforms","android","app","src","main","kotlin"),
     pluginJavaPath : path.join("com","outsystems","bluegps"),
-    fileName : "NavigationActivity.kt"
+    fileName : "BaseActivity.java"
 }
 
 module.exports = function (context) {
