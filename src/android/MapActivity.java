@@ -348,3 +348,14 @@ private void setListenerOnMapView() {
         if (visibility) binding.layoutDestination.setVisibility(View.VISIBLE); else binding.layoutDestination.setVisibility(View.GONE);
     }
 }
+
+public class NewActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityMapBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
+    }
+}
