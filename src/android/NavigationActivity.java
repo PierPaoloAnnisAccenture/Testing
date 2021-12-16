@@ -24,6 +24,5 @@ public class NavigationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation);
         getSupportActionBar().setTitle("Navigation View");
-        binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
     }
 }
