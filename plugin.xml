@@ -41,6 +41,7 @@
         <resource-file src="resources/android/menu/settings_menu.xml" target="res/menu/settings_menu.xml" />
 
         <resource-file src="resources/android/layout/activity_map.xml" target="res/layout/activity_map.xml" />
+        <resource-file src="resources/android/layout/activity_navigation.xml" target="res/layout/activity_map.xml" />
         <resource-file src="resources/android/layout/toolbar_map_view.xml" target="res/layout/toolbar_map_view.xml" />
 
         <resource-file src="resources/android/drawable/ic_baseline_layers_24.xml" target="res/drawable/ic_baseline_layers_24.xml" />
