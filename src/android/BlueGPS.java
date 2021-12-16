@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
 import $appid.MapActivity;
-import $appid.BaseActivity;
+import $appid.NavigationActivity;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
@@ -275,7 +275,7 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
-                Intent navigationIntent = new Intent(cordova.getActivity(), BaseActivity.class);
+                Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
                 cordova.getActivity().startActivity(navigationIntent);
                 break;
             case STARTADV:

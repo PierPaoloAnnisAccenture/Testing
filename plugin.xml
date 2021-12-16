@@ -26,7 +26,7 @@
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
-            <activity android:exported="true" android:launchMode="singleTop" android:name=".BaseActivity"  android:theme="@style/MyMaterialTheme" />
+            <activity android:exported="true" android:launchMode="singleTop" android:name=".NavigationActivity"  android:theme="@style/MyMaterialTheme" />
         </config-file>
 
         <resource-file src="sdk/android/bluegps_sdk-release-1.0.3.aar" target="libs/bluegps_sdk-release-1.0.3.aar"/>
@@ -34,9 +34,7 @@
 
 
         <source-file src="src/android/MapActivity.java" target-dir="src/com/outsystems/bluegps" />
-        <source-file src="src/android/BaseActivity.java" target-dir="src/com/outsystems/bluegps" />
-        <source-file src="src/android/NavigationActivity.kt" target-dir="src/com/outsystems/bluegps" />
-         <source-file src="src/android/SpinnerAdapter.kt" target-dir="src/com/outsystems/bluegps" />
+        <source-file src="src/android/NavigationActivity.java" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/BlueGPS.java" target-dir="src/com/outsystems/bluegps" />
 
 
