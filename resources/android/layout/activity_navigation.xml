@@ -38,7 +38,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="24dp"
                 android:minWidth="50dp"
-                android:text="@string/from"
+                android:text="From:""
                 app:layout_constraintBottom_toBottomOf="@+id/spinnerFrom"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/spinnerFrom" />
@@ -71,7 +71,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="24dp"
                 android:minWidth="50dp"
-                android:text="@string/to" />
+                android:text="To: " />
 
             <Spinner
                 android:id="@+id/spinnerTo"
@@ -94,7 +94,7 @@
             android:layout_marginEnd="24dp"
             android:minWidth="200dp"
             android:onClick="startNavigation"
-            android:text="@string/navigate" />
+            android:text="Navigate" />
 
 
     </LinearLayout>
