@@ -28,8 +28,6 @@ import com.outsystems.bluegps.BlueGPS;
 
 import java.lang.reflect.Type;
 
-import $appid.R;
-
 
 public class MapActivity extends AppCompatActivity {
 private String TAG = "MapActivity";
@@ -48,7 +46,7 @@ private Position source;
         super.onCreate(savedInstanceState);
         binding = ActivityMapBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
-        setContentView(R.layout.activity_map);
+        setContentView(view);
 
         getSupportActionBar().setTitle("Map View");
         tapViewClickListener();
