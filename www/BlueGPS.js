@@ -13,7 +13,7 @@ exports.openMap = function (success, error,tagID,style,showMap) {
 };
 
 exports.navigationMap = function (success, error,tagID,style,showMap) {
-    exec(success, error, 'BlueGPS', 'navigationMap', []);
+    exec(success, error, 'BlueGPS', 'navigationMap', [tagID,style,showMap]);
 };
 
 exports.startAdv = function (success, error) {
