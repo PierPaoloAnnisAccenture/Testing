@@ -286,12 +286,12 @@ public class BlueGPS extends CordovaPlugin {
 
                     Map<String, String> userNav = new HashMap<>();
                     if (sdkEnvironment.getLoggedUser().getToken() != null){
-                        user.put("token",sdkEnvironment.getLoggedUser().getToken());
+                        userNav.put("token",sdkEnvironment.getLoggedUser().getToken());
                     }else{
-                        user.put("username",sdkEnvironment.getLoggedUser().getUsername());
-                        user.put("password",sdkEnvironment.getLoggedUser().getPassword());
+                        userNav.put("username",sdkEnvironment.getLoggedUser().getUsername());
+                        userNav.put("password",sdkEnvironment.getLoggedUser().getPassword());
                     }
-                    authParametersNav = new AuthParameters(credential,user,null,null,null);
+                    authParametersNav = new AuthParameters(credential,userNav,null,null,null);
                 } else {
                     authParametersNav = new AuthParameters(credential,null,null,null,null);
                 }
