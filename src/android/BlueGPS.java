@@ -300,13 +300,13 @@ public class BlueGPS extends CordovaPlugin {
                 MapStyle mapStyleNav = new MapStyle();
                 JSONObject styleNav = new JSONObject(args.getString(1));
 
-                JSONObject iconsNav = style.getJSONObject("icons");
+                JSONObject iconsNav = styleNav.getJSONObject("icons");
                 IconStyle iconsStyleNav = new IconStyle();
-                if (iconsNav.has("opacity")) iconsStyleNav.setOpacity(icons.getDouble("opacity"));
-                if (iconsNav.has("name")) iconsStyleNav.setName(icons.getString("name"));
-                if (iconsNav.has("align")) iconsStyleNav.setAlign(icons.getString("align"));
-                if (iconsNav.has("vAlign")) iconsStyleNav.setVAlign(icons.getString("vAlign"));
-                if (iconsNav.has("followZoom")) iconsStyleNav.setFollowZoom(icons.getBoolean("followZoom"));
+                if (iconsNav.has("opacity")) iconsStyleNav.setOpacity(iconsNav.getDouble("opacity"));
+                if (iconsNav.has("name")) iconsStyleNav.setName(iconsNav.getString("name"));
+                if (iconsNav.has("align")) iconsStyleNav.setAlign(iconsNav.getString("align"));
+                if (iconsNav.has("vAlign")) iconsStyleNav.setVAlign(iconsNav.getString("vAlign"));
+                if (iconsNav.has("followZoom")) iconsStyleNav.setFollowZoom(iconsNav.getBoolean("followZoom"));
 
                 mapStyleNav.setIcons(iconsStyleNav);
 
@@ -331,7 +331,7 @@ public class BlueGPS extends CordovaPlugin {
                     indicationStyleNav.setRadiusMeter(indicationNav.getDouble("radiusMeter"));
                 mapStyleNav.setIndication(indicationStyleNav);
 
-                JSONObject navigationNav = style.getJSONObject("navigation");
+                JSONObject navigationNav = styleNav.getJSONObject("navigation");
                 NavigationStyle navigationStyleNav = new NavigationStyle();
 
                 if (navigationNav.has("animationTime"))
@@ -343,7 +343,7 @@ public class BlueGPS extends CordovaPlugin {
                 if (navigationNav.has("iconSource"))
                     navigationStyleNav.setIconSource(navigationNav.getString("iconSource"));
                 if (navigationNav.has("jumpColor"))
-                    navigationStyleNav.setJumpColor(navigation.getString("jumpColor"));
+                    navigationStyleNav.setJumpColor(navigationNav.getString("jumpColor"));
                 if (navigationNav.has("jumpOpacity"))
                     navigationStyleNav.setJumpOpacity(navigationNav.getDouble("jumpOpacity"));
                 if (navigationNav.has("jumpRadiusMeter"))
