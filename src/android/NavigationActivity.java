@@ -28,7 +28,7 @@ public class NavigationActivity extends AppCompatActivity {
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        binding.webView.initMap(BlueGPS.sdkEnvironment, configurationMap, null);
+        binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
     }
 
     private ConfigurationMap setupConfigurationMap() {
