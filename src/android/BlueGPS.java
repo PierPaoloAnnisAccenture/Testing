@@ -291,9 +291,9 @@ public class BlueGPS extends CordovaPlugin {
                         userNav.put("username",sdkEnvironment.getLoggedUser().getUsername());
                         userNav.put("password",sdkEnvironment.getLoggedUser().getPassword());
                     }
-                    authParametersNav = new AuthParameters(credential,userNav,null,null,null);
+                    authParametersNav = new AuthParameters(credentialNav,userNav,null,null,null);
                 } else {
-                    authParametersNav = new AuthParameters(credential,null,null,null,null);
+                    authParametersNav = new AuthParameters(credentialNav,null,null,null,null);
                 }
                 configurationMap.setAuth(authParameters);
 
