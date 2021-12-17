@@ -8,11 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.outsystems.bluegps.BlueGPS;
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
-import $appid.R;
+import $appid.databinding.ActivityNavigationBinding;
 
 public class NavigationActivity extends AppCompatActivity {
 
-
+    private ActivityNavigationBinding binding;
     private String TAG = "NavigationActivity";
     private View toolbarView;
     private GenericResource source;
@@ -22,7 +22,9 @@ public class NavigationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_navigation);
+        binding = ActivityNavigationBinding.inflate(getLayoutInflater());
+        View view = binding.getRoot();
+        setContentView(view);
         getSupportActionBar().setTitle("Navigation View");
     }
 }
