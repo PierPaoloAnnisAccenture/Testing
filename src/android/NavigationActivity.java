@@ -13,6 +13,7 @@ import $appid.databinding.ActivityNavigationBinding;
 import com.synapseslab.bluegps_sdk.data.model.map.ConfigurationMap;
 import com.synapseslab.bluegps_sdk.data.model.map.IconStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.MapStyle;
+import com.synapseslab.bluegps_sdk.data.model.map.Position;
 import com.synapseslab.bluegps_sdk.data.model.map.NavigationStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.ShowMap;
 
@@ -29,6 +30,19 @@ public class NavigationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
+        startNavigation(view);
+    }
+
+    void startNavigation(View view){
+        Position source = new Position();
+        source.setMapId(11);
+        source.setX(-11.05);
+        source.setY(-3.12);
+        Position destination = new Position();
+        destination.setMapId(11);
+        destination.setX(32.64);
+        destination.setY(6.3);
+        binding.webView.goto(source, destination);
     }
 
     private ConfigurationMap setupConfigurationMap() {
