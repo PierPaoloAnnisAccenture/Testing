@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.snackbar.Snackbar;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
+import $appid.PoiField;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;

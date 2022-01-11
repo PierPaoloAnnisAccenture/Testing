@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import $appid.PoiField;
+
 import com.outsystems.bluegps.BlueGPS;
 import com.mobilecop.bluegps.NavigationExtKt;
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
