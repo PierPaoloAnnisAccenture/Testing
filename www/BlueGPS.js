@@ -13,7 +13,23 @@ exports.openMap = function (success, error,tagID,style,showMap) {
 };
 
 exports.navigationMap = function (success, error,tagID,style,showMap) {
-    exec(success, error, 'BlueGPS', 'navigationMap', [tagID,style,showMap]);
+    exec(success, error, 'BlueGPS', 'navigationMap', [tagID,style,showMap, {
+                                                                              "origin":{
+                                                                                 "bookingType":null,
+                                                                                 "name":"Elevator",
+                                                                                 "mapId":11,
+                                                                                 "x":32.64,
+                                                                                 "y":6.3
+                                                                              },
+                                                                              "destination":{
+                                                                                 "bookingType":"desk",
+                                                                                 "name":"Desk180",
+                                                                                 "mapId":11,
+                                                                                 "x":-11.05,
+                                                                                 "y":-3.12
+                                                                              }
+                                                                           }
+]);
 };
 
 exports.startAdv = function (success, error) {

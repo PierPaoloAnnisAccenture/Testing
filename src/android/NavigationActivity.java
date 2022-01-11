@@ -1,5 +1,6 @@
 package $appid;
 
+import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class NavigationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startNavigation(view);
+                Log.d("PoiField", ((PoiField) getIntent().getExtras().getSerializable("origin")).getName());
             }
         });
     }
@@ -44,10 +46,12 @@ public class NavigationActivity extends AppCompatActivity {
         source.setMapId(11);
         source.setX(-11.05);
         source.setY(-3.12);
+
         Position destination = new Position();
         destination.setMapId(11);
         destination.setX(32.64);
         destination.setY(6.3);
+
         NavigationExtKt.moveTo(binding.webView, source, destination);
     }
 

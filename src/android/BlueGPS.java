@@ -275,7 +275,9 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
+                PoiField poi =  new PoiField("Elevator", "", 11, 32.64, 6.3);
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
+                intent.putExtra("origin", poi);
 
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credentialNav = new HashMap<>();
