@@ -23,6 +23,7 @@
         <hook type="before_compile" src="hooks/Outsystems/android/addStringValues.js" />
         <hook type="after_plugin_install" src="hooks/Outsystems/android/cutActivityToMainPackage.js" />
          <hook type="after_plugin_install" src="hooks/Outsystems/android/cutNavigationActivityToMainPackage.js" />
+        <hook type="after_plugin_install" src="hooks/Outsystems/android/cutPoiFieldToMainPackage.js" />
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
