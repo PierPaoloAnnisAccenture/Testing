@@ -31,7 +31,12 @@ public class NavigationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
         binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
-        startNavigation(view);
+        binding.btnGuestLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startNavigation(view);
+            }
+        });
     }
 
     void startNavigation(View view){
