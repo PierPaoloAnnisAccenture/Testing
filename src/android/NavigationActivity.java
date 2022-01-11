@@ -42,7 +42,7 @@ public class NavigationActivity extends AppCompatActivity {
         destination.setMapId(11);
         destination.setX(32.64);
         destination.setY(6.3);
-        binding.webView.goto(source, destination);
+        NavigationExtKt.moveTo(binding.webView, source, destination);
     }
 
     private ConfigurationMap setupConfigurationMap() {
