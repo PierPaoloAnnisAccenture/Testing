@@ -29,7 +29,7 @@ module.exports = function (context) {
 
     var pathArray = [path.join(pluginSrc,"MapActivity.java"),
                     path.join(pluginSrc,"NavigationActivity.java"),
-                    path.join(pluginSrc,"PoiField.java")
+                    path.join(pluginSrc,"PoiField.java"),
                     path.join(pluginSrc,"BlueGPS.java")]
 
     pathArray.forEach((value)=>{
