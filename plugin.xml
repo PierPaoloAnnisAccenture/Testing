@@ -30,6 +30,7 @@
         </config-file>
 
         <resource-file src="sdk/android/bluegps_sdk-release-1.0.3.aar" target="libs/bluegps_sdk-release-1.0.3.aar"/>
+        <resource-file src="sdk/android/BlueGps-debug.aar" target="libs/BlueGps-debug.aar"/>
 		<framework src="sdk/android/dependencies.gradle" custom="true" type="gradleReference"/>
 
 
