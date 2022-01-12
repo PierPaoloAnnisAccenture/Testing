@@ -35,7 +35,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import android.util.Log;
 import kotlin.coroutines.CoroutineContext;
 
 public class BlueGPS extends CordovaPlugin {
