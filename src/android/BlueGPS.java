@@ -284,6 +284,8 @@ public class BlueGPS extends CordovaPlugin {
 
                 JSONObject poiArgs = new JSONObject(args.getString(3));
                       Log.d("Args", poiArgs.toString());
+                JSONObject originPoint = poiArgs.getJSONObject("origin");
+                Log.d("Args origin", originPoint.toString());
 
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credentialNav = new HashMap<>();
