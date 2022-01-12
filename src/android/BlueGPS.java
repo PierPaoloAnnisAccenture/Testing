@@ -282,6 +282,9 @@ public class BlueGPS extends CordovaPlugin {
 
               Log.d("Args", args.toString());
 
+                JSONObject poi = new JSONObject(args.getString(3));
+                      Log.d("Args", poi.toString());
+
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credentialNav = new HashMap<>();
                 credentialNav.put("sdkKey",sdkEnvironment.getSdkKey());
