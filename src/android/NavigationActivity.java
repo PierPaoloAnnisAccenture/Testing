@@ -40,6 +40,9 @@ public class NavigationActivity extends AppCompatActivity {
         origin = (PoiField) getIntent().getExtras().getSerializable("origin");
         destination = (PoiField) getIntent().getExtras().getSerializable("destination");
 
+        Log.d("Extras", origin.toString());
+        Log.d("Extras", destination.toString());
+
         binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
         binding.btnGuestLogin.setOnClickListener(new View.OnClickListener() {
             @Override
