@@ -276,16 +276,31 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
-                PoiField poi =  new PoiField("Elevator", "", 11, 32.64, 6.3);
-                Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
-                navigationIntent.putExtra("origin", poi);
-
-              Log.d("Args", args.toString());
-
                 JSONObject poiArgs = new JSONObject(args.getString(3));
-                      Log.d("Args", poiArgs.toString());
                 JSONObject originPoint = poiArgs.getJSONObject("origin");
-                Log.d("Args origin", originPoint.toString());
+
+                String originName = originPoint.getString("name");
+                String originBookingType = originPoint.getString("bookingType");
+                int originMapId = originPoint.getInt("mapId");
+                double originX = originPoint.getDouble("x");
+                double originY = originPoint.getDouble("y");
+
+                PoiField originPoi =  new PoiField(originName, originBookingType, originMapId, originX, originY);
+
+                JSONObject destPoint = poiArgs.getJSONObject("destination");
+
+                String destName = destPoint.getString("name");
+                String destBookingType = destPoint.getString("bookingType");
+                int destMapId = destPoint.getInt("mapId");
+                double destX = destPoint.getDouble("x");
+                double destY = destPoint.getDouble("y");
+
+                PoiField destPoi =  new PoiField(destName, destBookingType, destMapId, destX, destY);
+
+                Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
+                navigationIntent.putExtra("origin", originPoi);
+                navigationIntent.putExtra("destination", destPoi);
+
 
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credentialNav = new HashMap<>();

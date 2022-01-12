@@ -27,32 +27,38 @@ public class NavigationActivity extends AppCompatActivity {
     private ArrayList<GenericResource> genericResourceList = new ArrayList<>();
     private ConfigurationMap configurationMap = setupConfigurationMap();
 
+    private PoiField origin;
+    private PoiField destination;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        origin = (PoiField) getIntent().getExtras().getSerializable("origin");
+        destination = (PoiField) getIntent().getExtras().getSerializable("destination");
+
         binding.webView.initMap(BlueGPS.sdkEnvironment, BlueGPS.configurationMap, null);
         binding.btnGuestLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startNavigation(view);
-                Log.d("PoiField", ((PoiField) getIntent().getExtras().getSerializable("origin")).getName());
+                startNavigation(view, origin, destination);
             }
         });
     }
 
-    void startNavigation(View view){
+    void startNavigation(View view, PoiField o, PoiField d){
         Position source = new Position();
-        source.setMapId(11);
-        source.setX(-11.05);
-        source.setY(-3.12);
+        source.setMapId(o.getMapId());
+        source.setX(o.getX());
+        source.setY(o.getY());
 
         Position destination = new Position();
-        destination.setMapId(11);
-        destination.setX(32.64);
-        destination.setY(6.3);
+        destination.setMapId(d.getMapId());
+        destination.setX(d.getX());
+        destination.setY(d.getY());
 
         NavigationExtKt.moveTo(binding.webView, source, destination);
     }
