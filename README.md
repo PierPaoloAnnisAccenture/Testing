@@ -9,10 +9,10 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   
 2. Create Cordova Project
  
- >> cordova create < <NameProject> > com.example.plugins < <NameProject> > 
+ >> cordova create NameProject com.example.plugins NameProject
   
-3. open the folder < <NameProject> >
-  >> cd < <NameProject> >
+3. open the folder NameProject
+  >> cd NameProject
   
 4. add android platform version (Cordova Engine version)
   >> cordova platform add android@10.1.1
