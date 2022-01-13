@@ -25,23 +25,31 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   >> cordova plugin add https://github.com/PierPaoloAnnisAccenture/Testing.git
   
   
- 6 build android
-  >> cordova build android
+  6 change the minSDK
+    6.1 open the file 
+      ..NameProject\platforms\android\cdv-gradle-config.json
+    6.2 change the minSDK to 25
+          {
+          "MIN_SDK_VERSION": 25,
+          ..
+          
+  7 build android
+    >> cordova build android
+
+
+  8 open android studio
   
-  
-  7 open android studio
-  
-  8 open the project
+  9 open the project
     ..NameProject\platforms\android
   
-  9 run the project
+  10 run the project
   
-  10 open chrome for inspect
+  11 open chrome for inspect
     chrome://inspect
   
-  11 open the process
+  12 open the process
   
-  12 type the function that you want to test that it is inside WWW/blueGPS.js
+  13 type the function that you want to test that it is inside WWW/blueGPS.js
   ex
     >> BlueGPS.init(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "", "", "", false)
   
