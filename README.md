@@ -28,6 +28,8 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   6 change the minSDK
     6.1 open the file 
       ..NameProject\platforms\android\cdv-gradle-config.json
+      or 
+      ..NameProject\platforms\android\CordovaLib\build\intermediates\aapt_friendly_merged_manifests\debug\aapt\AndroidManifest.xml
     6.2 change the minSDK to 25
           {
           "MIN_SDK_VERSION": 25,
