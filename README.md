@@ -30,14 +30,18 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   
   
   7 open android studio
-  8 run the project
   
-  9 open chrome for inspect
+  8 open the project
+    ..NameProject\platforms\android
+  
+  9 run the project
+  
+  10 open chrome for inspect
     chrome://inspect
   
-  10 open the process
+  11 open the process
   
-  11 type the function that you want to test that it is inside WWW/blueGPS.js
+  12 type the function that you want to test that it is inside WWW/blueGPS.js
   ex
     >> BlueGPS.init(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "", "", "", false)
   
