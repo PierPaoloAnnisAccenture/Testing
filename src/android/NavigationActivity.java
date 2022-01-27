@@ -92,7 +92,7 @@ public class NavigationActivity extends AppCompatActivity {
 
         ConfigurationMap configurationMap = getIntent().getExtras().getParcelable("configurationMap");
 
-        binding.webView.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), new Function1<String, Unit>() {
+        binding.webView.initMap(BlueGPS.sdkEnvironment, configurationMap, new Function1<String, Unit>() {
             @Override
             public Unit invoke(String s) {
                 if (origin != null && destination != null)
