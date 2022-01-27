@@ -24,6 +24,7 @@
         <hook type="after_plugin_install" src="hooks/Outsystems/android/cutActivityToMainPackage.js" />
          <hook type="after_plugin_install" src="hooks/Outsystems/android/cutNavigationActivityToMainPackage.js" />
         <hook type="after_plugin_install" src="hooks/Outsystems/android/cutPoiFieldToMainPackage.js" />
+        <hook type="after_plugin_install" src="hooks/Outsystems/android/cutNavigationAdapterToMainPackage.js" />
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
@@ -38,6 +39,7 @@
         <source-file src="src/android/PoiField.java" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/MapActivity.java" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/NavigationActivity.java" target-dir="src/com/outsystems/bluegps" />
+        <source-file src="src/android/NavigationAdapter.java" target-dir="src/com/outsystems/bluegps" />
         <source-file src="src/android/BlueGPS.java" target-dir="src/com/outsystems/bluegps" />
 
 

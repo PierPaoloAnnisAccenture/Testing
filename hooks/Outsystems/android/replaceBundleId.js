@@ -30,7 +30,9 @@ module.exports = function (context) {
     var pathArray = [path.join(pluginSrc,"MapActivity.java"),
                     path.join(pluginSrc,"NavigationActivity.java"),
                     path.join(pluginSrc,"PoiField.java"),
-                    path.join(pluginSrc,"BlueGPS.java")]
+                    path.join(pluginSrc,"BlueGPS.java"),
+                    path.join(pluginSrc,"NavigationAdapter.java")
+                    ]
 
     pathArray.forEach((value)=>{
         if (fs.existsSync(value)) {

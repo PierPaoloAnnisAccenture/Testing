@@ -33,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import android.util.Log;
@@ -277,29 +278,25 @@ public class BlueGPS extends CordovaPlugin {
                 break;
             case NAVIGATION:
                 JSONObject poiArgs = new JSONObject(args.getString(3));
-                JSONObject originPoint = poiArgs.getJSONObject("origin");
+                ArrayList<PoiField> poiFields = new ArrayList<>();
+                JSONArray list =  poiArgs.getJSONArray("list");
+                for(int i = 0; i<list.length(); i++){
+                    JSONObject jsonObject = list.getJSONObject(i);
+                    Log.d("PoiJson", jsonObject.toString());
+                    try{
+                        PoiField poi = new PoiField().fromJson(jsonObject);
+                        Log.d("PoiJson", poi.toString());
+                        poiFields.add(poi);
+                    }
+                    catch(JSONException e){
+                        Log.d("PoiJson", e.getLocalizedMessage());
+                    }
+                }
 
-                String originName = originPoint.getString("name");
-                String originBookingType = originPoint.getString("bookingType");
-                int originMapId = originPoint.getInt("mapId");
-                double originX = originPoint.getDouble("x");
-                double originY = originPoint.getDouble("y");
-
-                PoiField originPoi =  new PoiField(originName, originBookingType, originMapId, originX, originY);
-
-                JSONObject destPoint = poiArgs.getJSONObject("destination");
-
-                String destName = destPoint.getString("name");
-                String destBookingType = destPoint.getString("bookingType");
-                int destMapId = destPoint.getInt("mapId");
-                double destX = destPoint.getDouble("x");
-                double destY = destPoint.getDouble("y");
-
-                PoiField destPoi =  new PoiField(destName, destBookingType, destMapId, destX, destY);
-
-                Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
-                navigationIntent.putExtra("origin", originPoi);
-                navigationIntent.putExtra("destination", destPoi);
+                int origin = poiArgs.getInt("origin");
+                Log.d("PoiJson", origin+"");
+                int destination = poiArgs.getInt("destination");
+                Log.d("PoiJson", destination+"");
 
 
                 configurationMap = new ConfigurationMap();
@@ -324,6 +321,7 @@ public class BlueGPS extends CordovaPlugin {
 
                 MapStyle mapStyleNav = new MapStyle();
                 JSONObject styleNav = new JSONObject(args.getString(1));
+                Log.d("StyleNav", styleNav.toString());
 
                 JSONObject iconsNav = styleNav.getJSONObject("icons");
                 IconStyle iconsStyleNav = new IconStyle();
@@ -337,6 +335,7 @@ public class BlueGPS extends CordovaPlugin {
 
 
                 JSONObject indicationNav = styleNav.getJSONObject("indication");
+                Log.d("IndicationNav", indicationNav.toString());
                 IndicationStyle indicationStyleNav = new IndicationStyle();
                 if (indicationNav.has("destColor"))
                     indicationStyleNav.setDestColor(indicationNav.getString("destColor"));
@@ -414,6 +413,14 @@ public class BlueGPS extends CordovaPlugin {
                 configurationMap.setShow(mapNav);
 
                 configurationMap.setTagid(args.getString(0));
+
+                Log.d("PoiArg", configurationMap.toString());
+
+                Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
+                navigationIntent.putExtra("origin", origin);
+                navigationIntent.putExtra("destination", destination);
+                navigationIntent.putExtra("list", poiFields);
+                navigationIntent.putExtra("configurationMap", configurationMap);
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
