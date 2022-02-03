@@ -12,15 +12,15 @@ import androidx.annotation.Nullable;
 
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class NavigationAdapter extends ArrayAdapter<GenericResource> {
     private Context context;
     private int layoutId;
     private int textId;
-    private List<GenericResource> list;
+    private ArrayList<GenericResource> list;
 
-    public NavigationAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull List<GenericResource> objects) {
+    public NavigationAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull ArrayList<GenericResource> objects) {
         super(context, resource, textViewResourceId, objects);
         this.context = context;
         this.layoutId = resource;

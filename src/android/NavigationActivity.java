@@ -72,7 +72,7 @@ public class NavigationActivity extends AppCompatActivity {
             @NonNull
             @Override
             public CoroutineContext getContext() {
-                return (CoroutineContext) Dispatchers.getDefault();
+                return (CoroutineContext) Dispatchers.getMain();
             }
 
             @Override
@@ -90,15 +90,15 @@ public class NavigationActivity extends AppCompatActivity {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                     originSpinner.setAdapter(adapter);
-                    originSpinner.setSelection(0);
                     destinationSpinner.setAdapter(adapter);
+                    originSpinner.setSelection(0);
                     destinationSpinner.setSelection(1);
                 }
             }
         };
 
 
-        BlueGPSLib.Companion.getInstance().findResources(false, null, null, "name", null, null, null, null, continuation);
+        BlueGPSLib.Companion.getInstance().findResources(false, null, "name", null, null, null, null, null, continuation);
 
         destinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
