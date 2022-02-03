@@ -1,10 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ (c) Copyright 2021. All rights reserved by Synapses S.r.l.s.
-  ~ https://www.synapseslab.com/
-  ~
-  ~ Created by Davide Agostini on 03/12/21, 13:35.
-  ~ Last modified 03/12/21, 13:35
-  -->
+<?xml version="1.0" encoding="utf-8"?>
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,104 +7,139 @@
     android:layout_height="match_parent"
     tools:context=".NavigationActivity">
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="10dp"
-        android:background="#f0f0f0"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/gd_indicator"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:orientation="vertical"
+        app:layout_constraintGuide_begin="20dp" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        app:layout_constraintStart_toStartOf="@id/gd_indicator">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/textView2"
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="24dp"
-                android:minWidth="50dp"
-                android:text="From:"
-                app:layout_constraintBottom_toBottomOf="@+id/spinnerFrom"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/spinnerFrom" />
+                android:src="@drawable/ic_arrow_back" />
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Back" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/indicator_container"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/spinner_container"
+            app:layout_constraintBottom_toBottomOf="@id/spinner_container">
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gd_indicator_container"
+                android:layout_width="1dp"
+                android:layout_height="1dp"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="20dp" />
+            <ImageView
+                android:id="@+id/indicator_from"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shape_circle"
+                app:tint="@color/blue_500"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
+                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"/>
+            <View
+                android:id="@+id/indicator_line"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                android:layout_margin="2dp"
+                app:layout_constraintTop_toBottomOf="@id/indicator_from"
+                app:layout_constraintBottom_toTopOf="@id/indicator_to"
+                app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
+                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"/>
+            <ImageView
+                android:id="@+id/indicator_to"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shape_circle"
+                app:tint="@color/blue_700"
+                app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
+                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/spinner_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/indicator_container"
+            app:layout_constraintEnd_toEndOf="parent">
             <Spinner
                 android:id="@+id/spinnerFrom"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/textView2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="24dp"
-                android:minWidth="50dp"
-                android:text="To: " />
-
+                android:background="@drawable/rounded_spinner"
+                app:layout_constraintTop_toTopOf="parent"/>
             <Spinner
                 android:id="@+id/spinnerTo"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginEnd="24dp" />
+                android:layout_marginEnd="24dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/rounded_spinner"
+                app:layout_constraintTop_toBottomOf="@id/spinnerFrom"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+    <Button
+        android:id="@+id/btnGuestLogin"
+        android:layout_width="125dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/white"
+        android:minWidth="50dp"
+        android:background="@drawable/rounded_button"
+        app:layout_constraintTop_toBottomOf="@id/top_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Start" />
 
-
-        <Button
-            android:id="@+id/btnGuestLogin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="24dp"
-            android:minWidth="200dp"
-            android:text="Navigate" />
-
-
-    </LinearLayout>
-
-    <LinearLayout
+    <com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView
+        android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
+        app:layout_constraintTop_toBottomOf="@id/btnGuestLogin"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-        <com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView
-            android:id="@+id/webView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

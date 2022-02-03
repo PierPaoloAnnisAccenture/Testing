@@ -13,6 +13,7 @@ import $appid.PoiField;
 import $appid.NavigationAdapter;
 
 import com.outsystems.bluegps.BlueGPS;
+import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.mobilecop.bluegps.NavigationExtKt;
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
 import $appid.databinding.ActivityNavigationBinding;
@@ -23,20 +24,22 @@ import com.synapseslab.bluegps_sdk.data.model.map.MapStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.Position;
 import com.synapseslab.bluegps_sdk.data.model.map.NavigationStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.ShowMap;
+import com.synapseslab.bluegps_sdk.utils.Resource;
 
 import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
 import kotlin.jvm.functions.Function1;
+import kotlinx.coroutines.Dispatchers;
+
 
 public class NavigationActivity extends AppCompatActivity {
 
     private ActivityNavigationBinding binding;
 
-    private ArrayList<PoiField> list;
-    private PoiField origin;
-    private PoiField destination;
-    private int selectOrigin = 0;
-    private int selectDest = 0;
-
+    private ArrayList<GenericResource> list =  new ArrayList<GenericResource>();
+    private GenericResource origin;
+    private GenericResource destination;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,23 +48,16 @@ public class NavigationActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        list = (ArrayList<PoiField>) getIntent().getExtras().getSerializable("list");
-        selectOrigin = getIntent().getExtras().getInt("origin");
-        selectDest = getIntent().getExtras().getInt("destination");
-
         Spinner originSpinner = binding.spinnerFrom;
         Spinner destinationSpinner = binding.spinnerTo;
 
-        NavigationAdapter adapter = new NavigationAdapter(this, R.layout.item_spinner, R.id.tvName, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        originSpinner.setAdapter(adapter);
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 origin = list.get(position);
                 if (origin != null && destination != null)
                     startNavigation(view, origin, destination);
+
             }
 
             @Override
@@ -69,9 +65,37 @@ public class NavigationActivity extends AppCompatActivity {
 
             }
         });
-        originSpinner.setSelection(selectOrigin);
 
-        destinationSpinner.setAdapter(adapter);
+        Continuation<Resource<List<GenericResource>>> continuation = new Continuation<Resource<List<GenericResource>>>() {
+            @NonNull
+            @Override
+            public CoroutineContext getContext() {
+                return (CoroutineContext) Dispatchers.getDefault();
+            }
+
+            @Override
+            public void resumeWith(@NonNull Object o) {
+                Log.d("Coroutine", "Test");
+                if(o instanceof Resource.Error){
+                    Log.d("Coroutine", "Test");
+                }
+                else {
+                    List<GenericResource> resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
+                    list = new ArrayList<>(resourceList);
+                    NavigationAdapter adapter = new NavigationAdapter(NavigationActivity.this, R.layout.item_spinner, R.id.tvName, list);
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    originSpinner.setAdapter(adapter);
+                    originSpinner.setSelection(0);
+                    destinationSpinner.setAdapter(adapter);
+                    destinationSpinner.setSelection(1);
+                }
+            }
+        };
+
+
+        BlueGPSLib.Companion.getInstance().findResources(false, null, null, "name", null, null, null, null, continuation);
+
         destinationSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -86,17 +110,15 @@ public class NavigationActivity extends AppCompatActivity {
 
             }
         });
-        destinationSpinner.setSelection(selectDest);
+//        destinationSpinner.setSelection(selectDest);
 
         Log.d("Info", "SDK Env: " + BlueGPS.sdkEnvironment.toString());
 
-        ConfigurationMap configurationMap = getIntent().getExtras().getParcelable("configurationMap");
+//        ConfigurationMap configurationMap = getIntent().getExtras().getParcelable("configurationMap");
 
-        binding.webView.initMap(BlueGPS.sdkEnvironment, configurationMap, new Function1<String, Unit>() {
+        binding.webView.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), new Function1<String, Unit>() {
             @Override
             public Unit invoke(String s) {
-                if (origin != null && destination != null)
-                    startNavigation(view, origin, destination);
                 return null;
             }
         });
@@ -110,18 +132,8 @@ public class NavigationActivity extends AppCompatActivity {
         });
     }
 
-    void startNavigation(View view, PoiField o, PoiField d) {
-        Position source = new Position();
-        source.setMapId(o.getMapId());
-        source.setX(o.getX());
-        source.setY(o.getY());
-
-        Position destination = new Position();
-        destination.setMapId(d.getMapId());
-        destination.setX(d.getX());
-        destination.setY(d.getY());
-
-        NavigationExtKt.moveTo(binding.webView, source, destination);
+    void startNavigation(View view, GenericResource source, GenericResource destination) {
+        NavigationExtKt.moveTo(binding.webView, source.getPosition(), destination.getPosition());
     }
 
     private ConfigurationMap setupConfigurationMap() {

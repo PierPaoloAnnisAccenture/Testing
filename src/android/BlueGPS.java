@@ -277,27 +277,6 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
-                JSONObject poiArgs = new JSONObject(args.getString(3));
-                ArrayList<PoiField> poiFields = new ArrayList<>();
-                JSONArray list =  poiArgs.getJSONArray("list");
-                for(int i = 0; i<list.length(); i++){
-                    JSONObject jsonObject = list.getJSONObject(i);
-                    Log.d("PoiJson", jsonObject.toString());
-                    try{
-                        PoiField poi = new PoiField().fromJson(jsonObject);
-                        Log.d("PoiJson", poi.toString());
-                        poiFields.add(poi);
-                    }
-                    catch(JSONException e){
-                        Log.d("PoiJson", e.getLocalizedMessage());
-                    }
-                }
-
-                int origin = poiArgs.getInt("origin");
-                Log.d("PoiJson", origin+"");
-                int destination = poiArgs.getInt("destination");
-                Log.d("PoiJson", destination+"");
-
 
                 configurationMap = new ConfigurationMap();
                 Map<String, String> credentialNav = new HashMap<>();
@@ -334,26 +313,26 @@ public class BlueGPS extends CordovaPlugin {
                 mapStyleNav.setIcons(iconsStyleNav);
 
 
-                JSONObject indicationNav = styleNav.getJSONObject("indication");
-                Log.d("IndicationNav", indicationNav.toString());
-                IndicationStyle indicationStyleNav = new IndicationStyle();
-                if (indicationNav.has("destColor"))
-                    indicationStyleNav.setDestColor(indicationNav.getString("destColor"));
-                if (indicationNav.has("followZoom"))
-                    indicationStyleNav.setFollowZoom(indicationNav.getBoolean("followZoom"));
-                if (indicationNav.has("iconDestination"))
-                    indicationStyleNav.setIconDestination(indicationNav.getString("iconDestination"));
-                if (indicationNav.has("iconHAlign"))
-                    indicationStyleNav.setIconHAlign(indicationNav.getString("iconHAlign"));
-                if (indicationNav.has("iconSource"))
-                    indicationStyleNav.setIconSource(indicationNav.getString("iconSource"));
-                if (indicationNav.has("iconVAlign"))
-                    indicationStyleNav.setIconVAlign(indicationNav.getString("iconVAlign"));
-                if (indicationNav.has("opacity"))
-                    indicationStyleNav.setOpacity(indicationNav.getDouble("opacity"));
-                if (indicationNav.has("radiusMeter"))
-                    indicationStyleNav.setRadiusMeter(indicationNav.getDouble("radiusMeter"));
-                mapStyleNav.setIndication(indicationStyleNav);
+//                JSONObject indicationNav = styleNav.getJSONObject("indication");
+//                Log.d("IndicationNav", indicationNav.toString());
+//                IndicationStyle indicationStyleNav = new IndicationStyle();
+//                if (indicationNav.has("destColor"))
+//                    indicationStyleNav.setDestColor(indicationNav.getString("destColor"));
+//                if (indicationNav.has("followZoom"))
+//                    indicationStyleNav.setFollowZoom(indicationNav.getBoolean("followZoom"));
+//                if (indicationNav.has("iconDestination"))
+//                    indicationStyleNav.setIconDestination(indicationNav.getString("iconDestination"));
+//                if (indicationNav.has("iconHAlign"))
+//                    indicationStyleNav.setIconHAlign(indicationNav.getString("iconHAlign"));
+//                if (indicationNav.has("iconSource"))
+//                    indicationStyleNav.setIconSource(indicationNav.getString("iconSource"));
+//                if (indicationNav.has("iconVAlign"))
+//                    indicationStyleNav.setIconVAlign(indicationNav.getString("iconVAlign"));
+//                if (indicationNav.has("opacity"))
+//                    indicationStyleNav.setOpacity(indicationNav.getDouble("opacity"));
+//                if (indicationNav.has("radiusMeter"))
+//                    indicationStyleNav.setRadiusMeter(indicationNav.getDouble("radiusMeter"));
+//                mapStyleNav.setIndication(indicationStyleNav);
 
                 JSONObject navigationNav = styleNav.getJSONObject("navigation");
                 NavigationStyle navigationStyleNav = new NavigationStyle();
@@ -417,10 +396,10 @@ public class BlueGPS extends CordovaPlugin {
                 Log.d("PoiArg", configurationMap.toString());
 
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
-                navigationIntent.putExtra("origin", origin);
-                navigationIntent.putExtra("destination", destination);
-                navigationIntent.putExtra("list", poiFields);
-                navigationIntent.putExtra("configurationMap", configurationMap);
+//                navigationIntent.putExtra("origin", origin);
+//                navigationIntent.putExtra("destination", destination);
+//                navigationIntent.putExtra("list", poiFields);
+//                navigationIntent.putExtra("configurationMap", configurationMap);
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
