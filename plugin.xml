@@ -28,7 +28,7 @@
 
         <config-file parent="/manifest/application" target="AndroidManifest.xml">
             <activity android:exported="true" android:launchMode="singleTop" android:name=".MapActivity"  android:theme="@style/MyMaterialTheme" />
-            <activity android:exported="true" android:launchMode="singleTop" android:name=".NavigationActivity"  android:theme="@style/MyMaterialTheme" />
+            <activity android:exported="true" android:launchMode="singleTop" android:name=".NavigationActivity"  android:theme="@style/NoAppBar" />
         </config-file>
 
         <resource-file src="sdk/android/bluegps_sdk-release-1.0.3.aar" target="libs/bluegps_sdk-release-1.0.3.aar"/>

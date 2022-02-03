@@ -6,6 +6,10 @@
         <item name="colorAccent">@color/black</item>
         <item name="textAppearanceButton">@style/AppTextAppearance.Button</item>
     </style>
+    <style name="NoAppBar" parent="Theme.AppCompat.Light.NoActionBar">
+    <item name="android:windowActionBar">false</item>
+    <item name="android:windowNoTitle">true</item>
+    </style>
     <!--To fix rendering in preview -->
     <style name="AppTextAppearance.Button" parent="TextAppearance.MaterialComponents.Button">
         <item name="android:textAllCaps">true</item>
