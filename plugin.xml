@@ -59,6 +59,7 @@
         <resource-file src="resources/android/drawable/round_border.xml" target="res/drawable/round_border.xml" />
         <resource-file src="resources/android/drawable/ic_arrow_back.xml" target="res/drawable/ic_arrow_back.xml" />
         <resource-file src="resources/android/drawable/rounded_button.xml" target="res/drawable/rounded_button.xml" />
+        <resource-file src="resources/android/drawable/rounded_spinner.xml" target="res/drawable/rounded_spinner.xml" />
         <resource-file src="resources/android/drawable/shape_circle.xml" target="res/drawable/shape_circle.xml" />
 
 
