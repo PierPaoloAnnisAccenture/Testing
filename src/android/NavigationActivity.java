@@ -79,9 +79,11 @@ public class NavigationActivity extends AppCompatActivity {
             public void resumeWith(@NonNull Object o) {
                 Log.d("Coroutine", "Test");
                 if(o instanceof Resource.Error){
-                    Log.d("Coroutine", "Test");
+                    Log.d("Coroutine", "Errore");
+                    Log.d("Coroutine", ((Resource.Error<?>) o).getMessage());
                 }
                 else {
+                    Log.d("Coroutine", "Success");
                     List<GenericResource> resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
                     list = new ArrayList<>(resourceList);
                     NavigationAdapter adapter = new NavigationAdapter(NavigationActivity.this, R.layout.item_spinner, R.id.tvName, list);
