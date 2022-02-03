@@ -40,9 +40,27 @@ public class NavigationAdapter extends ArrayAdapter<GenericResource> {
     }
 
     private View createViewFromResource(int position, View convertView, ViewGroup parent){
+        GenericResource current = list.get(position);
         View v = LayoutInflater.from(getContext()).inflate(layoutId, parent, false);
         TextView tv = v.findViewById(textId);
-        tv.setText(list.get(position).getName());
+
+        String resourceName = current.getName();
+
+        String result = resourceName;
+
+        if(current.getBuildingPosition() != null){
+            String floorName = current.getBuildingPosition().getFloorName();
+            if( floorName != null && !floorName.isEmpty())
+            {
+                result = result.concat(String.format(", %s", floorName));
+            }
+            String roomName = current.getBuildingPosition().getRoomName();
+            if(roomName != null && !roomName.isEmpty()){
+                result = result.concat(String.format(", %s", roomName));
+            }
+        }
+
+        tv.setText(result);
         return v;
     }
 }
