@@ -1,4 +1,4 @@
-package com.saipem.plugins;
+package $appid;
 
 import org.json.JSONException;
 import org.json.JSONObject;

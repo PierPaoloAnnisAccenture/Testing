@@ -1,4 +1,4 @@
-package com.saipem.plugins;
+package $appid;
 
 import android.util.Log;
 import android.os.Bundle;
