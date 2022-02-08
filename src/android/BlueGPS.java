@@ -10,9 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
-import $appid.MapActivity;
-import $appid.NavigationActivity;
-import $appid.PoiField;
+import com.saipem.plugins.MapActivity;
+import com.saipem.plugins.NavigationActivity;
+import com.saipem.plugins.PoiField;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
@@ -35,6 +35,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import android.util.Log;
 import kotlin.coroutines.CoroutineContext;
@@ -45,13 +46,14 @@ public class BlueGPS extends CordovaPlugin {
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
     private final String NAVIGATION = "navigationMap";
+
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
     public static SdkEnvironment sdkEnvironment;
     public static ConfigurationMap configurationMap;
     private BlueGPSAdvertisingService blueGPSAdvertisingService = null;
     private CallbackContext callback;
-    private final String appId = "$appid"; 
+    private final String appId = "com.saipem.plugins"; 
     String [] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
     @Override
@@ -396,10 +398,21 @@ public class BlueGPS extends CordovaPlugin {
                 Log.d("PoiArg", configurationMap.toString());
 
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
-//                navigationIntent.putExtra("origin", origin);
-//                navigationIntent.putExtra("destination", destination);
-//                navigationIntent.putExtra("list", poiFields);
-//                navigationIntent.putExtra("configurationMap", configurationMap);
+
+
+                JSONObject poiArgs = new JSONObject(args.getString(3));
+                JSONArray resources = poiArgs.getJSONArray("list");
+
+                List<PoiField> resourcesJson = new ArrayList<>();
+                for(int i=0; i<resources.length();i++){
+                    resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
+                }
+
+
+               // navigationIntent.putExtra("origin", origin);
+                navigationIntent.putExtra("destination", resourcesJson.get(poiArgs.getInt("destination")));
+           //   navigationIntent.putExtra("list", poiFields);
+                navigationIntent.putExtra("configurationMap", configurationMap);
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);

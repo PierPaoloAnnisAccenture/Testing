@@ -1,9 +1,11 @@
-package $appid;
+package com.saipem.plugins;
 
 import android.util.Log;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import androidx.annotation.NonNull;
@@ -11,21 +13,29 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import android.widget.Spinner;
 
-import $appid.PoiField;
-import $appid.NavigationAdapter;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.saipem.plugins.PoiField;
+import com.saipem.plugins.NavigationAdapter;
 
 import com.outsystems.bluegps.BlueGPS;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.mobilecop.bluegps.NavigationExtKt;
+import com.synapseslab.bluegps_sdk.data.model.map.ClickedObject;
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
-import $appid.databinding.ActivityNavigationBinding;
+import com.saipem.plugins.databinding.ActivityNavigationBinding;
 
 import com.synapseslab.bluegps_sdk.data.model.map.ConfigurationMap;
 import com.synapseslab.bluegps_sdk.data.model.map.IconStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.MapStyle;
+import com.synapseslab.bluegps_sdk.data.model.map.PayloadResponse;
 import com.synapseslab.bluegps_sdk.data.model.map.Position;
 import com.synapseslab.bluegps_sdk.data.model.map.NavigationStyle;
 import com.synapseslab.bluegps_sdk.data.model.map.ShowMap;
+import com.synapseslab.bluegps_sdk.data.model.stats.NavInfo;
+import com.synapseslab.bluegps_sdk.data.model.stats.NavigationStats;
 import com.synapseslab.bluegps_sdk.utils.Resource;
 
 import kotlin.Unit;
@@ -42,6 +52,9 @@ public class NavigationActivity extends AppCompatActivity {
     private ArrayList<GenericResource> list =  new ArrayList<GenericResource>();
     private GenericResource origin;
     private GenericResource destination;
+    private Boolean navigationMode = false;
+
+    private PoiField destinationJson;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +62,8 @@ public class NavigationActivity extends AppCompatActivity {
         binding = ActivityNavigationBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+
+        destinationJson = (PoiField) getIntent().getExtras().getSerializable("destination");
 
         binding.backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,13 +108,34 @@ public class NavigationActivity extends AppCompatActivity {
                     Log.d("Coroutine", "Success");
                     List<GenericResource> resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
                     list = new ArrayList<>(resourceList);
+
+                   int destinationIndex = 1;
+                    int originIndex = 0;
+
+                    int i=0;
+                    for( GenericResource genericResource : resourceList){
+                        if(genericResource.getName().equals(destinationJson.getName())){
+                            destinationIndex = i;
+                        }
+                        if(genericResource.getName().contains("Elevator")){
+                            originIndex = i;
+                        }
+
+                        i++;
+                    }
+
+
+
+
                     NavigationAdapter adapter = new NavigationAdapter(NavigationActivity.this, R.layout.item_spinner, R.id.tvName, list);
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
                     originSpinner.setAdapter(adapter);
                     destinationSpinner.setAdapter(adapter);
-                    originSpinner.setSelection(0);
-                    destinationSpinner.setSelection(1);
+
+
+                    originSpinner.setSelection(originIndex);
+                    destinationSpinner.setSelection(destinationIndex);
                 }
             }
         };
@@ -141,6 +177,9 @@ public class NavigationActivity extends AppCompatActivity {
                     startNavigation(view, origin, destination);
             }
         });
+
+
+        setListenerOnMapView();
     }
 
     void startNavigation(View view, GenericResource source, GenericResource destination) {
@@ -166,12 +205,107 @@ public class NavigationActivity extends AppCompatActivity {
         mapStyle.setIcons(iconStyle);
 
         ShowMap showMap = new ShowMap();
-        showMap.setAll(false);
-        showMap.setRoom(true);
+        showMap.setAll(true);
+        showMap.setRoom(false);
         showMap.setMe(true);
 
         configurationMap.setStyle(mapStyle);
         configurationMap.setShow(showMap);
         return configurationMap;
+    }
+
+
+
+
+    /**
+     * Setup the listener for BlueGPSMapView in order to implement the code
+     * to run when an event click on map occurs.
+     */
+    private void setListenerOnMapView() {
+        binding.webView.setBlueGPSMapListener((data, typeMapCallback) -> {
+            Type cType;
+            switch (typeMapCallback){
+                /*case INIT_SDK_END:
+                    Log.d(TAG,"INIT_SDK_END");
+                    break;
+                 */
+                case PARK_CONF:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse payloadResponse = new Gson().fromJson(data.getPayload(),cType);
+                    if (payloadResponse.getAvailableDateList() != null) {
+                        if (!payloadResponse.getAvailableDateList().isEmpty()) {
+                          //  Log.d(TAG, String.valueOf(payloadResponse.getAvailableDateList()));
+                        }
+                    }
+                    break;
+                //case ROOM_CLICK:
+                case MAP_CLICK:
+               /* case RESORUCE:
+                    cType = new TypeToken<ClickedObject>() {}.getType();
+                    GenericResource resource = new Gson().fromJson(data.getPayload(),cType);
+                    Snackbar.make(findViewById(android.R.id.content),
+                            typeMapCallback.name() + resource.getName() + resource.getType(),
+                            Snackbar.LENGTH_LONG).show();
+*/
+                case TAG_CLICK:
+                    cType = new TypeToken<Position>() {}.getType();
+                    Position position = new Gson().fromJson(data.getPayload(),cType);
+                    if (navigationMode) {
+                        runOnUiThread(() -> {
+                            /*source = position;
+                            binding.tvDestination.setText("Destination: ("+String.format("%.3f", position.getX())+"), "+String.format("%.3f", position.getY())+")");
+                            showHideLayoutDestination(true);*/
+
+                        });
+                    } else {
+                        Snackbar.make(findViewById(android.R.id.content),
+                                typeMapCallback.name() + position.toString(),
+                                Snackbar.LENGTH_LONG).show();
+
+                       /* new MaterialAlertDialogBuilder(getApplicationContext())
+                                .setTitle("Type: "+typeMapCallback.name())
+                                .setMessage(position.toString())
+                                .setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss()).show();*/
+                    }
+                    break;
+                case BOOKING_CLICK:
+                    cType = new TypeToken<ClickedObject>() {}.getType();
+                    ClickedObject clickedObject = new Gson().fromJson(data.getPayload(),cType);
+                    new MaterialAlertDialogBuilder(getApplicationContext())
+                            .setTitle("Type: "+typeMapCallback.name())
+                            .setMessage(clickedObject.toString())
+                            .setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                    break;
+                case NAV_STATS:
+                    cType = new TypeToken<NavigationStats>() {}.getType();
+                    NavigationStats navigationStats = new Gson().fromJson(data.getPayload(),cType);
+                  //  Log.d(TAG, String.valueOf(navigationStats));
+                    final String[] vehicles = {""};
+                    navigationStats.getVehicles().forEach(vehicle -> vehicles[0] +=vehicle.getName()+": "+(Math.round(vehicle.getRemainingTimeSecond()*100)/100.f)+"s\n");
+                    runOnUiThread(()->{
+                       // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
+                    });
+                    break;
+                case NAV_INFO:
+                    cType = new TypeToken<NavInfo>() {}.getType();
+                    NavInfo navInfo = new Gson().fromJson(data.getPayload(),cType);
+                    Snackbar.make(findViewById(android.R.id.content),navInfo.getMessage(),Snackbar.LENGTH_LONG).show();
+                    break;
+                case SUCCESS:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse response = new Gson().fromJson(data.getPayload(),cType);
+                   // Log.d(TAG, response.getMessage());
+                    break;
+                case ERROR:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse errorResp = new Gson().fromJson(data.getPayload(),cType);
+                    //Log.e(TAG , TAG + errorResp.getMessage());
+                    Snackbar.make(findViewById(android.R.id.content),
+                            errorResp.getMessage(),
+                            Snackbar.LENGTH_LONG).show();
+                    break;
+
+            }
+        });
     }
 }

@@ -1,4 +1,4 @@
-package $appid;
+package com.saipem.plugins;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +9,7 @@ public class PoiField implements Serializable {
     private String id;
     private String name;
     private String building;
-    private int floor;
+    private String floor;
     private String bookingType;
     private int mapId;
     private double x;
@@ -19,7 +19,7 @@ public class PoiField implements Serializable {
     public PoiField() {
     }
 
-    public PoiField(String id, String name, String building, int floor, String bookingType, int mapId, double x, double y, boolean bookedByMe) {
+    public PoiField(String id, String name, String building, String floor, String bookingType, int mapId, double x, double y, boolean bookedByMe) {
         this.id = id;
         this.name = name;
         this.building = building;
@@ -43,7 +43,7 @@ public class PoiField implements Serializable {
         return building;
     }
 
-    public int getFloor() {
+    public String getFloor() {
         return floor;
     }
 
@@ -67,16 +67,16 @@ public class PoiField implements Serializable {
         return bookedByMe;
     }
 
-    public PoiField fromJson(JSONObject o) throws JSONException {
-        id = o.getString("id");
-        name = o.getString("name");
-        building = o.getString("building");
-        floor = o.getInt("floor");
-        bookingType = o.getString("bookingType");
-        mapId = o.getInt("mapId");
-        x = o.getDouble("x");
-        y = o.getDouble("y");
-        bookedByMe = o.getBoolean("bookedByMe");
+    public static PoiField fromJson(JSONObject o) throws JSONException {
+        String id = o.getString("id");
+        String name = o.getString("name");
+        String building = o.getString("building");
+        String floor = o.getString("floor");
+        String bookingType = o.getString("bookingType");
+        Integer mapId = o.getInt("mapId");
+        Double x = o.getDouble("x");
+        Double y = o.getDouble("y");
+        Boolean bookedByMe = o.getBoolean("bookedByMe");
 
         return new PoiField(id, name, building, floor, bookingType, mapId, x, y, bookedByMe);
     }
