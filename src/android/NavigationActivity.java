@@ -18,14 +18,15 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
+import $appid.PoiField;
+import $appid.NavigationAdapter;
 
 import com.outsystems.bluegps.BlueGPS;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.mobilecop.bluegps.NavigationExtKt;
 import com.synapseslab.bluegps_sdk.data.model.map.ClickedObject;
 import com.synapseslab.bluegps_sdk.data.model.map.GenericResource;
-import com.saipem.plugins.databinding.ActivityNavigationBinding;
+import $appid.databinding.ActivityNavigationBinding;
 
 import com.synapseslab.bluegps_sdk.data.model.map.ConfigurationMap;
 import com.synapseslab.bluegps_sdk.data.model.map.IconStyle;
