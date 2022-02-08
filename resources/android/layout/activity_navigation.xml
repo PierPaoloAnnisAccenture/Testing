@@ -141,8 +141,6 @@
 
     <com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView
         android:id="@+id/webView"
-        android:layout_margin-top="100dp"
-
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/btnGuestLogin"
