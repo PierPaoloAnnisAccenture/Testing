@@ -1,4 +1,4 @@
-package $appid;
+package com.outsystems.bluegps;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
