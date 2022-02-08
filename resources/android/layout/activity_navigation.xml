@@ -18,6 +18,7 @@
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/gd_indicator">
@@ -37,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Back" />
+                android:text="Mobility" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,32 +60,36 @@
                 android:layout_width="1dp"
                 android:layout_height="1dp"
                 android:orientation="vertical"
-                app:layout_constraintGuide_begin="20dp" />
+                app:layout_constraintGuide_begin="30dp" />
             <ImageView
                 android:id="@+id/indicator_from"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="30dp"
                 android:src="@drawable/shape_circle"
-                app:tint="@color/blue_500"
-                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/color_secondary"
+                app:layout_constraintTop_toTopOf=""
                 app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
-                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"/>
+                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"
+            app:layout_constraintBottom_toBottomOf="@+id/indicator_line"/>
+
             <View
                 android:id="@+id/indicator_line"
                 android:layout_width="1dp"
-                android:layout_height="0dp"
-                android:background="@color/black"
+                android:layout_height="25dp"
                 android:layout_margin="2dp"
-                app:layout_constraintTop_toBottomOf="@id/indicator_from"
+                android:background="@color/gray"
                 app:layout_constraintBottom_toTopOf="@id/indicator_to"
+                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"
                 app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
-                app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"/>
+                app:layout_constraintTop_toBottomOf="@id/indicator_from" />
             <ImageView
                 android:id="@+id/indicator_to"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="15dp"
                 android:src="@drawable/shape_circle"
-                app:tint="@color/orange_primary"
+                app:tint="@color/color_primary"
                 app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
                 app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"
                 app:layout_constraintBottom_toBottomOf="parent"/>
@@ -101,17 +106,18 @@
                 android:id="@+id/spinnerFrom"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/rounded_spinner"
+
                 app:layout_constraintTop_toTopOf="parent"/>
             <Spinner
                 android:id="@+id/spinnerTo"
                 style="@style/Widget.AppCompat.Spinner.Underlined"
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
+                android:layout_height="40dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="24dp"
@@ -136,6 +142,8 @@
 
     <com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView
         android:id="@+id/webView"
+        android:layout_margin-top="100dp"
+
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@id/btnGuestLogin"
