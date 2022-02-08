@@ -19,7 +19,7 @@ import com.google.android.material.snackbar.Snackbar;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
-import com.saipem.plugins.R;
+import $appid.R;
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
