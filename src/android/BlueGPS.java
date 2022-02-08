@@ -5,6 +5,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.*;
 import android.content.pm.PackageManager;
 import android.os.IBinder;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -13,6 +19,8 @@ import com.google.android.material.snackbar.Snackbar;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
+import com.saipem.plugins.R;
+import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
@@ -45,8 +53,8 @@ public class BlueGPS extends CordovaPlugin {
     private final String INIT = "initializeSDK";
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
+    private final String OPENMAP_BLOCK = "openMapBlock";
     private final String NAVIGATION = "navigationMap";
-
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
     public static SdkEnvironment sdkEnvironment;
@@ -55,6 +63,10 @@ public class BlueGPS extends CordovaPlugin {
     private CallbackContext callback;
     private final String appId = "com.saipem.plugins"; 
     String [] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
+
+    List<PoiField> resourcesJson = new ArrayList<>();
+    Integer destinationIndex;
+    Integer originIndex;
 
     @Override
     protected void pluginInitialize() {
@@ -274,149 +286,43 @@ public class BlueGPS extends CordovaPlugin {
 
                 configurationMap.setTagid(args.getString(0));
 
-                cordova.getActivity().startActivity(mapIntent);
+                //cordova.getActivity().startActivity(mapIntent);
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 break;
             case NAVIGATION:
 
-                configurationMap = new ConfigurationMap();
-                Map<String, String> credentialNav = new HashMap<>();
-                credentialNav.put("sdkKey",sdkEnvironment.getSdkKey());
-                credentialNav.put("sdkSecret",sdkEnvironment.getSdkSecret());
-                AuthParameters authParametersNav;
-                if (sdkEnvironment.getLoggedUser() != null) {
-
-                    Map<String, String> userNav = new HashMap<>();
-                    if (sdkEnvironment.getLoggedUser().getToken() != null){
-                        userNav.put("token",sdkEnvironment.getLoggedUser().getToken());
-                    }else{
-                        userNav.put("username",sdkEnvironment.getLoggedUser().getUsername());
-                        userNav.put("password",sdkEnvironment.getLoggedUser().getPassword());
-                    }
-                    authParametersNav = new AuthParameters(credentialNav,userNav,null,null,null);
-                } else {
-                    authParametersNav = new AuthParameters(credentialNav,null,null,null,null);
-                }
-                configurationMap.setAuth(authParametersNav);
-
-                MapStyle mapStyleNav = new MapStyle();
-                JSONObject styleNav = new JSONObject(args.getString(1));
-                Log.d("StyleNav", styleNav.toString());
-
-                JSONObject iconsNav = styleNav.getJSONObject("icons");
-                IconStyle iconsStyleNav = new IconStyle();
-                if (iconsNav.has("opacity")) iconsStyleNav.setOpacity(iconsNav.getDouble("opacity"));
-                if (iconsNav.has("name")) iconsStyleNav.setName(iconsNav.getString("name"));
-                if (iconsNav.has("align")) iconsStyleNav.setAlign(iconsNav.getString("align"));
-                if (iconsNav.has("vAlign")) iconsStyleNav.setVAlign(iconsNav.getString("vAlign"));
-                if (iconsNav.has("followZoom")) iconsStyleNav.setFollowZoom(iconsNav.getBoolean("followZoom"));
-
-                mapStyleNav.setIcons(iconsStyleNav);
-
-
-//                JSONObject indicationNav = styleNav.getJSONObject("indication");
-//                Log.d("IndicationNav", indicationNav.toString());
-//                IndicationStyle indicationStyleNav = new IndicationStyle();
-//                if (indicationNav.has("destColor"))
-//                    indicationStyleNav.setDestColor(indicationNav.getString("destColor"));
-//                if (indicationNav.has("followZoom"))
-//                    indicationStyleNav.setFollowZoom(indicationNav.getBoolean("followZoom"));
-//                if (indicationNav.has("iconDestination"))
-//                    indicationStyleNav.setIconDestination(indicationNav.getString("iconDestination"));
-//                if (indicationNav.has("iconHAlign"))
-//                    indicationStyleNav.setIconHAlign(indicationNav.getString("iconHAlign"));
-//                if (indicationNav.has("iconSource"))
-//                    indicationStyleNav.setIconSource(indicationNav.getString("iconSource"));
-//                if (indicationNav.has("iconVAlign"))
-//                    indicationStyleNav.setIconVAlign(indicationNav.getString("iconVAlign"));
-//                if (indicationNav.has("opacity"))
-//                    indicationStyleNav.setOpacity(indicationNav.getDouble("opacity"));
-//                if (indicationNav.has("radiusMeter"))
-//                    indicationStyleNav.setRadiusMeter(indicationNav.getDouble("radiusMeter"));
-//                mapStyleNav.setIndication(indicationStyleNav);
-
-                JSONObject navigationNav = styleNav.getJSONObject("navigation");
-                NavigationStyle navigationStyleNav = new NavigationStyle();
-
-                if (navigationNav.has("animationTime"))
-                    navigationStyleNav.setAnimationTime(navigationNav.getDouble("animationTime"));
-                if (navigationNav.has("autoZoom"))
-                    navigationStyleNav.setAutoZoom(navigationNav.getBoolean("autoZoom"));
-                if (navigationNav.has("iconDestination"))
-                    navigationStyleNav.setIconDestination(navigationNav.getString("iconDestination"));
-                if (navigationNav.has("iconSource"))
-                    navigationStyleNav.setIconSource(navigationNav.getString("iconSource"));
-                if (navigationNav.has("jumpColor"))
-                    navigationStyleNav.setJumpColor(navigationNav.getString("jumpColor"));
-                if (navigationNav.has("jumpOpacity"))
-                    navigationStyleNav.setJumpOpacity(navigationNav.getDouble("jumpOpacity"));
-                if (navigationNav.has("jumpRadiusMeter"))
-                    navigationStyleNav.setJumpRadiusMeter(navigationNav.getDouble("jumpRadiusMeter"));
-                if (navigationNav.has("navigationStep"))
-                    navigationStyleNav.setNavigationStep(navigationNav.getDouble("navigationStep"));
-                if (navigationNav.has("showVoronoy"))
-                    navigationStyleNav.setShowVoronoy(navigationNav.getBoolean("showVoronoy"));
-                if (navigationNav.has("stroke"))
-                    navigationStyleNav.setStroke(navigationNav.getString("stroke"));
-                if (navigationNav.has("strokeLinecap"))
-                    navigationStyleNav.setStrokeLinecap(navigationNav.getString("strokeLinecap"));
-                if (navigationNav.has("strokeLinejoin"))
-                    navigationStyleNav.setStrokeLinejoin(navigationNav.getString("strokeLinejoin"));
-                if (navigationNav.has("strokeOpacity"))
-                    navigationStyleNav.setStrokeOpacity(navigationNav.getDouble("strokeOpacity"));
-                if (navigationNav.has("strokeWidthMeter"))
-                    navigationStyleNav.setStrokeWidthMeter(navigationNav.getDouble("strokeWidthMeter"));
-                if (navigationNav.has("velocityOptions")){
-                    Map<String,Double> velocityOptionsNav = new HashMap<>();
-                    JSONArray velocityArrayNav = navigationNav.getJSONArray("velocityOptions");
-                    for (int i = 0; i<velocityArrayNav.length(); i++){
-                        JSONObject velocityOptionNav = velocityArrayNav.getJSONObject(i);
-                        velocityOptionsNav.put(velocityOptionNav.getString("key"),velocityOptionNav.getDouble("value"));
-                    }
-                    navigationStyleNav.setVelocityOptions(velocityOptionsNav);
-                }
-                mapStyleNav.setNavigation(navigationStyleNav);
-
-                JSONObject showmapNav = new JSONObject(args.getString(2));
-                ShowMap mapNav = new ShowMap();
-
-                if (showmapNav.has("all"))
-                    mapNav.setAll(showmapNav.getBoolean("all"));
-                if (showmapNav.has("me"))
-                    mapNav.setMe(showmapNav.getBoolean("me"));
-                if (showmapNav.has("room"))
-                    mapNav.setRoom(showmapNav.getBoolean("room"));
-                if (showmapNav.has("park"))
-                    mapNav.setPark(showmapNav.getBoolean("park"));
-                if (showmapNav.has("desk"))
-                    mapNav.setDesk(showmapNav.getBoolean("desk"));
-                configurationMap.setShow(mapNav);
-
-                configurationMap.setTagid(args.getString(0));
-
-                Log.d("PoiArg", configurationMap.toString());
-
+                navigation(args);
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
 
-
-                JSONObject poiArgs = new JSONObject(args.getString(3));
-                JSONArray resources = poiArgs.getJSONArray("list");
-
-                List<PoiField> resourcesJson = new ArrayList<>();
-                for(int i=0; i<resources.length();i++){
-                    resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
-                }
-
-
-               // navigationIntent.putExtra("origin", origin);
-                navigationIntent.putExtra("destination", resourcesJson.get(poiArgs.getInt("destination")));
-           //   navigationIntent.putExtra("list", poiFields);
+                // navigationIntent.putExtra("origin", origin);
+                navigationIntent.putExtra("destination", resourcesJson.get(destinationIndex));
+                //   navigationIntent.putExtra("list", poiFields);
                 navigationIntent.putExtra("configurationMap", configurationMap);
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
                 cordova.getActivity().startActivity(navigationIntent);
+                break;
+            case OPENMAP_BLOCK:
+
+                navigation(args);
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
+
+                        BlueGPSMapView blueGPS = new BlueGPSMapView(webView.getContext());
+
+                        blueGPS.initMap(BlueGPS.sdkEnvironment,BlueGPS.configurationMap, null);
+
+                        cordova.getActivity().addContentView(blueGPS,new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
+
+                        callbackContext.success(); // Thread-safe.
+                    }
+                });
+
+                status = true;
+                result = new PluginResult(PluginResult.Status.OK);
                 break;
             case STARTADV:
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
@@ -503,4 +409,142 @@ public class BlueGPS extends CordovaPlugin {
             }
         }
     };
+
+
+
+    private void navigation(JSONArray args) throws JSONException {
+        configurationMap = new ConfigurationMap();
+        Map<String, String> credentialNav = new HashMap<>();
+        credentialNav.put("sdkKey",sdkEnvironment.getSdkKey());
+        credentialNav.put("sdkSecret",sdkEnvironment.getSdkSecret());
+        AuthParameters authParametersNav;
+        if (sdkEnvironment.getLoggedUser() != null) {
+
+            Map<String, String> userNav = new HashMap<>();
+            if (sdkEnvironment.getLoggedUser().getToken() != null){
+                userNav.put("token",sdkEnvironment.getLoggedUser().getToken());
+            }else{
+                userNav.put("username",sdkEnvironment.getLoggedUser().getUsername());
+                userNav.put("password",sdkEnvironment.getLoggedUser().getPassword());
+            }
+            authParametersNav = new AuthParameters(credentialNav,userNav,null,null,null);
+        } else {
+            authParametersNav = new AuthParameters(credentialNav,null,null,null,null);
+        }
+        configurationMap.setAuth(authParametersNav);
+
+        MapStyle mapStyleNav = new MapStyle();
+        JSONObject styleNav = new JSONObject(args.getString(1));
+        Log.d("StyleNav", styleNav.toString());
+
+        JSONObject iconsNav = styleNav.getJSONObject("icons");
+        IconStyle iconsStyleNav = new IconStyle();
+        if (iconsNav.has("opacity")) iconsStyleNav.setOpacity(iconsNav.getDouble("opacity"));
+        if (iconsNav.has("name")) iconsStyleNav.setName(iconsNav.getString("name"));
+        if (iconsNav.has("align")) iconsStyleNav.setAlign(iconsNav.getString("align"));
+        if (iconsNav.has("vAlign")) iconsStyleNav.setVAlign(iconsNav.getString("vAlign"));
+        if (iconsNav.has("followZoom")) iconsStyleNav.setFollowZoom(iconsNav.getBoolean("followZoom"));
+
+        mapStyleNav.setIcons(iconsStyleNav);
+
+
+//                JSONObject indicationNav = styleNav.getJSONObject("indication");
+//                Log.d("IndicationNav", indicationNav.toString());
+//                IndicationStyle indicationStyleNav = new IndicationStyle();
+//                if (indicationNav.has("destColor"))
+//                    indicationStyleNav.setDestColor(indicationNav.getString("destColor"));
+//                if (indicationNav.has("followZoom"))
+//                    indicationStyleNav.setFollowZoom(indicationNav.getBoolean("followZoom"));
+//                if (indicationNav.has("iconDestination"))
+//                    indicationStyleNav.setIconDestination(indicationNav.getString("iconDestination"));
+//                if (indicationNav.has("iconHAlign"))
+//                    indicationStyleNav.setIconHAlign(indicationNav.getString("iconHAlign"));
+//                if (indicationNav.has("iconSource"))
+//                    indicationStyleNav.setIconSource(indicationNav.getString("iconSource"));
+//                if (indicationNav.has("iconVAlign"))
+//                    indicationStyleNav.setIconVAlign(indicationNav.getString("iconVAlign"));
+//                if (indicationNav.has("opacity"))
+//                    indicationStyleNav.setOpacity(indicationNav.getDouble("opacity"));
+//                if (indicationNav.has("radiusMeter"))
+//                    indicationStyleNav.setRadiusMeter(indicationNav.getDouble("radiusMeter"));
+//                mapStyleNav.setIndication(indicationStyleNav);
+
+        JSONObject navigationNav = styleNav.getJSONObject("navigation");
+        NavigationStyle navigationStyleNav = new NavigationStyle();
+
+        if (navigationNav.has("animationTime"))
+            navigationStyleNav.setAnimationTime(navigationNav.getDouble("animationTime"));
+        if (navigationNav.has("autoZoom"))
+            navigationStyleNav.setAutoZoom(navigationNav.getBoolean("autoZoom"));
+        if (navigationNav.has("iconDestination"))
+            navigationStyleNav.setIconDestination(navigationNav.getString("iconDestination"));
+        if (navigationNav.has("iconSource"))
+            navigationStyleNav.setIconSource(navigationNav.getString("iconSource"));
+        if (navigationNav.has("jumpColor"))
+            navigationStyleNav.setJumpColor(navigationNav.getString("jumpColor"));
+        if (navigationNav.has("jumpOpacity"))
+            navigationStyleNav.setJumpOpacity(navigationNav.getDouble("jumpOpacity"));
+        if (navigationNav.has("jumpRadiusMeter"))
+            navigationStyleNav.setJumpRadiusMeter(navigationNav.getDouble("jumpRadiusMeter"));
+        if (navigationNav.has("navigationStep"))
+            navigationStyleNav.setNavigationStep(navigationNav.getDouble("navigationStep"));
+        if (navigationNav.has("showVoronoy"))
+            navigationStyleNav.setShowVoronoy(navigationNav.getBoolean("showVoronoy"));
+        if (navigationNav.has("stroke"))
+            navigationStyleNav.setStroke(navigationNav.getString("stroke"));
+        if (navigationNav.has("strokeLinecap"))
+            navigationStyleNav.setStrokeLinecap(navigationNav.getString("strokeLinecap"));
+        if (navigationNav.has("strokeLinejoin"))
+            navigationStyleNav.setStrokeLinejoin(navigationNav.getString("strokeLinejoin"));
+        if (navigationNav.has("strokeOpacity"))
+            navigationStyleNav.setStrokeOpacity(navigationNav.getDouble("strokeOpacity"));
+        if (navigationNav.has("strokeWidthMeter"))
+            navigationStyleNav.setStrokeWidthMeter(navigationNav.getDouble("strokeWidthMeter"));
+        if (navigationNav.has("velocityOptions")){
+            Map<String,Double> velocityOptionsNav = new HashMap<>();
+            JSONArray velocityArrayNav = navigationNav.getJSONArray("velocityOptions");
+            for (int i = 0; i<velocityArrayNav.length(); i++){
+                JSONObject velocityOptionNav = velocityArrayNav.getJSONObject(i);
+                velocityOptionsNav.put(velocityOptionNav.getString("key"),velocityOptionNav.getDouble("value"));
+            }
+            navigationStyleNav.setVelocityOptions(velocityOptionsNav);
+        }
+        mapStyleNav.setNavigation(navigationStyleNav);
+
+        JSONObject showmapNav = new JSONObject(args.getString(2));
+        ShowMap mapNav = new ShowMap();
+
+        if (showmapNav.has("all"))
+            mapNav.setAll(showmapNav.getBoolean("all"));
+        if (showmapNav.has("me"))
+            mapNav.setMe(showmapNav.getBoolean("me"));
+        if (showmapNav.has("room"))
+            mapNav.setRoom(showmapNav.getBoolean("room"));
+        if (showmapNav.has("park"))
+            mapNav.setPark(showmapNav.getBoolean("park"));
+        if (showmapNav.has("desk"))
+            mapNav.setDesk(showmapNav.getBoolean("desk"));
+        configurationMap.setShow(mapNav);
+
+        configurationMap.setTagid(args.getString(0));
+
+        Log.d("PoiArg", configurationMap.toString());
+
+
+
+        JSONObject poiArgs = new JSONObject(args.getString(3));
+        JSONArray resources = poiArgs.getJSONArray("list");
+
+        destinationIndex = poiArgs.getInt("destination");
+        originIndex = poiArgs.getInt("origin");
+
+
+        List<PoiField> resourcesJson = new ArrayList<>();
+        for(int i=0; i<resources.length();i++){
+            resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
+        }
+
+
+
+    }
 }
