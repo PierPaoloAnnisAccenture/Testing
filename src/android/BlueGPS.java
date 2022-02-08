@@ -10,9 +10,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.saipem.plugins.MapActivity;
-import com.saipem.plugins.NavigationActivity;
-import com.saipem.plugins.PoiField;
+import $appid.MapActivity;
+import $appid.NavigationActivity;
+import $appid.PoiField;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
