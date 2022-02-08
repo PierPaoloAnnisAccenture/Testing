@@ -17,8 +17,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.saipem.plugins.PoiField;
-import com.saipem.plugins.NavigationAdapter;
+
+
 
 import com.outsystems.bluegps.BlueGPS;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
