@@ -68,10 +68,9 @@
                 android:layout_margin="30dp"
                 android:src="@drawable/shape_circle"
                 app:tint="@color/color_secondary"
-                app:layout_constraintTop_toTopOf=""
                 app:layout_constraintStart_toStartOf="@id/gd_indicator_container"
                 app:layout_constraintEnd_toEndOf="@id/gd_indicator_container"
-            app:layout_constraintBottom_toBottomOf="@+id/indicator_line"/>
+                app:layout_constraintBottom_toBottomOf="@+id/indicator_line"/>
 
             <View
                 android:id="@+id/indicator_line"
