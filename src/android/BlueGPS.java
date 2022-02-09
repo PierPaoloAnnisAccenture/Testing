@@ -4,22 +4,32 @@ import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.content.*;
 import android.content.pm.PackageManager;
+
 import android.os.IBinder;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.mobilecop.bluegps.NavigationExtKt;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
+
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -27,8 +37,11 @@ import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironmentLoggedUser;
 import com.synapseslab.bluegps_sdk.data.model.map.*;
 import com.synapseslab.bluegps_sdk.data.model.response.AuthResponse;
+import com.synapseslab.bluegps_sdk.data.model.stats.NavInfo;
+import com.synapseslab.bluegps_sdk.data.model.stats.NavigationStats;
 import com.synapseslab.bluegps_sdk.service.BlueGPSAdvertisingService;
 import com.synapseslab.bluegps_sdk.utils.Resource;
+
 
 import kotlin.coroutines.Continuation;
 import kotlin.coroutines.EmptyCoroutineContext;
@@ -41,6 +54,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +63,19 @@ import java.util.Map;
 import android.util.Log;
 import kotlin.coroutines.CoroutineContext;
 
+import kotlinx.coroutines.Dispatchers;
+
 public class BlueGPS extends CordovaPlugin {
 
     private final String INIT = "initializeSDK";
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
+
     private final String OPENMAP_BLOCK = "openMapBlock";
+    private final String REFRESH_BLOCK = "refreshBlock";
+    private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
+    private final String GET_RESOURCES = "getResources";
+
     private final String NAVIGATION = "navigationMap";
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
@@ -64,9 +86,20 @@ public class BlueGPS extends CordovaPlugin {
     private final String appId = "com.saipem.plugins"; 
     String [] permissions = { Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION };
 
+
     List<PoiField> resourcesJson = new ArrayList<>();
     Integer destinationIndex;
     Integer originIndex;
+    BlueGPSMapView blueGPS;
+
+    boolean navigationMode = false;
+
+    List<GenericResource> resourceList;
+
+    GenericResource source;
+    GenericResource destination;
+
+    String floorName;
 
     @Override
     protected void pluginInitialize() {
@@ -109,6 +142,7 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result = null;
         switch (action) {
+
             case INIT:
                 if(!hasPermisssion()){
                     PermissionHelper.requestPermissions(this,1,permissions);
@@ -124,6 +158,9 @@ public class BlueGPS extends CordovaPlugin {
                         boolean enabledNetworkLogs = args.getBoolean(3);
 
                         BlueGPSLib.Companion.getInstance().initSDK(sdkEnvironment, cordova.getActivity(), enabledNetworkLogs);
+
+
+
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                     } catch (JSONException e) {
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Init Failed with error:" + e.getLocalizedMessage()));
@@ -296,7 +333,7 @@ public class BlueGPS extends CordovaPlugin {
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
 
                 // navigationIntent.putExtra("origin", origin);
-                navigationIntent.putExtra("destination", resourcesJson.get(destinationIndex));
+                navigationIntent.putExtra("destination", resourcesJson.get(0));
                 //   navigationIntent.putExtra("list", poiFields);
                 navigationIntent.putExtra("configurationMap", configurationMap);
 
@@ -309,20 +346,115 @@ public class BlueGPS extends CordovaPlugin {
                 navigation(args);
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
 
-                        BlueGPSMapView blueGPS = new BlueGPSMapView(webView.getContext());
+                        View v = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
 
-                        blueGPS.initMap(BlueGPS.sdkEnvironment,BlueGPS.configurationMap, null);
+                        ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                        cordova.getActivity().addContentView(blueGPS,new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500));
+                        ScrollView sv = new ScrollView(cordova.getActivity());
 
-                        callbackContext.success(); // Thread-safe.
+                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                        sv.setLayoutParams(lp);
+                        blueGPS = new BlueGPSMapView(v.getContext());
+
+                        blueGPS.initMap(BlueGPS.sdkEnvironment,setupConfigurationMap(), null);
+                        //blueGPS.setL
+
+                       // ((ViewGroup)v.getParent()).removeAllViews();
+                        //sv.addView((View) v);
+                       // sv.addView(v);
+                        sv.addView(blueGPS);
+                        RelativeLayout.LayoutParams lp2 =new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
+                        lp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                FrameLayout.LayoutParams.WRAP_CONTENT,
+                                FrameLayout.LayoutParams.WRAP_CONTENT);
+                        params.gravity = Gravity.BOTTOM|Gravity.CENTER;
+
+                        //testRoot.addView(dfpBanner, view);
+
+                        viewGroup.addView(sv,params);
+
+                    //cordova.getActivity().addContentView(sv,lp2);
+                        setListenerOnMapView( );
+                     //   callbackContext.success(); // Thread-safe.
                     }
                 });
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
+                break;
+            case REFRESH_BLOCK:
+                status = true;
+                break;
+            case GET_RESOURCES:
+
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+
+                        Continuation<Resource<List<GenericResource>>> continuation = new Continuation<Resource<List<GenericResource>>>() {
+                            @NonNull
+                            @Override
+                            public CoroutineContext getContext() {
+                                return (CoroutineContext) Dispatchers.getMain();
+                            }
+
+                            @Override
+                            public void resumeWith(@NonNull Object o) {
+                                Log.d("Coroutine", "Test");
+                                if(o instanceof Resource.Error){
+                                    Log.d("Coroutine", "Errore");
+                                    Log.d("Coroutine", ((Resource.Error<?>) o).getMessage());
+                                }
+                                else {
+                                    Log.d("Coroutine", "Success");
+                                    resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
+                                    callback.sendPluginResult(getResources(PluginResult.Status.OK));
+
+                                }
+                            }
+                        };
+
+
+                        BlueGPSLib.Companion.getInstance().findResources(false, null, "name", null, null, null, null, null, continuation);
+
+                    }
+                });
+                status = true;
+                break;
+            case START_NAVIGATION_BLOCK:
+                navigation(args);
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+
+
+                        int destinationIndex = 1;
+                        int originIndex = 0;
+
+                        int i=0;
+                        for( GenericResource genericResource : resourceList){
+                            if(genericResource.getName().equals(resourcesJson.get(0).getName())){
+                                destinationIndex = i;
+                            }
+                            if(genericResource.getName().contains("Elevator")){
+                                originIndex = i;
+                            }
+
+                            i++;
+                        }
+
+                        source = resourceList.get(originIndex);
+                        destination = resourceList.get(destinationIndex);
+                        blueGPS.updateConfigurationMap(setupConfigurationMap());
+
+                        NavigationExtKt.moveTo(blueGPS, source.getPosition(), destination.getPosition());
+
+                        callbackContext.success(); // Thread-safe.
+                    }
+                });
+
+
                 break;
             case STARTADV:
                 cordova.getThreadPool().execute(() -> blueGPSAdvertisingService.startAdv());
@@ -338,9 +470,9 @@ public class BlueGPS extends CordovaPlugin {
                 result = new PluginResult(PluginResult.Status.ERROR, "Invalid Action!");
                 break;
         }
-        if (result != null) {
+        /*if (result != null) {
             callbackContext.sendPluginResult(result);
-        }
+        }*/
         return status;
     }
 
@@ -539,12 +671,208 @@ public class BlueGPS extends CordovaPlugin {
         originIndex = poiArgs.getInt("origin");
 
 
-        List<PoiField> resourcesJson = new ArrayList<>();
+        resourcesJson = new ArrayList<>();
         for(int i=0; i<resources.length();i++){
             resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
         }
 
 
 
+    }
+
+    private ConfigurationMap setupConfigurationMap() {
+        ConfigurationMap configurationMap = new ConfigurationMap();
+
+        MapStyle mapStyle = new MapStyle();
+
+        NavigationStyle navigationStyle = new NavigationStyle();
+        navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
+        navigationStyle.setIconDestination("/api/public/resource/icons/commons/end.svg");
+
+        IconStyle iconStyle = new IconStyle();
+        iconStyle.setName("saipem");
+        iconStyle.setAlign("center");
+        iconStyle.setVAlign("center");
+        iconStyle.setFollowZoom(false);
+
+        mapStyle.setNavigation(navigationStyle);
+        mapStyle.setIcons(iconStyle);
+
+        ShowMap showMap = new ShowMap();
+        showMap.setAll(true);
+        showMap.setRoom(false);
+        showMap.setMe(true);
+
+        configurationMap.setStyle(mapStyle);
+        configurationMap.setShow(showMap);
+        return configurationMap;
+    }
+
+
+    /**
+     * Setup the listener for BlueGPSMapView in order to implement the code
+     * to run when an event click on map occurs.
+     */
+    private void setListenerOnMapView() {
+
+        blueGPS.setBlueGPSMapListener((data, typeMapCallback) -> {
+            Type cType;
+            switch (typeMapCallback){
+                /*case INIT_SDK_END:
+                    Log.d(TAG,"INIT_SDK_END");
+                    break;
+                 */
+                case FLOOR_CHANGE:
+                    cType = new TypeToken<Floor>() {}.getType();
+                    Floor floor = new Gson().fromJson(data.getPayload(),cType);
+                    floorName = floor.getLabel();
+
+                case PARK_CONF:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse payloadResponse = new Gson().fromJson(data.getPayload(),cType);
+                    if (payloadResponse.getAvailableDateList() != null) {
+                        if (!payloadResponse.getAvailableDateList().isEmpty()) {
+                            //  Log.d(TAG, String.valueOf(payloadResponse.getAvailableDateList()));
+                        }
+                    }
+                    break;
+                //case ROOM_CLICK:
+                case MAP_CLICK:
+               /* case RESORUCE:
+                    cType = new TypeToken<ClickedObject>() {}.getType();
+                    GenericResource resource = new Gson().fromJson(data.getPayload(),cType);
+                    Snackbar.make(findViewById(android.R.id.content),
+                            typeMapCallback.name() + resource.getName() + resource.getType(),
+                            Snackbar.LENGTH_LONG).show();
+*/
+                case TAG_CLICK:
+                   /* blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
+                                                @Override
+                                                public Object invoke(Floor floor, Error error) {
+                                                    if(floor != null){
+                                                        floorName = floor.getLabel();
+                                                    }
+                                                    return floor;
+                                                }
+
+
+                                            }
+                    );*/
+
+
+
+
+
+                    callback.sendPluginResult(getPoiTouchResult(PluginResult.Status.OK, data.getPayload()));
+
+
+                    if (navigationMode) {
+                        cordova.getActivity().runOnUiThread(() -> {
+                            /*source = position;
+                            binding.tvDestination.setText("Destination: ("+String.format("%.3f", position.getX())+"), "+String.format("%.3f", position.getY())+")");
+                            showHideLayoutDestination(true);*/
+
+                        });
+                    } else {
+/*
+                        Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
+                                typeMapCallback.name() + position.toString(),
+                                Snackbar.LENGTH_LONG).show();
+
+  */                     /* new MaterialAlertDialogBuilder(getApplicationContext())
+                                .setTitle("Type: "+typeMapCallback.name())
+                                .setMessage(position.toString())
+                                .setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss()).show();*/
+                    }
+                    break;
+                case BOOKING_CLICK:
+                    cType = new TypeToken<ClickedObject>() {}.getType();
+                    ClickedObject clickedObject = new Gson().fromJson(data.getPayload(),cType);
+                    new MaterialAlertDialogBuilder(cordova.getActivity().getApplicationContext())
+                            .setTitle("Type: "+typeMapCallback.name())
+                            .setMessage(clickedObject.toString())
+                            .setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss()).show();
+                    break;
+                case NAV_STATS:
+                    cType = new TypeToken<NavigationStats>() {}.getType();
+                    NavigationStats navigationStats = new Gson().fromJson(data.getPayload(),cType);
+                    //  Log.d(TAG, String.valueOf(navigationStats));
+                    final String[] vehicles = {""};
+                    navigationStats.getVehicles().forEach(vehicle -> vehicles[0] +=vehicle.getName()+": "+(Math.round(vehicle.getRemainingTimeSecond()*100)/100.f)+"s\n");
+                    cordova.getActivity().runOnUiThread(()->{
+                        // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
+                    });
+                    break;
+                case NAV_INFO:
+                    cType = new TypeToken<NavInfo>() {}.getType();
+                    NavInfo navInfo = new Gson().fromJson(data.getPayload(),cType);
+                    Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),navInfo.getMessage(),Snackbar.LENGTH_LONG).show();
+                    break;
+                case SUCCESS:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse response = new Gson().fromJson(data.getPayload(),cType);
+                    // Log.d(TAG, response.getMessage());
+                    break;
+                case ERROR:
+                    cType = new TypeToken<PayloadResponse>() {}.getType();
+                    PayloadResponse errorResp = new Gson().fromJson(data.getPayload(),cType);
+                    //Log.e(TAG , TAG + errorResp.getMessage());
+                    Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
+                            errorResp.getMessage(),
+                            Snackbar.LENGTH_LONG).show();
+                    break;
+
+            }
+        });
+    }
+
+
+
+    private PluginResult getPoiTouchResult(PluginResult.Status status, String payload){
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+
+        Type cType = new TypeToken<Position>() {}.getType();
+        Position position = new Gson().fromJson(payload,cType);
+        PoiField poiField = null;
+
+        try {
+            JSONObject jsonObject = new JSONObject(payload);
+            Type poiType = new TypeToken<PoiField>() {}.getType();
+            poiField= new Gson().fromJson(jsonObject.getString("data"), poiType);
+
+        }catch (JSONException err){
+            Log.d("Error", err.toString());
+        }
+        if(poiField == null){
+            poiField = new PoiField();
+        }
+        poiField.setX(position.getX());
+        poiField.setY(position.getY());
+        poiField.setMapId(position.getMapId());
+        poiField.setFloor(floorName);
+
+        return new PluginResult(status, gson.toJson(poiField));
+    }
+
+
+    private PluginResult getResources(PluginResult.Status status){
+        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").create();
+
+
+        List<PoiField> poiFieldList = new ArrayList<PoiField>();
+        for( GenericResource genericResource : resourceList){
+            PoiField poiField = new PoiField();
+            poiField.setFloor(genericResource.getBuildingPosition() != null ? genericResource.getBuildingPosition().getFloorName(): "undefined");
+            poiField.setName(genericResource.getName());
+            poiField.setX(genericResource.getPosition().getX());
+            poiField.setY(genericResource.getPosition().getY());
+            poiField.setType(genericResource.getType());
+            poiField.setSubType(genericResource.getSubType());
+            poiFieldList.add(poiField);
+        }
+
+
+
+        return new PluginResult(status, gson.toJson(poiFieldList));
     }
 }

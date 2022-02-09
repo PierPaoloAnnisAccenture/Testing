@@ -21,6 +21,14 @@ exports.openMapBlock = function (success, error,tagID,style,showMap,resources) {
     exec(success, error, 'BlueGPS', 'openMapBlock', [tagID,style,showMap,resources]);
 };
 
+exports.refreshBlock = function (success, error,tagID,style,showMap,resources) {
+    exec(success, error, 'BlueGPS', 'refreshBlock', [tagID,style,showMap,resources]);
+};
+
+exports.getResources = function (success, error) {
+    exec(success, error, 'BlueGPS', 'getResources');
+};
+
 
 exports.startAdv = function (success, error) {
     exec(success, error, 'BlueGPS', 'startAdv', []);
