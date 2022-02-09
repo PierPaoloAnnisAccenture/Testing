@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 
 
@@ -73,6 +74,8 @@ public class BlueGPS extends CordovaPlugin {
 
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
+    private final String CLOSE_BLOCK = "closeBlock";
+
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
     private final String GET_RESOURCES = "getResources";
 
@@ -88,8 +91,8 @@ public class BlueGPS extends CordovaPlugin {
 
 
     List<PoiField> resourcesJson = new ArrayList<>();
-    Integer destinationIndex;
-    Integer originIndex;
+    Integer destinationIndexJson;
+    Integer originIndexJson;
     BlueGPSMapView blueGPS;
 
     boolean navigationMode = false;
@@ -347,43 +350,76 @@ public class BlueGPS extends CordovaPlugin {
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
+                        if (blueGPS == null) {
+                            View v = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
 
-                        View v = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
+                            ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                        ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
+                            ScrollView sv = new ScrollView(cordova.getActivity());
 
-                        ScrollView sv = new ScrollView(cordova.getActivity());
+                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+                            sv.setLayoutParams(lp);
+                            blueGPS = new BlueGPSMapView(v.getContext());
 
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                        sv.setLayoutParams(lp);
-                        blueGPS = new BlueGPSMapView(v.getContext());
+                            blueGPS.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), null);
+                            //blueGPS.setL
 
-                        blueGPS.initMap(BlueGPS.sdkEnvironment,setupConfigurationMap(), null);
-                        //blueGPS.setL
+                            // ((ViewGroup)v.getParent()).removeAllViews();
+                            //sv.addView((View) v);
+                            // sv.addView(v);
+                            sv.addView(blueGPS);
+                            RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
+                            lp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    FrameLayout.LayoutParams.WRAP_CONTENT);
+                            params.gravity = Gravity.BOTTOM | Gravity.CENTER;
 
-                       // ((ViewGroup)v.getParent()).removeAllViews();
-                        //sv.addView((View) v);
-                       // sv.addView(v);
-                        sv.addView(blueGPS);
-                        RelativeLayout.LayoutParams lp2 =new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
-                        lp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                        final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                                FrameLayout.LayoutParams.WRAP_CONTENT,
-                                FrameLayout.LayoutParams.WRAP_CONTENT);
-                        params.gravity = Gravity.BOTTOM|Gravity.CENTER;
+                            //testRoot.addView(dfpBanner, view);
 
-                        //testRoot.addView(dfpBanner, view);
+                            viewGroup.addView(sv, params);
+                            showNavigation();
 
-                        viewGroup.addView(sv,params);
 
-                    //cordova.getActivity().addContentView(sv,lp2);
-                        setListenerOnMapView( );
-                     //   callbackContext.success(); // Thread-safe.
+                            //cordova.getActivity().addContentView(sv,lp2);
+                            setListenerOnMapView();
+
+                            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
+                                @Override
+                                public void handleOnBackPressed() {
+                                    // Handle the back button event
+                                    viewGroup.removeView(sv);
+                                }
+                            };
+                            //   callbackContext.success(); // Thread-safe.
+                        }else{
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "blueGPS already exist"));
+                        }
                     }
                 });
 
                 status = true;
                 result = new PluginResult(PluginResult.Status.OK);
+                break;
+            case CLOSE_BLOCK:
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        if(blueGPS !=  null){
+                            ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
+                            viewGroup.removeViewAt(viewGroup.getChildCount()-1);
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+
+
+                        }else{
+
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "blueGPS not exist"));
+
+                        }
+
+
+                    }});
+
+                status = true;
                 break;
             case REFRESH_BLOCK:
                 status = true;
@@ -425,34 +461,12 @@ public class BlueGPS extends CordovaPlugin {
                 break;
             case START_NAVIGATION_BLOCK:
                 navigation(args);
+
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
+                        showNavigation();
+                    }});
 
-
-                        int destinationIndex = 1;
-                        int originIndex = 0;
-
-                        int i=0;
-                        for( GenericResource genericResource : resourceList){
-                            if(genericResource.getName().equals(resourcesJson.get(0).getName())){
-                                destinationIndex = i;
-                            }
-                            if(genericResource.getName().contains("Elevator")){
-                                originIndex = i;
-                            }
-
-                            i++;
-                        }
-
-                        source = resourceList.get(originIndex);
-                        destination = resourceList.get(destinationIndex);
-                        blueGPS.updateConfigurationMap(setupConfigurationMap());
-
-                        NavigationExtKt.moveTo(blueGPS, source.getPosition(), destination.getPosition());
-
-                        callbackContext.success(); // Thread-safe.
-                    }
-                });
 
 
                 break;
@@ -667,8 +681,8 @@ public class BlueGPS extends CordovaPlugin {
         JSONObject poiArgs = new JSONObject(args.getString(3));
         JSONArray resources = poiArgs.getJSONArray("list");
 
-        destinationIndex = poiArgs.getInt("destination");
-        originIndex = poiArgs.getInt("origin");
+        destinationIndexJson = poiArgs.getInt("destination");
+        originIndexJson  = poiArgs.getInt("origin");
 
 
         resourcesJson = new ArrayList<>();
@@ -738,52 +752,9 @@ public class BlueGPS extends CordovaPlugin {
                     break;
                 //case ROOM_CLICK:
                 case MAP_CLICK:
-               /* case RESORUCE:
-                    cType = new TypeToken<ClickedObject>() {}.getType();
-                    GenericResource resource = new Gson().fromJson(data.getPayload(),cType);
-                    Snackbar.make(findViewById(android.R.id.content),
-                            typeMapCallback.name() + resource.getName() + resource.getType(),
-                            Snackbar.LENGTH_LONG).show();
-*/
+
                 case TAG_CLICK:
-                   /* blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
-                                                @Override
-                                                public Object invoke(Floor floor, Error error) {
-                                                    if(floor != null){
-                                                        floorName = floor.getLabel();
-                                                    }
-                                                    return floor;
-                                                }
-
-
-                                            }
-                    );*/
-
-
-
-
-
                     callback.sendPluginResult(getPoiTouchResult(PluginResult.Status.OK, data.getPayload()));
-
-
-                    if (navigationMode) {
-                        cordova.getActivity().runOnUiThread(() -> {
-                            /*source = position;
-                            binding.tvDestination.setText("Destination: ("+String.format("%.3f", position.getX())+"), "+String.format("%.3f", position.getY())+")");
-                            showHideLayoutDestination(true);*/
-
-                        });
-                    } else {
-/*
-                        Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
-                                typeMapCallback.name() + position.toString(),
-                                Snackbar.LENGTH_LONG).show();
-
-  */                     /* new MaterialAlertDialogBuilder(getApplicationContext())
-                                .setTitle("Type: "+typeMapCallback.name())
-                                .setMessage(position.toString())
-                                .setPositiveButton("Ok", (dialogInterface, i) -> dialogInterface.dismiss()).show();*/
-                    }
                     break;
                 case BOOKING_CLICK:
                     cType = new TypeToken<ClickedObject>() {}.getType();
@@ -874,5 +845,38 @@ public class BlueGPS extends CordovaPlugin {
 
 
         return new PluginResult(status, gson.toJson(poiFieldList));
+    }
+
+    private void showNavigation(){
+        if(resourceList!=null && resourcesJson != null && destinationIndexJson>-1 && originIndexJson>-1){
+
+
+
+                    int destinationIndex = 1;
+                    int originIndex = 0;
+
+                    int i=0;
+                    for( GenericResource genericResource : resourceList){
+                        if(genericResource.getName().equals(resourcesJson.get(destinationIndexJson).getName())){
+                            destinationIndex = i;
+                        }
+                        if(genericResource.getName().contains(resourcesJson.get(originIndexJson).getName())){
+                            originIndex = i;
+                        }
+
+                        i++;
+                    }
+
+                    source = resourceList.get(originIndex);
+                    destination = resourceList.get(destinationIndex);
+                    blueGPS.updateConfigurationMap(setupConfigurationMap());
+
+                    NavigationExtKt.moveTo(blueGPS, source.getPosition(), destination.getPosition());
+
+                    destinationIndexJson = -1;
+                    originIndexJson = -1;
+                    callback.success(); // Thread-safe.
+                }
+
     }
 }
