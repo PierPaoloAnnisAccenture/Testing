@@ -378,7 +378,7 @@ public class BlueGPS extends CordovaPlugin {
                             //testRoot.addView(dfpBanner, view);
 
                             viewGroup.addView(sv, params);
-                            showNavigation();
+
 
 
                             //cordova.getActivity().addContentView(sv,lp2);
@@ -389,12 +389,12 @@ public class BlueGPS extends CordovaPlugin {
                                 public void handleOnBackPressed() {
                                     // Handle the back button event
                                     viewGroup.removeView(sv);
+                                    blueGPS = null;
                                 }
                             };
                             //   callbackContext.success(); // Thread-safe.
-                        }else{
-                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "blueGPS already exist"));
                         }
+
                     }
                 });
 
@@ -409,7 +409,7 @@ public class BlueGPS extends CordovaPlugin {
                             viewGroup.removeViewAt(viewGroup.getChildCount()-1);
                             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
 
-
+                            blueGPS = null;
                         }else{
 
                             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "blueGPS not exist"));
@@ -732,10 +732,10 @@ public class BlueGPS extends CordovaPlugin {
         blueGPS.setBlueGPSMapListener((data, typeMapCallback) -> {
             Type cType;
             switch (typeMapCallback){
-                /*case INIT_SDK_END:
-                    Log.d(TAG,"INIT_SDK_END");
+                case INIT_SDK_COMPLETED:
+                   // showNavigation();
                     break;
-                 */
+
                 case FLOOR_CHANGE:
                     cType = new TypeToken<Floor>() {}.getType();
                     Floor floor = new Gson().fromJson(data.getPayload(),cType);
@@ -837,6 +837,8 @@ public class BlueGPS extends CordovaPlugin {
             poiField.setName(genericResource.getName());
             poiField.setX(genericResource.getPosition().getX());
             poiField.setY(genericResource.getPosition().getY());
+            poiField.setId(String.valueOf(genericResource.getId()));
+            poiField.setMapId(genericResource.getPosition().getMapId());
             poiField.setType(genericResource.getType());
             poiField.setSubType(genericResource.getSubType());
             poiFieldList.add(poiField);

@@ -1,5 +1,6 @@
 package $appid;
 
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,6 +20,8 @@ public class PoiField implements Serializable {
     private double y;
     private boolean bookedByMe;
 
+    public PoiField() {
+    }
 
     public PoiField(String id, String name, String building, String floor, String bookingType, int mapId, double x, double y, boolean bookedByMe) {
         this.id = id;
@@ -32,11 +35,6 @@ public class PoiField implements Serializable {
         this.bookedByMe = bookedByMe;
     }
 
-
-    public void setBuilding(String building) {
-        this.building = building;
-    }
-
     public void setId(String id) {
         this.id = id;
     }
@@ -45,16 +43,16 @@ public class PoiField implements Serializable {
         this.name = name;
     }
 
-    public void setBookingType(String bookingType) {
-        this.bookingType = bookingType;
-    }
-
-    public void setBookedByMe(boolean bookedByMe) {
-        this.bookedByMe = bookedByMe;
+    public void setBuilding(String building) {
+        this.building = building;
     }
 
     public void setFloor(String floor) {
         this.floor = floor;
+    }
+
+    public void setBookingType(String bookingType) {
+        this.bookingType = bookingType;
     }
 
     public void setMapId(int mapId) {
@@ -69,10 +67,10 @@ public class PoiField implements Serializable {
         this.y = y;
     }
 
-    public PoiField() {
+    public void setBookedByMe(boolean bookedByMe) {
+        this.bookedByMe = bookedByMe;
     }
 
-    
     public String getType() {
         return type;
     }
@@ -125,16 +123,61 @@ public class PoiField implements Serializable {
         return bookedByMe;
     }
 
-    public static PoiField fromJson(JSONObject o) throws JSONException {
-        String id = o.getString("id");
-        String name = o.getString("name");
-        String building = o.getString("building");
-        String floor = o.getString("floor");
-        String bookingType = o.getString("bookingType");
-        Integer mapId = o.getInt("mapId");
-        Double x = o.getDouble("x");
-        Double y = o.getDouble("y");
-        Boolean bookedByMe = o.getBoolean("bookedByMe");
+    public static PoiField fromJson(JSONObject o){
+        String id = null;
+        try {
+            id = o.getString("id");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String name = null;
+        try {
+            name = o.getString("name");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String building = null;
+        try {
+            building = o.getString("building");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String floor = null;
+        try {
+            floor = o.getString("floor");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        String bookingType = null;
+        try {
+            bookingType = o.getString("bookingType");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Integer mapId = null;
+        try {
+            mapId = o.getInt("mapId");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Double x = null;
+        try {
+            x = o.getDouble("x");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Double y = null;
+        try {
+            y = o.getDouble("y");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Boolean bookedByMe = null;
+        try {
+            bookedByMe = o.getBoolean("bookedByMe");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         return new PoiField(id, name, building, floor, bookingType, mapId, x, y, bookedByMe);
     }
