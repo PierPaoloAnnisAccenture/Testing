@@ -17,8 +17,8 @@ exports.navigationMap = function (success, error,tagID,style,showMap,resources) 
 };
 
 
-exports.openMapBlock = function (success, error,tagID,style,showMap,resources) {
-    exec(success, error, 'BlueGPS', 'openMapBlock', [tagID,style,showMap,resources]);
+exports.openMapBlock = function (success, error,tagID,style,showMap,resources, heightTopJS) {
+    exec(success, error, 'BlueGPS', 'openMapBlock', [tagID,style,showMap,resources, screen.height, heightTopJS]);
 };
 
 exports.refreshBlock = function (success, error) {

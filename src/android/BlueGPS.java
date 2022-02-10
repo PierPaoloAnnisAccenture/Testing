@@ -6,18 +6,18 @@ import android.content.*;
 import android.content.pm.PackageManager;
 
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -30,7 +30,6 @@ import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
-
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -103,7 +102,6 @@ public class BlueGPS extends CordovaPlugin {
     GenericResource destination;
 
     String floorName;
-    ScrollView sv;
 
     @Override
     protected void pluginInitialize() {
@@ -152,6 +150,7 @@ public class BlueGPS extends CordovaPlugin {
                     PermissionHelper.requestPermissions(this,1,permissions);
                 }
                 cordova.getThreadPool().execute(() -> {
+
                     try {
                         sdkEnvironment = new SdkEnvironment();
                         sdkEnvironment.setSdkKey(args.getString(0));
@@ -163,13 +162,12 @@ public class BlueGPS extends CordovaPlugin {
 
                         BlueGPSLib.Companion.getInstance().initSDK(sdkEnvironment, cordova.getActivity(), enabledNetworkLogs);
 
-
-
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                     } catch (JSONException e) {
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Init Failed with error:" + e.getLocalizedMessage()));
                     }
                 });
+
                 status = true;
                 result = null;
                 break;
@@ -361,6 +359,9 @@ public class BlueGPS extends CordovaPlugin {
                 navigation(args);
                 JSONObject navigationJSON = new JSONObject(args.getString(3));
 
+                Integer maxHeightJS =  args.getInt(4);
+                Integer heightTopJS =  args.getInt(5);
+
                 int  destinationIndex = navigationJSON.getInt("destination");
                 int  originIndex = navigationJSON.getInt("origin");
 
@@ -370,50 +371,57 @@ public class BlueGPS extends CordovaPlugin {
                         //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
                         if (blueGPS == null) {
                             View v = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
+                            v.setBackgroundColor(ContextCompat.getColor(cordova.getActivity(), R.color.color_primary));
 
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                            sv = new ScrollView(cordova.getActivity());
 
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                            sv.setLayoutParams(lp);
                             blueGPS = new BlueGPSMapView(v.getContext());
 
                             blueGPS.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), null);
-                            //blueGPS.setL
 
-                            // ((ViewGroup)v.getParent()).removeAllViews();
-                            //sv.addView((View) v);
-                            // sv.addView(v);
-                            sv.addView(blueGPS);
-                            RelativeLayout.LayoutParams lp2 = new RelativeLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 500);
-                            lp2.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            DisplayMetrics displayMetrics =  new DisplayMetrics();
+                            cordova.getActivity().getWindowManager()
+                                    .getDefaultDisplay()
+                                    .getMetrics(displayMetrics);
+
+                            Integer heightPixelsBLUGPS = (displayMetrics.heightPixels  * (maxHeightJS-heightTopJS))/maxHeightJS;
+
+
                             final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
-                                    FrameLayout.LayoutParams.WRAP_CONTENT);
+                                    heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
 
-                            //testRoot.addView(dfpBanner, view);
+                            viewGroup.addView(blueGPS, params);
 
-                            viewGroup.addView(sv, params);
-
-
-
-                            //cordova.getActivity().addContentView(sv,lp2);
                             setListenerOnMapView();
 
                             OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
                                 @Override
                                 public void handleOnBackPressed() {
                                     // Handle the back button event
-                                    viewGroup.removeView(sv);
+                                    viewGroup.removeView(blueGPS);
                                     blueGPS = null;
                                 }
                             };
+
+
                             callbackContext.success(); // Thread-safe.
+                        }else{
+                            DisplayMetrics displayMetrics =  new DisplayMetrics();
+
+                            Integer heightPixelsBLUGPS = (displayMetrics.heightPixels  * (maxHeightJS-heightTopJS))/maxHeightJS;
+                            final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    heightPixelsBLUGPS);
+                            params.gravity = Gravity.BOTTOM | Gravity.CENTER;
+                            blueGPS.setLayoutParams(params);
+
+                            showNavigationBlock(originIndex, destinationIndex);
                         }
 
-                        showNavigationBlock(originIndex, destinationIndex);
 
                     }
                 });
@@ -427,9 +435,8 @@ public class BlueGPS extends CordovaPlugin {
                         if(blueGPS !=  null){
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                            viewGroup.removeView(sv);
+                            viewGroup.removeView(blueGPS);
                             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-                            sv=null;
                             blueGPS = null;
                         }else{
 
