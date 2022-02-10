@@ -333,6 +333,17 @@ public class BlueGPS extends CordovaPlugin {
             case NAVIGATION:
 
                 navigation(args);
+                JSONObject poiArgs = new JSONObject(args.getString(3));
+                JSONArray resources = poiArgs.getJSONArray("list");
+
+                destinationIndexJson = poiArgs.getInt("destination");
+                originIndexJson  = poiArgs.getInt("origin");
+
+
+                resourcesJson = new ArrayList<>();
+                for(int i=0; i<resources.length();i++){
+                    resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
+                }
                 Intent navigationIntent = new Intent(cordova.getActivity(), NavigationActivity.class);
 
                 // navigationIntent.putExtra("origin", origin);
@@ -347,6 +358,12 @@ public class BlueGPS extends CordovaPlugin {
             case OPENMAP_BLOCK:
 
                 navigation(args);
+                JSONObject navigationJSON = new JSONObject(args.getString(3));
+
+                int  destinationIndex = navigationJSON.getInt("destination");
+                int  originIndex = navigationJSON.getInt("origin");
+
+
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
                         //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
@@ -394,7 +411,8 @@ public class BlueGPS extends CordovaPlugin {
                             };
                             //   callbackContext.success(); // Thread-safe.
                         }
-                        showNavigation();
+
+                        showNavigationBlock(originIndex, destinationIndex);
 
                     }
                 });
@@ -462,10 +480,14 @@ public class BlueGPS extends CordovaPlugin {
                 break;
             case START_NAVIGATION_BLOCK:
                 navigation(args);
+                JSONObject indexJSON = new JSONObject(args.getString(3));
+
+                int  destination = indexJSON.getInt("destination");
+                int  origin = indexJSON.getInt("origin");
 
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        showNavigation();
+                        showNavigationBlock(origin, destination);
                     }});
 
 
@@ -679,17 +701,7 @@ public class BlueGPS extends CordovaPlugin {
 
 
 
-        JSONObject poiArgs = new JSONObject(args.getString(3));
-        JSONArray resources = poiArgs.getJSONArray("list");
 
-        destinationIndexJson = poiArgs.getInt("destination");
-        originIndexJson  = poiArgs.getInt("origin");
-
-
-        resourcesJson = new ArrayList<>();
-        for(int i=0; i<resources.length();i++){
-            resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
-        }
 
 
 
@@ -848,6 +860,21 @@ public class BlueGPS extends CordovaPlugin {
 
 
         return new PluginResult(status, gson.toJson(poiFieldList));
+    }
+
+
+    private void showNavigationBlock(int originIndex, int destinationIndex){
+        if(resourceList!=null){
+
+            source = resourceList.get(originIndex);
+            destination = resourceList.get(destinationIndex);
+            blueGPS.updateConfigurationMap(setupConfigurationMap());
+
+            NavigationExtKt.moveTo(blueGPS, source.getPosition(), destination.getPosition());
+
+            callback.success(); // Thread-safe.
+        }
+
     }
 
     private void showNavigation(){
