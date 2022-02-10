@@ -411,7 +411,9 @@ public class BlueGPS extends CordovaPlugin {
                             callbackContext.success(); // Thread-safe.
                         }else{
                             DisplayMetrics displayMetrics =  new DisplayMetrics();
-
+                            cordova.getActivity().getWindowManager()
+                                    .getDefaultDisplay()
+                                    .getMetrics(displayMetrics);
                             Integer heightPixelsBLUGPS = (displayMetrics.heightPixels  * (maxHeightJS-heightTopJS))/maxHeightJS;
                             final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
