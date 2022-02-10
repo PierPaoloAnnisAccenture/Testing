@@ -103,6 +103,7 @@ public class BlueGPS extends CordovaPlugin {
     GenericResource destination;
 
     String floorName;
+    ScrollView sv;
 
     @Override
     protected void pluginInitialize() {
@@ -372,7 +373,7 @@ public class BlueGPS extends CordovaPlugin {
 
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                            ScrollView sv = new ScrollView(cordova.getActivity());
+                            sv = new ScrollView(cordova.getActivity());
 
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                             sv.setLayoutParams(lp);
@@ -409,7 +410,7 @@ public class BlueGPS extends CordovaPlugin {
                                     blueGPS = null;
                                 }
                             };
-                            //   callbackContext.success(); // Thread-safe.
+                            callbackContext.success(); // Thread-safe.
                         }
 
                         showNavigationBlock(originIndex, destinationIndex);
@@ -425,9 +426,10 @@ public class BlueGPS extends CordovaPlugin {
                     public void run() {
                         if(blueGPS !=  null){
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
-                            viewGroup.removeView(blueGPS);
-                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
 
+                            viewGroup.removeView(sv);
+                            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+                            sv=null;
                             blueGPS = null;
                         }else{
 
@@ -461,6 +463,7 @@ public class BlueGPS extends CordovaPlugin {
                                 if(o instanceof Resource.Error){
                                     Log.d("Coroutine", "Errore");
                                     Log.d("Coroutine", ((Resource.Error<?>) o).getMessage());
+                                    callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, ((Resource.Error<?>) o).getMessage()));
                                 }
                                 else {
                                     Log.d("Coroutine", "Success");
@@ -715,12 +718,13 @@ public class BlueGPS extends CordovaPlugin {
         NavigationStyle navigationStyle = new NavigationStyle();
         navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
         navigationStyle.setIconDestination("/api/public/resource/icons/commons/end.svg");
+        navigationStyle.setStroke("#dc8731");
 
         IconStyle iconStyle = new IconStyle();
         iconStyle.setName("saipem");
         iconStyle.setAlign("center");
         iconStyle.setVAlign("center");
-        iconStyle.setFollowZoom(false);
+        iconStyle.setFollowZoom(true);
 
         mapStyle.setNavigation(navigationStyle);
         mapStyle.setIcons(iconStyle);
