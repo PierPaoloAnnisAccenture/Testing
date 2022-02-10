@@ -406,7 +406,7 @@ public class BlueGPS extends CordovaPlugin {
                     public void run() {
                         if(blueGPS !=  null){
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
-                            viewGroup.removeViewAt(viewGroup.getChildCount()-1);
+                            viewGroup.removeView(blueGPS);
                             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
 
                             blueGPS = null;
