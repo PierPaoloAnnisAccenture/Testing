@@ -394,6 +394,7 @@ public class BlueGPS extends CordovaPlugin {
                             };
                             //   callbackContext.success(); // Thread-safe.
                         }
+                        showNavigation();
 
                     }
                 });

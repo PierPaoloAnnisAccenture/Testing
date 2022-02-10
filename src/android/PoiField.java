@@ -172,7 +172,7 @@ public class PoiField implements Serializable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Boolean bookedByMe = null;
+        Boolean bookedByMe = false;
         try {
             bookedByMe = o.getBoolean("bookedByMe");
         } catch (JSONException e) {
