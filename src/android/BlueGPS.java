@@ -364,8 +364,7 @@ public class BlueGPS extends CordovaPlugin {
                 Integer maxHeightJS =  args.getInt(4);
                 Integer heightTopJS =  args.getInt(5);
 
-                int  destinationIndex = navigationJSON.getInt("destination");
-                int  originIndex = navigationJSON.getInt("origin");
+
 
 
                 cordova.getActivity().runOnUiThread(new Runnable() {
@@ -414,8 +413,7 @@ public class BlueGPS extends CordovaPlugin {
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                             blueGPS.setLayoutParams(params);
-
-                            showNavigationBlock(originIndex, destinationIndex);
+                            showNavigationAPIBlock(navigationJSON);
                         }
 
 
@@ -879,6 +877,53 @@ public class BlueGPS extends CordovaPlugin {
 
 
         return new PluginResult(status, gson.toJson(poiFieldList));
+    }
+
+
+    private void showNavigationAPIBlock(JSONObject navigation) {
+
+
+        JSONArray resources = null;
+        try {
+            resources = navigation.getJSONArray("list");
+
+        destinationIndexJson = navigation.getInt("destination");
+            originIndexJson  = navigation.getInt("origin");
+
+
+            resourcesJson = new ArrayList<>();
+            for(int i=0; i<resources.length();i++){
+                resourcesJson.add(PoiField.fromJson(resources.getJSONObject(i)));
+            }
+
+            if(!resourcesJson.isEmpty() && originIndexJson>-1 && destinationIndexJson>-1 && resourcesJson.size()>destinationIndexJson && resourcesJson.size()>originIndexJson){
+
+                Position posSource = new Position();
+                posSource.setMapId(resourcesJson.get(originIndexJson).getMapId());
+                posSource.setX(resourcesJson.get(originIndexJson).getX());
+                posSource.setY(resourcesJson.get(originIndexJson).getY());
+
+
+                Position posDestination = new Position();
+                posDestination.setMapId(resourcesJson.get(destinationIndexJson).getMapId());
+                posDestination.setX(resourcesJson.get(destinationIndexJson).getX());
+                posDestination.setY(resourcesJson.get(destinationIndexJson).getY());
+
+
+                blueGPS.updateConfigurationMap(setupConfigurationMap());
+
+
+                NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
+
+                callback.success(); // Thread-safe.
+            }
+        } catch (JSONException e) {
+
+            callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+        }
+
+
+
     }
 
 
