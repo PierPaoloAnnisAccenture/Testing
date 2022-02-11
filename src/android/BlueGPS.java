@@ -29,7 +29,6 @@ import com.mobilecop.bluegps.NavigationExtKt;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
-import $appid.R;
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -400,16 +399,9 @@ public class BlueGPS extends CordovaPlugin {
 
                             setListenerOnMapView();
 
-                            OnBackPressedCallback callback = new OnBackPressedCallback(true /* enabled by default */) {
-                                @Override
-                                public void handleOnBackPressed() {
-                                    // Handle the back button event
-                                    viewGroup.removeView(blueGPS);
-                                    blueGPS = null;
-                                }
-                            };
 
 
+                            callback.success();
                         }else{
                             DisplayMetrics displayMetrics =  new DisplayMetrics();
                             cordova.getActivity().getWindowManager()
@@ -457,6 +449,9 @@ public class BlueGPS extends CordovaPlugin {
                 break;
             case GET_RESOURCES:
                 if(blueGPSinizialized){
+                    if(resourceList==null){
+
+
                     cordova.getActivity().runOnUiThread(new Runnable() {
                         public void run() {
 
@@ -488,7 +483,10 @@ public class BlueGPS extends CordovaPlugin {
                             BlueGPSLib.Companion.getInstance().findResources(false, null, "name", null, null, null, null, null, continuation);
 
                         }
-                    });
+                    });}
+                    else{
+                        callback.sendPluginResult(getResources(PluginResult.Status.OK));
+                    }
                 }else{
                     callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "BlueGPS not initialized"));
                 }
@@ -814,7 +812,7 @@ public class BlueGPS extends CordovaPlugin {
                     cType = new TypeToken<PayloadResponse>() {}.getType();
                     PayloadResponse response = new Gson().fromJson(data.getPayload(),cType);
                     // Log.d(TAG, response.getMessage());
-                    callback.success(); // Thread-safe.
+                 //   callback.success(); // Thread-safe.
 
                     break;
                 case ERROR:
