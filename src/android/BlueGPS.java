@@ -105,6 +105,8 @@ public class BlueGPS extends CordovaPlugin {
 
     boolean blueGPSinizialized = false;
 
+    ViewGroup.LayoutParams mainLayoutBefore;
+
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
@@ -371,14 +373,13 @@ public class BlueGPS extends CordovaPlugin {
                     public void run() {
                         //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
                         if (blueGPS == null) {
-                            View v = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
-                            v.setBackgroundColor(ContextCompat.getColor(cordova.getActivity(), R.color.color_primary));
+                            View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
 
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
 
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                            blueGPS = new BlueGPSMapView(v.getContext());
+                            blueGPS = new BlueGPSMapView(mainView.getContext());
 
                             blueGPS.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), null);
 
@@ -395,12 +396,17 @@ public class BlueGPS extends CordovaPlugin {
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                             blueGPS.setZ(-2);
-
                             viewGroup.addView(blueGPS, params);
 
                             setListenerOnMapView();
 
+                            mainLayoutBefore = mainView.getLayoutParams();
 
+                            final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    displayMetrics.heightPixels-heightPixelsBLUGPS);
+                            paramsMain.gravity = Gravity.TOP | Gravity.CENTER;
+                            mainView.setLayoutParams(paramsMain);
 
                             callback.success();
                         }else{
@@ -431,6 +437,10 @@ public class BlueGPS extends CordovaPlugin {
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
                             viewGroup.removeView(blueGPS);
+                            View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
+                            mainView.setLayoutParams(mainLayoutBefore);
+
+
                             callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                             blueGPS = null;
                         }else{
