@@ -408,7 +408,6 @@ public class BlueGPS extends CordovaPlugin {
                             };
 
 
-                            callbackContext.success(); // Thread-safe.
                         }else{
                             DisplayMetrics displayMetrics =  new DisplayMetrics();
                             cordova.getActivity().getWindowManager()
@@ -809,6 +808,8 @@ public class BlueGPS extends CordovaPlugin {
                     cType = new TypeToken<PayloadResponse>() {}.getType();
                     PayloadResponse response = new Gson().fromJson(data.getPayload(),cType);
                     // Log.d(TAG, response.getMessage());
+                    callback.success(); // Thread-safe.
+
                     break;
                 case ERROR:
                     cType = new TypeToken<PayloadResponse>() {}.getType();
