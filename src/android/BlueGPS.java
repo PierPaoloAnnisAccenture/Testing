@@ -877,7 +877,7 @@ public class BlueGPS extends CordovaPlugin {
 
 
     private void showNavigationBlock(int originIndex, int destinationIndex){
-        if(resourceList!=null){
+        if(resourceList!=null && originIndex>-1 && destinationIndex>-1){
 
             source = resourceList.get(originIndex);
             destination = resourceList.get(destinationIndex);
