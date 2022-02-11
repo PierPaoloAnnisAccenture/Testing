@@ -103,6 +103,8 @@ public class BlueGPS extends CordovaPlugin {
 
     String floorName;
 
+    boolean blueGPSinizialized = false;
+
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
@@ -161,7 +163,7 @@ public class BlueGPS extends CordovaPlugin {
                         boolean enabledNetworkLogs = args.getBoolean(3);
 
                         BlueGPSLib.Companion.getInstance().initSDK(sdkEnvironment, cordova.getActivity(), enabledNetworkLogs);
-
+                        blueGPSinizialized = true;
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
                     } catch (JSONException e) {
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Init Failed with error:" + e.getLocalizedMessage()));
@@ -454,39 +456,43 @@ public class BlueGPS extends CordovaPlugin {
                 status = true;
                 break;
             case GET_RESOURCES:
+                if(blueGPSinizialized){
+                    cordova.getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
 
-                cordova.getActivity().runOnUiThread(new Runnable() {
-                    public void run() {
-
-                        Continuation<Resource<List<GenericResource>>> continuation = new Continuation<Resource<List<GenericResource>>>() {
-                            @NonNull
-                            @Override
-                            public CoroutineContext getContext() {
-                                return (CoroutineContext) Dispatchers.getMain();
-                            }
-
-                            @Override
-                            public void resumeWith(@NonNull Object o) {
-                                Log.d("Coroutine", "Test");
-                                if(o instanceof Resource.Error){
-                                    Log.d("Coroutine", "Errore");
-                                    Log.d("Coroutine", ((Resource.Error<?>) o).getMessage());
-                                    callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, ((Resource.Error<?>) o).getMessage()));
+                            Continuation<Resource<List<GenericResource>>> continuation = new Continuation<Resource<List<GenericResource>>>() {
+                                @NonNull
+                                @Override
+                                public CoroutineContext getContext() {
+                                    return (CoroutineContext) Dispatchers.getMain();
                                 }
-                                else {
-                                    Log.d("Coroutine", "Success");
-                                    resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
-                                    callback.sendPluginResult(getResources(PluginResult.Status.OK));
 
+                                @Override
+                                public void resumeWith(@NonNull Object o) {
+                                    Log.d("Coroutine", "Test");
+                                    if(o instanceof Resource.Error){
+                                        Log.d("Coroutine", "Errore");
+                                        Log.d("Coroutine", ((Resource.Error<?>) o).getMessage());
+                                        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, ((Resource.Error<?>) o).getMessage()));
+                                    }
+                                    else {
+                                        Log.d("Coroutine", "Success");
+                                        resourceList = ((Resource.Success<List<GenericResource>>) o).getData();
+                                        callback.sendPluginResult(getResources(PluginResult.Status.OK));
+
+                                    }
                                 }
-                            }
-                        };
+                            };
 
 
-                        BlueGPSLib.Companion.getInstance().findResources(false, null, "name", null, null, null, null, null, continuation);
+                            BlueGPSLib.Companion.getInstance().findResources(false, null, "name", null, null, null, null, null, continuation);
 
-                    }
-                });
+                        }
+                    });
+                }else{
+                    callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "BlueGPS not initialized"));
+                }
+
                 status = true;
                 break;
             case START_NAVIGATION_BLOCK:
