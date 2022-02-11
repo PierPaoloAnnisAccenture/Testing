@@ -30,6 +30,7 @@ import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
+
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -73,6 +74,8 @@ public class BlueGPS extends CordovaPlugin {
 
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
+    private final String REFRESH_HEIGHT_BLOCK = "refreshHeightBlock";
+
     private final String CLOSE_BLOCK = "closeBlock";
 
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
@@ -420,7 +423,7 @@ public class BlueGPS extends CordovaPlugin {
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                             blueGPS.setLayoutParams(params);
-                            
+
                             View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
                             final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -461,6 +464,42 @@ public class BlueGPS extends CordovaPlugin {
                     }});
 
                 status = true;
+                break;
+            case REFRESH_HEIGHT_BLOCK:
+
+                Integer maxRefreshHeightJS =  args.getInt(0);
+                Integer maxRefreshHeightTopJS =  args.getInt(1);
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                            DisplayMetrics displayMetrics =  new DisplayMetrics();
+                            cordova.getActivity().getWindowManager()
+                                    .getDefaultDisplay()
+                                    .getMetrics(displayMetrics);
+
+                            Integer heightPixelsBLUGPS = (displayMetrics.heightPixels  * (maxRefreshHeightJS-maxRefreshHeightTopJS))/maxRefreshHeightJS;
+
+                            final FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    heightPixelsBLUGPS);
+                            params.gravity = Gravity.BOTTOM | Gravity.CENTER;
+                            blueGPS.setLayoutParams(params);
+
+                            View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
+                            final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
+                                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                                    displayMetrics.heightPixels-heightPixelsBLUGPS);
+                            paramsMain.gravity = Gravity.TOP | Gravity.CENTER;
+                            mainView.setLayoutParams(paramsMain);
+
+                        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+
+
+
+                    }
+                });
+
+                status = true;
+
                 break;
             case REFRESH_BLOCK:
                 status = true;
@@ -514,7 +553,7 @@ public class BlueGPS extends CordovaPlugin {
             case START_NAVIGATION_BLOCK:
 
 
-                JSONObject indexJSON = new JSONObject(args.getString(2));
+                JSONObject indexJSON = new JSONObject(args.getString(0));
 
                 JSONObject  destination = indexJSON.getJSONObject("destination");
                 JSONObject  origin = indexJSON.getJSONObject("origin");
