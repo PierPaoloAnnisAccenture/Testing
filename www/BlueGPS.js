@@ -37,6 +37,10 @@ exports.refreshHeightBlock = function (success, error, heightJSWithKeyboard, hei
     exec(success, error, 'BlueGPS', 'refreshHeightBlock', [heightJSWithKeyboard, heightJSTop]);
 };
 
+exports.currentFloor = function (success, error) {
+    exec(success, error, 'BlueGPS', 'currentFloor');
+};
+
 exports.closeBlock = function (success, error) {
     exec(success, error, 'BlueGPS', 'closeBlock');
 };

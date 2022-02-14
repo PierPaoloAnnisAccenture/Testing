@@ -1,6 +1,7 @@
 package com.outsystems.bluegps;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothAdapter;
 import android.content.*;
 import android.content.pm.PackageManager;
@@ -11,13 +12,16 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentContainerView;
 
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -30,7 +34,6 @@ import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
-
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -64,6 +67,7 @@ import java.util.Map;
 import android.util.Log;
 import kotlin.coroutines.CoroutineContext;
 
+import kotlin.jvm.functions.Function2;
 import kotlinx.coroutines.Dispatchers;
 
 public class BlueGPS extends CordovaPlugin {
@@ -80,10 +84,15 @@ public class BlueGPS extends CordovaPlugin {
 
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
     private final String GET_RESOURCES = "getResources";
+    private final String CURR_FLOOR_BLOCK = "currentFloor";
+
 
     private final String NAVIGATION = "navigationMap";
     private final String STARTADV = "startAdv";
     private final String STOPADV = "stopAdv";
+
+
+
     public static SdkEnvironment sdkEnvironment;
     public static ConfigurationMap configurationMap;
     private BlueGPSAdvertisingService blueGPSAdvertisingService = null;
@@ -109,6 +118,9 @@ public class BlueGPS extends CordovaPlugin {
     boolean blueGPSinizialized = false;
 
     ViewGroup.LayoutParams mainLayoutBefore;
+    TextView floorView;
+
+    FrameLayout secondView;
 
     @Override
     protected void pluginInitialize() {
@@ -151,7 +163,21 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result = null;
         switch (action) {
+            case CURR_FLOOR_BLOCK:
+                cordova.getActivity().runOnUiThread(new Runnable() {
+                                                        public void run() {
+                blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
+                    @Override
+                    public Object invoke(Floor floor, Error error) {
 
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
+
+                        return floor;
+                    }
+                });
+                }});
+                status = true;
+                break;
             case INIT:
                 if(!hasPermisssion()){
                     PermissionHelper.requestPermissions(this,1,permissions);
@@ -373,6 +399,7 @@ public class BlueGPS extends CordovaPlugin {
 
 
                 cordova.getActivity().runOnUiThread(new Runnable() {
+                    @SuppressLint("ResourceAsColor")
                     public void run() {
                         //Toast.makeText(webView.getContext(),"Set proxy fail!",Toast.LENGTH_LONG).show();
                         if (blueGPS == null) {
@@ -380,6 +407,8 @@ public class BlueGPS extends CordovaPlugin {
 
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
+
+                            secondView = new FrameLayout(mainView.getContext());
 
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                             blueGPS = new BlueGPSMapView(mainView.getContext());
@@ -399,7 +428,23 @@ public class BlueGPS extends CordovaPlugin {
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                             blueGPS.setZ(-2);
-                            viewGroup.addView(blueGPS, params);
+
+
+                            secondView.addView(blueGPS);
+                            floorView = new TextView(mainView.getContext());
+                            floorView.setText("");
+                            floorView.setAllCaps(true);
+                            floorView.setTextColor(R.color.black);
+
+                            final ViewGroup.MarginLayoutParams textLayout = new ViewGroup.MarginLayoutParams(
+                                    ViewGroup.MarginLayoutParams.WRAP_CONTENT,
+                                    ViewGroup.MarginLayoutParams.WRAP_CONTENT);
+                            textLayout.setMargins(100,0,0,20);
+                            floorView.setLayoutParams(textLayout);
+
+                            secondView.addView(floorView);
+
+                            viewGroup.addView(secondView, params);
 
                             setListenerOnMapView();
 
@@ -422,7 +467,7 @@ public class BlueGPS extends CordovaPlugin {
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
-                            blueGPS.setLayoutParams(params);
+                            secondView.setLayoutParams(params);
 
                             View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
                             final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
@@ -447,7 +492,7 @@ public class BlueGPS extends CordovaPlugin {
                         if(blueGPS !=  null){
                             ViewGroup viewGroup = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content));
 
-                            viewGroup.removeView(blueGPS);
+                            viewGroup.removeView(secondView);
                             View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
                             mainView.setLayoutParams(mainLayoutBefore);
 
@@ -842,6 +887,7 @@ public class BlueGPS extends CordovaPlugin {
                     cType = new TypeToken<Floor>() {}.getType();
                     Floor floor = new Gson().fromJson(data.getPayload(),cType);
                     floorName = floor.getLabel();
+                    floorView.setText(floor.getLabel());
 
                 case PARK_CONF:
                     cType = new TypeToken<PayloadResponse>() {}.getType();
@@ -874,6 +920,18 @@ public class BlueGPS extends CordovaPlugin {
                     navigationStats.getVehicles().forEach(vehicle -> vehicles[0] +=vehicle.getName()+": "+(Math.round(vehicle.getRemainingTimeSecond()*100)/100.f)+"s\n");
                     cordova.getActivity().runOnUiThread(()->{
                         // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
+
+                        blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
+                            @Override
+                            public Object invoke(Floor floor, Error error) {
+
+                                floorView.setText(floor.getName());
+
+                                callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
+
+                                return floor;
+                            }
+                        });
                     });
                     break;
                 case NAV_INFO:
