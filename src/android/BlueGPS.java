@@ -79,7 +79,7 @@ public class BlueGPS extends CordovaPlugin {
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
     private final String REFRESH_HEIGHT_BLOCK = "refreshHeightBlock";
-
+    private final String GO_TO_FLOOR_BLOCK = "gotoFloor";
     private final String CLOSE_BLOCK = "closeBlock";
 
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
@@ -122,6 +122,8 @@ public class BlueGPS extends CordovaPlugin {
 
     FrameLayout secondView;
 
+    JSONObject navigationJSON;
+
     @Override
     protected void pluginInitialize() {
         super.pluginInitialize();
@@ -163,19 +165,24 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result = null;
         switch (action) {
+            case GO_TO_FLOOR_BLOCK:
+                Floor floor = new Floor();
+                floor.setId(args.getInt(0));
+
+                cordova.getActivity().runOnUiThread(()->{
+
+                    blueGPS.gotoFloor(floor);
+                });
+                status = true;
+
+                break;
+
             case CURR_FLOOR_BLOCK:
                 cordova.getActivity().runOnUiThread(new Runnable() {
-                                                        public void run() {
-                blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
-                    @Override
-                    public Object invoke(Floor floor, Error error) {
-
-                        callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
-
-                        return floor;
+                    public void run() {
+                        setCurrentFloor();
                     }
                 });
-                }});
                 status = true;
                 break;
             case INIT:
@@ -390,7 +397,7 @@ public class BlueGPS extends CordovaPlugin {
             case OPENMAP_BLOCK:
 
                 navigation(args);
-                JSONObject navigationJSON = new JSONObject(args.getString(3));
+                navigationJSON = new JSONObject(args.getString(3));
 
                 Integer maxHeightJS =  args.getInt(4);
                 Integer heightTopJS =  args.getInt(5);
@@ -413,7 +420,7 @@ public class BlueGPS extends CordovaPlugin {
                             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                             blueGPS = new BlueGPSMapView(mainView.getContext());
 
-                            blueGPS.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(), null);
+                            blueGPS.initMap(BlueGPS.sdkEnvironment, setupConfigurationMap(false), null);
 
                             DisplayMetrics displayMetrics =  new DisplayMetrics();
                             cordova.getActivity().getWindowManager()
@@ -439,7 +446,7 @@ public class BlueGPS extends CordovaPlugin {
                             final ViewGroup.MarginLayoutParams textLayout = new ViewGroup.MarginLayoutParams(
                                     ViewGroup.MarginLayoutParams.WRAP_CONTENT,
                                     ViewGroup.MarginLayoutParams.WRAP_CONTENT);
-                            textLayout.setMargins(100,0,0,20);
+                            textLayout.setMargins(130,0,0,20);
                             floorView.setLayoutParams(textLayout);
 
                             secondView.addView(floorView);
@@ -529,7 +536,6 @@ public class BlueGPS extends CordovaPlugin {
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
                             secondView.setLayoutParams(params);
 
-
                             View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
                             final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
@@ -618,7 +624,7 @@ public class BlueGPS extends CordovaPlugin {
 
                 cordova.getActivity().runOnUiThread(new Runnable() {
                     public void run() {
-                        blueGPS.updateConfigurationMap(setupConfigurationMap());
+                        blueGPS.updateConfigurationMap(setupConfigurationMap(true));
 
                         NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
 
@@ -833,36 +839,32 @@ public class BlueGPS extends CordovaPlugin {
 
         Log.d("PoiArg", configurationMap.toString());
 
-
-
-
-
-
-
     }
 
-    private ConfigurationMap setupConfigurationMap() {
+    private ConfigurationMap setupConfigurationMap(boolean isNavigation) {
         ConfigurationMap configurationMap = new ConfigurationMap();
 
         MapStyle mapStyle = new MapStyle();
 
         NavigationStyle navigationStyle = new NavigationStyle();
-        navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
+       // navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
         navigationStyle.setIconDestination("/api/public/resource/icons/commons/end.svg");
-        navigationStyle.setStroke("#dc8731");
 
+        navigationStyle.setStroke("#dc8731");
         IconStyle iconStyle = new IconStyle();
         iconStyle.setName("saipem");
         iconStyle.setAlign("center");
         iconStyle.setVAlign("center");
         iconStyle.setFollowZoom(true);
 
+        iconStyle.setOpacity(0.0);
+        //iconStyle.setRadiusMeter(5.0);
         mapStyle.setNavigation(navigationStyle);
         mapStyle.setIcons(iconStyle);
 
         ShowMap showMap = new ShowMap();
         showMap.setAll(true);
-        showMap.setRoom(false);
+        showMap.setRoom(!isNavigation);
         showMap.setMe(true);
 
         configurationMap.setStyle(mapStyle);
@@ -881,7 +883,11 @@ public class BlueGPS extends CordovaPlugin {
             Type cType;
             switch (typeMapCallback){
                 case INIT_SDK_COMPLETED:
-                   // showNavigation();
+                    cordova.getActivity().runOnUiThread(()->{
+                        setCurrentFloor();
+
+                        showNavigationAPIBlock(navigationJSON);
+                    });
                     break;
 
                 case FLOOR_CHANGE:
@@ -921,18 +927,8 @@ public class BlueGPS extends CordovaPlugin {
                     navigationStats.getVehicles().forEach(vehicle -> vehicles[0] +=vehicle.getName()+": "+(Math.round(vehicle.getRemainingTimeSecond()*100)/100.f)+"s\n");
                     cordova.getActivity().runOnUiThread(()->{
                         // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
+                        setCurrentFloor();
 
-                        blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
-                            @Override
-                            public Object invoke(Floor floor, Error error) {
-
-                                floorView.setText(floor.getName());
-
-                                callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
-
-                                return floor;
-                            }
-                        });
                     });
                     break;
                 case NAV_INFO:
@@ -1020,7 +1016,7 @@ public class BlueGPS extends CordovaPlugin {
         try {
             resources = navigation.getJSONArray("list");
 
-        destinationIndexJson = navigation.getInt("destination");
+            destinationIndexJson = navigation.getInt("destination");
             originIndexJson  = navigation.getInt("origin");
 
 
@@ -1043,7 +1039,7 @@ public class BlueGPS extends CordovaPlugin {
                 posDestination.setY(resourcesJson.get(destinationIndexJson).getY());
 
 
-                blueGPS.updateConfigurationMap(setupConfigurationMap());
+                blueGPS.updateConfigurationMap(setupConfigurationMap(true));
 
 
                 NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
@@ -1083,7 +1079,7 @@ public class BlueGPS extends CordovaPlugin {
 
                     source = resourceList.get(originIndex);
                     destination = resourceList.get(destinationIndex);
-                    blueGPS.updateConfigurationMap(setupConfigurationMap());
+                    blueGPS.updateConfigurationMap(setupConfigurationMap(true));
 
                     NavigationExtKt.moveTo(blueGPS, source.getPosition(), destination.getPosition());
 
@@ -1093,4 +1089,23 @@ public class BlueGPS extends CordovaPlugin {
                 }
 
     }
+
+
+
+
+    private void setCurrentFloor(){
+        blueGPS.getCurrentFloor(new Function2<Floor, Error, Object>() {
+            @Override
+            public Object invoke(Floor floor, Error error) {
+                if(floor!=null){
+                    floorView.setText(floor.getName());
+
+                    callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
+                }
+                return floor;
+            }
+        });
+
+    }
+
 }

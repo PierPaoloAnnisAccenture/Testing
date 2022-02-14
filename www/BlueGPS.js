@@ -41,6 +41,11 @@ exports.currentFloor = function (success, error) {
     exec(success, error, 'BlueGPS', 'currentFloor');
 };
 
+
+exports.gotoFloor = function (success, error, floorId) {
+    exec(success, error, 'BlueGPS', 'gotoFloor', [floorId]);
+};
+
 exports.closeBlock = function (success, error) {
     exec(success, error, 'BlueGPS', 'closeBlock');
 };
