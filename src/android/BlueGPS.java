@@ -34,6 +34,7 @@ import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
+
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
@@ -72,19 +73,20 @@ import kotlinx.coroutines.Dispatchers;
 
 public class BlueGPS extends CordovaPlugin {
 
-    private final String INIT = "initializeSDK";
     private final String LOGIN = "login";
     private final String OPENMAP = "openMap";
 
+    private final String INIT = "initializeSDK";
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
     private final String REFRESH_HEIGHT_BLOCK = "refreshHeightBlock";
     private final String GO_TO_FLOOR_BLOCK = "gotoFloor";
     private final String CLOSE_BLOCK = "closeBlock";
-
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
-    private final String GET_RESOURCES = "getResources";
     private final String CURR_FLOOR_BLOCK = "currentFloor";
+
+
+    private final String GET_RESOURCES = "getResources";
 
 
     private final String NAVIGATION = "navigationMap";
@@ -605,10 +607,8 @@ public class BlueGPS extends CordovaPlugin {
             case START_NAVIGATION_BLOCK:
 
 
-                JSONObject indexJSON = new JSONObject(args.getString(0));
-
-                JSONObject  destination = indexJSON.getJSONObject("destination");
-                JSONObject  origin = indexJSON.getJSONObject("origin");
+                JSONObject  origin =  new JSONObject(args.getString(0));
+                JSONObject  destination =  new JSONObject(args.getString(1));
 
                 Position posSource = new Position();
                 posSource.setMapId(origin.getInt("mapId"));
@@ -847,7 +847,7 @@ public class BlueGPS extends CordovaPlugin {
         MapStyle mapStyle = new MapStyle();
 
         NavigationStyle navigationStyle = new NavigationStyle();
-       // navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
+        navigationStyle.setIconSource("/api/public/resource/icons/commons/start.svg");
         navigationStyle.setIconDestination("/api/public/resource/icons/commons/end.svg");
 
         navigationStyle.setStroke("#dc8731");

@@ -29,8 +29,8 @@ exports.getResources = function (success, error) {
     exec(success, error, 'BlueGPS', 'getResources');
 };
 
-exports.startNavigationBlock = function (success, error,resources) {
-    exec(success, error, 'BlueGPS', 'startNavigationBlock', [resources]);
+exports.startNavigationBlock = function (success, error, origin, destination) {
+    exec(success, error, 'BlueGPS', 'startNavigationBlock', [origin, destination]);
 };
 
 exports.refreshHeightBlock = function (success, error, heightJSWithKeyboard, heightJSTop) {
