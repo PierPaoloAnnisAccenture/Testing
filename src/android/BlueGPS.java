@@ -527,7 +527,8 @@ public class BlueGPS extends CordovaPlugin {
                                     FrameLayout.LayoutParams.WRAP_CONTENT,
                                     heightPixelsBLUGPS);
                             params.gravity = Gravity.BOTTOM | Gravity.CENTER;
-                            blueGPS.setLayoutParams(params);
+                            secondView.setLayoutParams(params);
+
 
                             View mainView = ((ViewGroup) cordova.getActivity().findViewById(android.R.id.content)).getChildAt(0);
                             final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
