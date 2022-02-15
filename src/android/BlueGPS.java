@@ -167,12 +167,17 @@ public class BlueGPS extends CordovaPlugin {
                 Integer maxHeightJS =  args.getInt(3);
                 Integer heightTopJS =  args.getInt(4);
 
-                try{
+                if(args.length()>5
+                        && args.getString(5)!=null
+                        && args.getString(6)!=null
+                        && !args.getString(5).equals("null")
+                        && !args.getString(6).equals("null")
+                ){
                     originJSON =  new JSONObject(args.getString(5));
                     destinationJSON =  new JSONObject(args.getString(6));
-                }catch(JSONException jsonE){
-
                 }
+
+
 
 
 
@@ -234,7 +239,6 @@ public class BlueGPS extends CordovaPlugin {
                             paramsMain.gravity = Gravity.TOP | Gravity.CENTER;
                             mainView.setLayoutParams(paramsMain);
 
-                            callback.success();
                         }else{
                             DisplayMetrics displayMetrics =  new DisplayMetrics();
                             cordova.getActivity().getWindowManager()
@@ -592,7 +596,11 @@ public class BlueGPS extends CordovaPlugin {
                 case INIT_SDK_COMPLETED:
                     cordova.getActivity().runOnUiThread(()->{
                         setCurrentFloor();
-                        showNavigationMapJSON();
+                        if(originJSON!=null && destinationJSON!=null)
+                            showNavigationMapJSON();
+                        else
+                            callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+
                     });
                     break;
 
@@ -650,13 +658,16 @@ public class BlueGPS extends CordovaPlugin {
 
                     break;
                 case ERROR:
+
                     cType = new TypeToken<PayloadResponse>() {}.getType();
                     PayloadResponse errorResp = new Gson().fromJson(data.getPayload(),cType);
                     //Log.e(TAG , TAG + errorResp.getMessage());
-                    Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
+                   /* Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
                             errorResp.getMessage(),
-                            Snackbar.LENGTH_LONG).show();
-                    break;
+                            Snackbar.LENGTH_LONG).show();*/
+                    callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, errorResp.getMessage()));
+
+                break;
 
             }
         });
@@ -700,7 +711,6 @@ public class BlueGPS extends CordovaPlugin {
                 if(floor!=null){
                     floorView.setText(floor.getName());
                     floorName = floor.getName();
-                    callback.sendPluginResult(new PluginResult(PluginResult.Status.OK, floor.getName()));
                 }
                 return floor;
             }
@@ -710,23 +720,27 @@ public class BlueGPS extends CordovaPlugin {
 
 
     private void showNavigationMapJSON(){
-        try {
-            Position posSource = new Position();
-            posSource.setMapId(originJSON.getInt("mapId"));
-            posSource.setX(originJSON.getDouble("x"));
-            posSource.setY(originJSON.getDouble("y"));
+        if(originJSON!= null && destinationJSON != null){
+            try {
+                Position posSource = new Position();
+                posSource.setMapId(originJSON.getInt("mapId"));
+                posSource.setX(originJSON.getDouble("x"));
+                posSource.setY(originJSON.getDouble("y"));
 
-            Position posDestination = new Position();
-            posDestination.setMapId(destinationJSON.getInt("mapId"));
-            posDestination.setX(destinationJSON.getDouble("x"));
-            posDestination.setY(destinationJSON.getDouble("y"));
+                Position posDestination = new Position();
+                posDestination.setMapId(destinationJSON.getInt("mapId"));
+                posDestination.setX(destinationJSON.getDouble("x"));
+                posDestination.setY(destinationJSON.getDouble("y"));
 
-            blueGPS.updateConfigurationMap(setupConfigurationMap(true));
-            NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+                blueGPS.updateConfigurationMap(setupConfigurationMap(true));
+                NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
+                originJSON = null;
+                destinationJSON = null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
+
     }
 
 }
