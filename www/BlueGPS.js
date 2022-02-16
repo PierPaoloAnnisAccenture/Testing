@@ -4,9 +4,8 @@ exports.init = function (success, error,sdkKey,sdkSecret,sdkEndpoint,enableNetwo
     exec(success, error, 'BlueGPS', 'initializeSDK', [sdkKey,sdkSecret,sdkEndpoint,enableNetwork]);
 };
 
-
-exports.openMapBlock = function (success, error,tagID,style,showMap, heightTopJS, origin, destination) {
-    exec(success, error, 'BlueGPS', 'openMapBlock', [tagID,style,showMap, screen.height, heightTopJS, origin, destination]);
+exports.openMapBlock = function (success, error,configurationMap, heightJSTop, origin, destination) {
+    exec(success, error, 'BlueGPS', 'openMapBlock', [configurationMap,screen.height, heightJSTop, origin, destination]);
 };
 
 exports.refreshBlock = function (success, error) {
@@ -31,5 +30,9 @@ exports.gotoFloor = function (success, error, floorId) {
 
 exports.closeBlock = function (success, error) {
     exec(success, error, 'BlueGPS', 'closeBlock');
+};
+//TODO to remove
+exports.openMap = function (success, error,tagID,style,showMap) {
+    exec(success, error, 'BlueGPS', 'openMap', [tagID,style,showMap]);
 };
 
