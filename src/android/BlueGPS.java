@@ -2,8 +2,6 @@ package com.outsystems.bluegps;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothAdapter;
-
 import android.content.*;
 import android.content.pm.PackageManager;
 
@@ -61,6 +59,8 @@ public class BlueGPS extends CordovaPlugin {
 
 
     private final String INIT = "initializeSDK";
+    private final String INIT_TOKEN = "initializeToken";
+
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
     private final String REFRESH_HEIGHT_BLOCK = "refreshHeightBlock";
@@ -128,7 +128,31 @@ public class BlueGPS extends CordovaPlugin {
         boolean status = false;
         PluginResult result;
         switch (action) {
+            case INIT_TOKEN:
+                if (!hasPermisssion()) {
+                    PermissionHelper.requestPermissions(this, 1, permissions);
+                }
+                cordova.getThreadPool().execute(() -> {
 
+                    try {
+                        sdkEnvironment = new SdkEnvironment();
+                        sdkEnvironment.setSdkToken(args.getString(0));
+                        sdkEnvironment.setSdkEndpoint(args.getString(1));
+                        sdkEnvironment.setAppId(appId);
+                        sdkEnvironment.setLoggedUser(null);
+                        boolean enabledNetworkLogs = args.getBoolean(2);
+
+                        BlueGPSLib.Companion.getInstance().initSDK(sdkEnvironment, cordova.getActivity(), enabledNetworkLogs);
+                        blueGPSinizialized = true;
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+                    } catch (JSONException e) {
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Init Failed with error:" + e.getLocalizedMessage()));
+                    }
+                });
+
+                status = true;
+
+                break;
             case INIT:
                 if (!hasPermisssion()) {
                     PermissionHelper.requestPermissions(this, 1, permissions);
@@ -432,7 +456,7 @@ public class BlueGPS extends CordovaPlugin {
         try {
 
             if (configurationJSON.has("tagId")) {
-               configurationMap.setTagid(configurationJSON.getString("tagId"));
+                configurationMap.setTagid(configurationJSON.getString("tagId"));
             }
 
             if (configurationJSON.has("show")) {

@@ -1,7 +1,11 @@
 var exec = require('cordova/exec');
 
-exports.init = function (success, error,sdkKey,sdkSecret,sdkEndpoint,enableNetwork) {
+exports.initSecret = function (success, error,sdkKey,sdkSecret,sdkEndpoint,enableNetwork) {
     exec(success, error, 'BlueGPS', 'initializeSDK', [sdkKey,sdkSecret,sdkEndpoint,enableNetwork]);
+};
+
+exports.initToken = function (success, error,sdkToken,sdkEndpoint,enableNetwork) {
+    exec(success, error, 'BlueGPS', 'initializeToken', [sdkToken,sdkEndpoint,enableNetwork]);
 };
 
 exports.openMapBlock = function (success, error,configurationMap, heightJSTop, origin, destination) {
@@ -33,6 +37,7 @@ exports.closeBlock = function (success, error) {
 };
 //TODO to remove
 exports.openMap = function (success, error,tagID,style,showMap) {
+    console.log("Open Map" );
     exec(success, error, 'BlueGPS', 'openMap', [tagID,style,showMap]);
 };
 
