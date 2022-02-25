@@ -27,6 +27,18 @@ module.exports = function (context) {
         });
     }
 
+    if(manifestContent.indexOf("maxSdkVersion") > -1){
+        console.log("Found maxSdKVersion BlueGPS");
+        console.log("indexOfMax " + manifestContent.indexOf("android:maxSdkVersion=\"30"));
+
+        manifestContent = manifestContent.replace("android:maxSdkVersion=\"30","");
+        manifestContent = manifestContent.replace("android:maxSdkVersion=\"30","");
+        
+        console.log("indexOfMax2 " + manifestContent.indexOf("android:maxSdkVersion=\"30"));
+
+    }
+    console.log(manifestContent.toString());
+
     fs.writeFileSync(constants.manifestPath, manifestContent);
     
     console.log("Finished changing Manifest!");
