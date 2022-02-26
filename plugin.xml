@@ -32,8 +32,7 @@
 
         <hook type="after_plugin_install" src="hooks/Outsystems/android/replaceBundleId.js" />
         <hook type="after_plugin_install" src="hooks/Outsystems/android/changeManifest.js" />
-        <hook type="after_compile" src="hooks/Outsystems/android/changeManifest.js" />
-        <hook type="after_build" src="hooks/Outsystems/android/changeManifest.js" />
+  
 
         <hook type="before_compile" src="hooks/Outsystems/android/addStringValues.js" />
         <hook type="after_plugin_install" src="hooks/Outsystems/android/cutActivityToMainPackage.js" />
