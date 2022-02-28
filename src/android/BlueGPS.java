@@ -28,15 +28,14 @@ import $appid.NavigationActivity;
 import $appid.PoiField;
 import $appid.R;
 
+
 import com.synapseslab.bluegps_sdk.component.map.BlueGPSMapView;
 import com.synapseslab.bluegps_sdk.core.BlueGPSLib;
 import com.synapseslab.bluegps_sdk.data.model.advertising.AdvertisingStatus;
 import com.synapseslab.bluegps_sdk.data.model.environment.SdkEnvironment;
 import com.synapseslab.bluegps_sdk.data.model.map.*;
-import com.synapseslab.bluegps_sdk.data.model.response.AuthResponse;
 import com.synapseslab.bluegps_sdk.data.model.stats.NavInfo;
 import com.synapseslab.bluegps_sdk.service.BlueGPSAdvertisingService;
-import com.synapseslab.bluegps_sdk.utils.Resource;
 
 
 import org.apache.cordova.CallbackContext;
@@ -55,20 +54,17 @@ import java.util.Map;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 
-import kotlin.Unit;
-import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
-import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.functions.Function2;
-import kotlinx.coroutines.Dispatchers;
 
 public class BlueGPS extends CordovaPlugin {
 
 
     private final String INIT = "initializeSDK";
     private final String INIT_TOKEN = "initializeToken";
+
+    private final String REFRESH_TOKEN = "refreshToken";
+
 
     private final String OPENMAP_BLOCK = "openMapBlock";
     private final String REFRESH_BLOCK = "refreshBlock";
@@ -78,6 +74,8 @@ public class BlueGPS extends CordovaPlugin {
     private final String START_NAVIGATION_BLOCK = "startNavigationBlock";
     private final String CURR_FLOOR_BLOCK = "currentFloor";
 
+
+    private static final String HTTP_STATUS_FORBIDDEN = "403";
 
     public static SdkEnvironment sdkEnvironment;
     public static ConfigurationMap configurationMap;
@@ -97,7 +95,7 @@ public class BlueGPS extends CordovaPlugin {
     JSONObject destinationJSON;
     String floorName;
 
-    boolean enabledNetworkLogs = true;
+    AuthParameters auth;
 
     @Override
     protected void pluginInitialize() {
@@ -140,6 +138,7 @@ public class BlueGPS extends CordovaPlugin {
         PluginResult result;
         switch (action) {
             case INIT_TOKEN:
+
                 if (!hasPermisssion()) {
                     PermissionHelper.requestPermissions(this, 1, permissions);
                 }
@@ -149,30 +148,27 @@ public class BlueGPS extends CordovaPlugin {
                         sdkEnvironment = new SdkEnvironment();
                         sdkEnvironment.setSdkToken(args.getString(0));
                         sdkEnvironment.setSdkEndpoint(args.getString(1));
-                        sdkEnvironment.setAppId(appId);
-                        sdkEnvironment.setLoggedUser(null);
-                        enabledNetworkLogs = args.getBoolean(2);
+                        auth = new AuthParameters();
+                        auth.setToken(args.getString(0));
 
+                        blueGPSinizialized = true;
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
+                    } catch (JSONException e) {
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Init Failed with error:" + e.getLocalizedMessage()));
+                    }
+                });
 
-/*
-                        BlueGPSLib.Companion.getInstance().registerSDK(sdkEnvironment, new Continuation<Resource<AuthResponse>>() {
-                            @NonNull
-                            @Override
-                            public CoroutineContext getContext() {
-                               // return EmptyCoroutineContext.INSTANCE;
-                                return (CoroutineContext) Dispatchers.getMain();
-                            }
+                status = true;
 
-                            @Override
-                            public void resumeWith(@NonNull Object o) {
-                                callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
-                            }
+                break;
+            case REFRESH_TOKEN:
 
-                        });
-*/
-//
-                       BlueGPSLib.Companion.getInstance().initSDK(sdkEnvironment, cordova.getActivity(), enabledNetworkLogs);
-
+                cordova.getThreadPool().execute(() -> {
+                    try {
+                        sdkEnvironment = new SdkEnvironment();
+                        sdkEnvironment.setSdkToken(args.getString(0));
+                        auth = new AuthParameters();
+                        auth.setToken(args.getString(0));
 
                         blueGPSinizialized = true;
                         callback.sendPluginResult(new PluginResult(PluginResult.Status.OK));
@@ -253,8 +249,6 @@ public class BlueGPS extends CordovaPlugin {
                                     blueGPS = new BlueGPSMapView(mainView.getContext());
 
                                     blueGPS.initMap(BlueGPS.sdkEnvironment, configurationMap, null);
-
-
                                     setListenerOnMapView();
                                     DisplayMetrics displayMetrics = new DisplayMetrics();
                                     cordova.getActivity().getWindowManager()
@@ -286,8 +280,6 @@ public class BlueGPS extends CordovaPlugin {
                                     secondView.addView(floorView);
 
                                     viewGroup.addView(secondView, params);
-
-                                  //  setListenerOnMapView();
 
 
                                     final FrameLayout.LayoutParams paramsMain = new FrameLayout.LayoutParams(
@@ -628,6 +620,10 @@ public class BlueGPS extends CordovaPlugin {
             }
 
 
+            if (auth != null) {
+                configurationMap.setAuth(auth);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -812,10 +808,10 @@ public class BlueGPS extends CordovaPlugin {
      */
     private void setListenerOnMapView() {
 
-            blueGPS.setBlueGPSMapListener((data, typeMapCallback) -> {
+        blueGPS.setBlueGPSMapListener((data, typeMapCallback) -> {
 
             try {
-                    Type cType;
+                Type cType;
 
                 switch (typeMapCallback) {
                     case INIT_SDK_COMPLETED:
@@ -861,11 +857,11 @@ public class BlueGPS extends CordovaPlugin {
                     final String[] vehicles = {""};
                     navigationStats.getVehicles().forEach(vehicle -> vehicles[0] +=vehicle.getName()+": "+(Math.round(vehicle.getRemainingTimeSecond()*100)/100.f)+"s\n");*/
 
-                           cordova.getActivity().runOnUiThread(() -> {
-                               // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
-                               setCurrentFloor();
+                        cordova.getActivity().runOnUiThread(() -> {
+                            // binding.tvRemaining.setText("Remaining distance: "+(Math.round(navigationStats.getRemainingDistance()*100)/100.f)+"m \n"+ vehicles[0]);
+                            setCurrentFloor();
 
-                          });
+                        });
                         break;
                     case NAV_INFO:
                         cType = new TypeToken<NavInfo>() {
@@ -887,13 +883,13 @@ public class BlueGPS extends CordovaPlugin {
                         cType = new TypeToken<PayloadResponse>() {
                         }.getType();
                         PayloadResponse errorResp = new Gson().fromJson(data.getPayload(), cType);
-                        //Log.e(TAG , TAG + errorResp.getMessage());
-                   /* Snackbar.make(cordova.getActivity().findViewById(android.R.id.content),
-                            errorResp.getMessage(),
-                            Snackbar.LENGTH_LONG).show();*/
-                  //      closeMAPBlock();
-                        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, errorResp.getMessage()));
 
+                        callback.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, errorResp.getMessage()));
+                        if (errorResp.getMessage().indexOf(HTTP_STATUS_FORBIDDEN) > -1) {
+                            cordova.getActivity().runOnUiThread(() -> {
+                                closeMAPBlock();
+                            });
+                        }
                         break;
 
                 }
@@ -990,7 +986,7 @@ public class BlueGPS extends CordovaPlugin {
         blueGPS = null;
     }
 
-    private void onInitSDK(){
+    private void onInitSDK() {
         cordova.getActivity().runOnUiThread(() -> {
             try {
                 setCurrentFloor();

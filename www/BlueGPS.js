@@ -4,8 +4,8 @@ exports.initSecret = function (success, error,sdkKey,sdkSecret,sdkEndpoint,enabl
     exec(success, error, 'BlueGPS', 'initializeSDK', [sdkKey,sdkSecret,sdkEndpoint,enableNetwork]);
 };
 
-exports.initToken = function (success, error,sdkToken,sdkEndpoint,enableNetwork) {
-    exec(success, error, 'BlueGPS', 'initializeToken', [sdkToken,sdkEndpoint,enableNetwork]);
+exports.initToken = function (success, error,sdkToken,sdkEndpoint) {
+    exec(success, error, 'BlueGPS', 'initializeToken', [sdkToken,sdkEndpoint]);
 };
 
 exports.openMapBlock = function (success, error,configurationMap, heightJSTop, origin, destination) {
@@ -14,6 +14,10 @@ exports.openMapBlock = function (success, error,configurationMap, heightJSTop, o
 
 exports.refreshBlock = function (success, error) {
     exec(success, error, 'BlueGPS', 'refreshBlock');
+};
+
+exports.refreshToken = function (success, error,sdkToken) {
+    exec(success, error, 'BlueGPS', 'refreshToken', [sdkToken]);
 };
 
 exports.startNavigationBlock = function (success, error, origin, destination) {

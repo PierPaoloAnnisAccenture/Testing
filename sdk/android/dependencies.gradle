@@ -1,5 +1,5 @@
 dependencies {
-    implementation files("../app/src/main/libs/bluegps_sdk-release-fix-1.0.3.aar")
+    implementation files("../app/src/main/libs/bluegps_sdk-release-1.0.3.aar")
     implementation files("../app/src/main/libs/BlueGps-debug.aar")
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
