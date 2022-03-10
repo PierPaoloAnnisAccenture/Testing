@@ -27,7 +27,7 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         print("received error: \(error.localizedDescription)")
     }
     
-    private var mapView: DynamicMapView?
+    var mapView: DynamicMapView?
     @IBOutlet var leftBarButtonItem: UIBarButtonItem?
     @IBOutlet var rightBarButtonItem: UIBarButtonItem?
     @IBOutlet var navigationBar: UINavigationItem?
@@ -43,6 +43,9 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
 
     private var configuration: ConfigurationModel!
     private var dataSource = [FloorModel]()
+    
+    var webConsole: CDVCommandDelegate?
+    var callbackId: String?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,6 +97,9 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         self.view.addSubview(tableView!)
         
         mapView?.getFloor({ [unowned self] results, error in
+            if error != nil {
+                webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView Error: Get Floor sent an exception: \(error?.localizedDescription ?? "")"), callbackId: self.callbackId ?? "")
+            }
             if let results = results {
                 dataSource = results
                 tableView?.reloadData()
