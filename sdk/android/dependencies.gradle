@@ -11,7 +11,14 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
 }
 android{
-
+  packagingOptions {
+        exclude 'AndroidManifest.xml'
+        exclude 'res/drawable-hdpi-v4/ic_launcher_foreground.png'
+        exclude 'res/drawable-mdpi-v4/ic_launcher_foreground.png'
+        exclude 'res/drawable-xhdpi-v4/ic_launcher_foreground.png'
+        exclude 'res/drawable-xxhdpi-v4/ic_launcher_foreground.png'
+        exclude 'res/drawable-xxxhdpi-v4/ic_launcher_foreground.png'
+    }
     buildFeatures {
         viewBinding true
     }
