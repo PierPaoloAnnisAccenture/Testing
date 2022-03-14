@@ -22,7 +22,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.mobilecop.bluegps.NavigationExtKt;
 import $appid.MapActivity;
 import $appid.NavigationActivity;
 import $appid.PoiField;
@@ -964,7 +963,8 @@ public class BlueGPS extends CordovaPlugin {
                 posDestination.setY(destinationJSON.getDouble("y"));
 
                 //blueGPS.updateConfigurationMap(setupConfigurationMap(true));
-                NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
+               // NavigationExtKt.moveTo(blueGPS, posSource, posDestination);
+                BlueGPSMapView.goto(blueGPS, posSource, posDestination, false, 4, (Object)null);
 
                 originJSON = null;
                 destinationJSON = null;
