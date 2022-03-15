@@ -6,35 +6,35 @@
 	<dict>
 		<key>Headers/SynapsesSDK-Swift.h</key>
 		<data>
-		ft0Tx5ucVunK0vWf2A3hcEGhcek=
+		ilouCgz7vV9i7X18tMpAd825FqI=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		AQIGl9L+b3T89nvnHkulgkjuzLA=
+		rcSZ6dSNI4eAWUlZpGvxziVhHGI=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		NLuMYdJeEZHMVUUNx/87Nitmtjg=
+		UOUJvXBfIBo2h7wAKcG3HgSyDQs=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		hB4odk1Ubmnj535v0poFtuI7cyg=
+		QoISUywIu8VYfmpxLEXO+plo2W4=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		2rx/+cFx4pz3BoxhR2uNWXeUBek=
+		FXl4NeIAfR3j2FUuZ9IH21oa5kk=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
 		<data>
-		NLuMYdJeEZHMVUUNx/87Nitmtjg=
+		UOUJvXBfIBo2h7wAKcG3HgSyDQs=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
 		<data>
-		hB4odk1Ubmnj535v0poFtuI7cyg=
+		QoISUywIu8VYfmpxLEXO+plo2W4=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		2rx/+cFx4pz3BoxhR2uNWXeUBek=
+		FXl4NeIAfR3j2FUuZ9IH21oa5kk=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Toolbox.storyboardc/1kr-lC-kFv-view-UOz-BR-GbU.nib</key>
 		<data>
-		eM+YES8xE8JytrZk2EQyn1As0Rw=
+		WNceQIkBDvt0CW1v1FAE7DqW3mE=
 		</data>
 		<key>Toolbox.storyboardc/Info.plist</key>
 		<data>
@@ -50,7 +50,7 @@
 		</data>
 		<key>Toolbox.storyboardc/UINavigationController-iWt-B3-vni.nib</key>
 		<data>
-		Y+YjqM+nhkyrKSzuCG2rNw8zOPM=
+		IE4ZeZw6ZIOM0SIY/WEmCfxVtMw=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -59,49 +59,49 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ax+xb+Ukwp37WuzrJexkZ+0Y1B0uB1YkfinT8ZLzc5w=
+			yLWXZj+R/QdA2Xk9TtUdqJLo8ye7tyzdT3FLyD553Ho=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eh+UmaWz003pP54igyqNZDXeBF93JbJryJUTRrg+OQ4=
+			VoBWfEJ7DUHUUO0Biyg0/YhhF3p9Fv8KEbXxuHmAP54=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			8PFv9Ew2Bh+s7YyugZq20QGj4TT182MOjNGJJznl5XM=
+			TBtcISCk8EIqBwG517XetUCDbNJk/01AM55HoySzAj4=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			digEmnkAA2AqDJZEgU+xGR9RmsF5x534pGlwYPruI/I=
+			wP5hAshevlV4YafvbTbAbLX4JU/7AhtkMAw2jPpRvi4=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			eh+UmaWz003pP54igyqNZDXeBF93JbJryJUTRrg+OQ4=
+			VoBWfEJ7DUHUUO0Biyg0/YhhF3p9Fv8KEbXxuHmAP54=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			8PFv9Ew2Bh+s7YyugZq20QGj4TT182MOjNGJJznl5XM=
+			TBtcISCk8EIqBwG517XetUCDbNJk/01AM55HoySzAj4=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			digEmnkAA2AqDJZEgU+xGR9RmsF5x534pGlwYPruI/I=
+			wP5hAshevlV4YafvbTbAbLX4JU/7AhtkMAw2jPpRvi4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -115,7 +115,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			MEsFScOQOao8yMvT96SjazhzPmiUvFMT1IwL6hK021k=
+			5CMiU/ppAlOnDCiwQygl6Y1Q15Il85dp2F3ii+v+G+U=
 			</data>
 		</dict>
 		<key>Toolbox.storyboardc/Info.plist</key>
@@ -129,7 +129,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			hVTE8uRgLC5OhtEvTWSsUe4K1jXEpl4lB3sJ22U45a0=
+			2+SpjYNF8BR/zDC9PK+rKtob3RmZs4yPIyW84BY4vIU=
 			</data>
 		</dict>
 	</dict>

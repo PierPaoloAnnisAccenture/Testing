@@ -6,59 +6,59 @@
 	<dict>
 		<key>Headers/SynapsesSDK-Swift.h</key>
 		<data>
-		NiqFelU03mmtnNdLbyi0rtNz/lU=
+		kvoTEy+lhAqkrhde/Z8gFNx1Qa0=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		EqlPh3RvlfAoBPuuMeIPzXVQbZw=
+		Dy+f77I6yIkZRUjG+rY85d1B5kU=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		cpqYssWnCI2ZhUKggxgpajwqQU8=
+		Q0l7pelCEUgNh6a3OdgkjlUzksc=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		wohE6HJ5HOKLTvc40IyRV/3rurc=
+		ZUAYwq5t/om6NOeRs60gMXxAbJs=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		YZbvbI9CHCb2NOxbvLnfHfW9aPk=
+		v+2uFX5MlgE2W98zZbPpSm3Zadg=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
 		<data>
-		cpqYssWnCI2ZhUKggxgpajwqQU8=
+		Q0l7pelCEUgNh6a3OdgkjlUzksc=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
 		<data>
-		wohE6HJ5HOKLTvc40IyRV/3rurc=
+		ZUAYwq5t/om6NOeRs60gMXxAbJs=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
 		<data>
-		YZbvbI9CHCb2NOxbvLnfHfW9aPk=
+		v+2uFX5MlgE2W98zZbPpSm3Zadg=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		+jHz1PfShTdn/HZz9D5K9uXPGS8=
+		q2wbzf8oYszGx/lWVnyr44IuvBU=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<data>
-		Mb9p9MLnycUr22Nfrr0+KFkwLCE=
+		LIAgpjqR4TSQZgVwpBLsZg7a9uQ=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		7UNFjfZ63w8lNoDGXXOYaP3My5o=
+		DpfZXhFHOuk6+Wy8H1XGfg6wMzM=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftdoc</key>
 		<data>
-		+jHz1PfShTdn/HZz9D5K9uXPGS8=
+		q2wbzf8oYszGx/lWVnyr44IuvBU=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftinterface</key>
 		<data>
-		Mb9p9MLnycUr22Nfrr0+KFkwLCE=
+		LIAgpjqR4TSQZgVwpBLsZg7a9uQ=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		7UNFjfZ63w8lNoDGXXOYaP3My5o=
+		DpfZXhFHOuk6+Wy8H1XGfg6wMzM=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -66,7 +66,7 @@
 		</data>
 		<key>Toolbox.storyboardc/1kr-lC-kFv-view-UOz-BR-GbU.nib</key>
 		<data>
-		pLowOni+OXhCZrlImiXXpBFdHXU=
+		WNceQIkBDvt0CW1v1FAE7DqW3mE=
 		</data>
 		<key>Toolbox.storyboardc/Info.plist</key>
 		<data>
@@ -74,7 +74,7 @@
 		</data>
 		<key>Toolbox.storyboardc/UINavigationController-iWt-B3-vni.nib</key>
 		<data>
-		uSVtyqTZ5PWMwD2/dIpgj6kcAU4=
+		IE4ZeZw6ZIOM0SIY/WEmCfxVtMw=
 		</data>
 	</dict>
 	<key>files2</key>
@@ -83,91 +83,91 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			viiq+B5J3zR6ChnRW03dsHycRTotupV9wnX3YbMfycE=
+			BMCFHRbgKOz0xhzEtDbOePEcyWTqBfh5DuZ6qu0JRZY=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			crsb7kQakJXasGIMLNst4t8tSboGxEK5/+v6F8PCZgc=
+			/qW+HQ0TTDNkriWJ1HSw3x6HSPgMVnLqPG7GzXiR3dQ=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5PdTWS6P34kH+OShy0oPjhHkns9WUQ0Dw+6dN5NKzJk=
+			stzLgIde4unpzVbj0gr/pHwkR/l/CIdYKK4ENLvrA20=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vzWgtuMaFr/z4Hu+cpdee7rilIwC0gedfVQZ6kGX9Ec=
+			+pLh1Hl4c72kRKr6Inc3tamvLgmOTRrCfffJoT+MaZw=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			crsb7kQakJXasGIMLNst4t8tSboGxEK5/+v6F8PCZgc=
+			/qW+HQ0TTDNkriWJ1HSw3x6HSPgMVnLqPG7GzXiR3dQ=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			5PdTWS6P34kH+OShy0oPjhHkns9WUQ0Dw+6dN5NKzJk=
+			stzLgIde4unpzVbj0gr/pHwkR/l/CIdYKK4ENLvrA20=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			vzWgtuMaFr/z4Hu+cpdee7rilIwC0gedfVQZ6kGX9Ec=
+			+pLh1Hl4c72kRKr6Inc3tamvLgmOTRrCfffJoT+MaZw=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jm/nukTKW75SqZq/9/f1UH5McWJj0Iw6P2gjggHyiHM=
+			LnYG6MALFp9mKh93Elltk8Lh0EvmXtWKPUFKqCormN8=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GneIOJEfAu4oflqipyOEBTExhaajTOikoreWllPl3C8=
+			MGoHTTDXJmAp2yk/Y1L+MosTIjKT9hU9k8ZRY7X1t+Q=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+KEixMllL5UD6vx7Aa1wlm52oC++WT0x3ysKyU0tytw=
+			Yr9zNDNbKVteF+XQob1M8LGGVNe+Oe1ZCqaHj8i8iu4=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			jm/nukTKW75SqZq/9/f1UH5McWJj0Iw6P2gjggHyiHM=
+			LnYG6MALFp9mKh93Elltk8Lh0EvmXtWKPUFKqCormN8=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			GneIOJEfAu4oflqipyOEBTExhaajTOikoreWllPl3C8=
+			MGoHTTDXJmAp2yk/Y1L+MosTIjKT9hU9k8ZRY7X1t+Q=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			+KEixMllL5UD6vx7Aa1wlm52oC++WT0x3ysKyU0tytw=
+			Yr9zNDNbKVteF+XQob1M8LGGVNe+Oe1ZCqaHj8i8iu4=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
@@ -181,7 +181,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			l/W85XKFxndhqFbTvevVJ2fV/J5FmmGaIzmMRgMKzoQ=
+			5CMiU/ppAlOnDCiwQygl6Y1Q15Il85dp2F3ii+v+G+U=
 			</data>
 		</dict>
 		<key>Toolbox.storyboardc/Info.plist</key>
@@ -195,7 +195,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			JmzzBJi7pucF5LAhA8xzKY5hvXtQW1GeokSmThvRP+U=
+			2+SpjYNF8BR/zDC9PK+rKtob3RmZs4yPIyW84BY4vIU=
 			</data>
 		</dict>
 	</dict>
