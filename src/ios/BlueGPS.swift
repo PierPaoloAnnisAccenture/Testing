@@ -18,7 +18,7 @@ import SynapsesSDK
         let sdkKey = command.argument(at: 0) as! String
         let sdkSecret = command.argument(at: 1) as! String
         let endpoint = command.argument(at: 2) as! String
-        BlueGPS.setupSDK(EnvironmentModel(endpoint: endpoint, key: sdkKey, secret: sdkSecret))
+        BlueGPS.shared.setupSDK(EnvironmentModel(endpoint: endpoint, key: sdkKey, secret: sdkSecret))
         BlueGPSPlugin.sdkCredentials = SDKCredentialsModel(sdkCredentials: SynapsesCredentialModel(sdkKey: sdkKey,
                                     sdkSecret: sdkSecret),
                                     loggedUser: nil,
@@ -31,9 +31,8 @@ import SynapsesSDK
         let endpoint = command.argument(at: 1) as! String
 
         
-        commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "Not Implemented Yet"), callbackId: command.callbackId)
-        
-        BlueGPS.setupSDK(EnvironmentModel(endpoint: endpoint, key: "", secret: "", timeout: 30, token: sdkToken, loggedUser: nil, microsoftToken: nil))
+       // commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "Not Implemented Yet"), callbackId: command.callbackId)
+        let _result12 = BlueGPS.shared.setupSDK(EnvironmentModel(endpoint: endpoint, timeout: 30, token: sdkToken))
         /*
         Create sdkEnvironment global and set the environment for blueGPS
          sdkEnvironment = new SdkEnvironment();
@@ -45,6 +44,21 @@ import SynapsesSDK
            auth = new AuthParameters();
                         auth.setToken(args.getString(0));
         */
+        
+        var testCDV = CDVCommandStatus.error
+        var test12 = "FAIL";
+        
+        BlueGPS.shared.initSDK { response in
+        if response.code == 200,
+        let payload = response.payload?.value as? NetworkResponseLogin
+        {
+        //do something with NetworkResponseLogin
+            testCDV = CDVCommandStatus.ok
+            test12 = "OK"
+        }
+        }
+        
+        commandDelegate.send(CDVPluginResult(status: testCDV, messageAs: test12), callbackId: command.callbackId)
     }
 
     @objc(login:) func login(command: CDVInvokedUrlCommand) {
@@ -105,10 +119,10 @@ import SynapsesSDK
             BlueGPSPlugin.mapConfig.style.indication.iconHAlign = indication["iconHAlign"] as! String
         }
         if (indication["opacity"] != nil) {
-            BlueGPSPlugin.mapConfig.style.indication.opacity = Int(indication["opacity"] as! Double)
+            BlueGPSPlugin.mapConfig.style.indication.opacity = (indication["opacity"] as! Double)
         }
         if (indication["radiusMeter"] != nil) {
-            BlueGPSPlugin.mapConfig.style.indication.radiusMeter = Int(indication["radiusMeter"] as! Double)
+            BlueGPSPlugin.mapConfig.style.indication.radiusMeter = (indication["radiusMeter"] as! Double)
         }
 
         
@@ -128,7 +142,7 @@ import SynapsesSDK
             BlueGPSPlugin.mapConfig.style.navigation.jumpColor = navigation["jumpColor"] as! String
         }
         if (navigation["jumpOpacity"] != nil) {
-            BlueGPSPlugin.mapConfig.style.navigation.jumpOpacity = Int(navigation["jumpOpacity"] as! Double)
+            BlueGPSPlugin.mapConfig.style.navigation.jumpOpacity = (navigation["jumpOpacity"] as! Double)
         }
         if (navigation["jumpRadiusMeter"] != nil) {
             BlueGPSPlugin.mapConfig.style.navigation.jumpRadiusMeter = navigation["jumpRadiusMeter"] as! Double
@@ -149,7 +163,7 @@ import SynapsesSDK
             BlueGPSPlugin.mapConfig.style.navigation.strokeLinejoin = navigation["strokeLinejoin"] as! String
         }
         if (navigation["strokeOpacity"] != nil) {
-            BlueGPSPlugin.mapConfig.style.navigation.strokeOpacity = Int(navigation["strokeOpacity"] as! Double)
+            BlueGPSPlugin.mapConfig.style.navigation.strokeOpacity = (navigation["strokeOpacity"] as! Double)
         }
         if (navigation["strokeWidthMeter"] != nil) {
             BlueGPSPlugin.mapConfig.style.navigation.strokeWidthMeter = navigation["strokeWidthMeter"] as! Double
@@ -262,10 +276,10 @@ import SynapsesSDK
                 BlueGPSPlugin.mapConfig.style.indication.iconHAlign = indication["iconHAlign"] as! String
             }
             if (indication["opacity"] != nil) {
-                BlueGPSPlugin.mapConfig.style.indication.opacity = Int(indication["opacity"] as! Double)
+                BlueGPSPlugin.mapConfig.style.indication.opacity = (indication["opacity"] as! Double)
             }
             if (indication["radiusMeter"] != nil) {
-                BlueGPSPlugin.mapConfig.style.indication.radiusMeter = Int(indication["radiusMeter"] as! Double)
+                BlueGPSPlugin.mapConfig.style.indication.radiusMeter = (indication["radiusMeter"] as! Double)
             }
 
             if (navigation["animationTime"] != nil) {
@@ -284,7 +298,7 @@ import SynapsesSDK
                 BlueGPSPlugin.mapConfig.style.navigation.jumpColor = navigation["jumpColor"] as! String
             }
             if (navigation["jumpOpacity"] != nil) {
-                BlueGPSPlugin.mapConfig.style.navigation.jumpOpacity = Int(navigation["jumpOpacity"] as! Double)
+                BlueGPSPlugin.mapConfig.style.navigation.jumpOpacity = (navigation["jumpOpacity"] as! Double)
             }
             if (navigation["jumpRadiusMeter"] != nil) {
                 BlueGPSPlugin.mapConfig.style.navigation.jumpRadiusMeter = navigation["jumpRadiusMeter"] as! Double
@@ -305,7 +319,7 @@ import SynapsesSDK
                 BlueGPSPlugin.mapConfig.style.navigation.strokeLinejoin = navigation["strokeLinejoin"] as! String
             }
             if (navigation["strokeOpacity"] != nil) {
-                BlueGPSPlugin.mapConfig.style.navigation.strokeOpacity = Int(navigation["strokeOpacity"] as! Double)
+                BlueGPSPlugin.mapConfig.style.navigation.strokeOpacity = (navigation["strokeOpacity"] as! Double)
             }
             if (navigation["strokeWidthMeter"] != nil) {
                 BlueGPSPlugin.mapConfig.style.navigation.strokeWidthMeter = navigation["strokeWidthMeter"] as! Double

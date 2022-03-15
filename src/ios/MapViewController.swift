@@ -11,6 +11,14 @@ import SynapsesSDK
 
 class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDelegate,UITableViewDataSource {
     
+    func mapViewInitDidComplete(_ operationId: String) {
+        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "MapView mapViewInitDidComplete: \(operationId ?? "")"), callbackId: self.callbackId ?? "")
+    }
+    
+    func mapViewInitDidFail(_ error: Error) {
+            webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewInitDidFail: \(error.localizedDescription ?? "")"), callbackId: self.callbackId ?? "")
+    }
+    
     private var lastMapItem:MapPositionModel?
     private var prevMapItem:MapPositionModel?
     
@@ -96,6 +104,7 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         tableView?.isHidden = true
         self.view.addSubview(tableView!)
         
+        /*
         mapView?.getFloor({ [unowned self] results, error in
             if error != nil {
                 webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView Error: Get Floor sent an exception: \(error?.localizedDescription ?? "")"), callbackId: self.callbackId ?? "")
@@ -105,6 +114,7 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
                 tableView?.reloadData()
             }
         })
+        */
         
     }
     
