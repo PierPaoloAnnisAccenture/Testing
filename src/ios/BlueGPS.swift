@@ -4,7 +4,6 @@
 //
 //  Created by Luis Bouça on 12/11/2021.
 //
-
 import Foundation
 import SynapsesSDK
 
@@ -32,33 +31,20 @@ import SynapsesSDK
 
         
        // commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "Not Implemented Yet"), callbackId: command.callbackId)
-        let _result12 = BlueGPS.shared.setupSDK(EnvironmentModel(endpoint: endpoint, timeout: 30, token: sdkToken))
-        /*
-        Create sdkEnvironment global and set the environment for blueGPS
-         sdkEnvironment = new SdkEnvironment();
-                        sdkEnvironment.setSdkToken(args.getString(0));
-                        sdkEnvironment.setSdkEndpoint(args.getString(1));
-                        auth = new AuthParameters();
-                        auth.setToken(args.getString(0));
-
-           auth = new AuthParameters();
-                        auth.setToken(args.getString(0));
-        */
-        
-        var testCDV = CDVCommandStatus.error
-        var test12 = "FAIL";
-        
-        BlueGPS.shared.initSDK { response in
-        if response.code == 200,
-        let payload = response.payload?.value as? NetworkResponseLogin
-        {
-        //do something with NetworkResponseLogin
-            testCDV = CDVCommandStatus.ok
-            test12 = "OK"
+        BlueGPS.shared.setupSDK(EnvironmentModel(endpoint: endpoint, timeout: 30, token: sdkToken)) { responseSetup in
+            if responseSetup.code == 200 || responseSetup.code == 201 {
+                BlueGPS.shared.initSDK { responseInit in
+                    if responseInit.code == 200 || responseSetup.code == 201 {
+                        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "InitSDK success"), callbackId: command.callbackId)
+                    } else {
+                        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: InitSDK returned code: \(responseInit.code), message: \(responseInit.message ?? "")"), callbackId: command.callbackId)
+                    }
+                }
+            } else {
+                //TODO: FAIL
+                self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: SetupSDK returned code: \(responseSetup.code), message: \(responseSetup.message ?? "")"), callbackId: command.callbackId)
+            }
         }
-        }
-        
-        commandDelegate.send(CDVPluginResult(status: testCDV, messageAs: test12), callbackId: command.callbackId)
     }
 
     @objc(login:) func login(command: CDVInvokedUrlCommand) {
@@ -125,7 +111,6 @@ import SynapsesSDK
             BlueGPSPlugin.mapConfig.style.indication.radiusMeter = (indication["radiusMeter"] as! Double)
         }
 
-        
         if (navigation["animationTime"] != nil) {
             BlueGPSPlugin.mapConfig.style.navigation.animationTime = navigation["animationTime"] as! Double
         }

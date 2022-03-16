@@ -4,7 +4,6 @@
 //
 //  Created by Costantino Pistagna on 30/04/21.
 //
-
 import UIKit
 import Combine
 import SynapsesSDK
@@ -128,7 +127,6 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         
         // delegation is required in order to receive events from Map.
         // self.mapView?.delegate = self
-
         /// Or we can forge a specific configuration as follow
         self.mapView?.load("/api/public/resource/sdk/mobile.html", configuration: BlueGPSPlugin.mapConfig, delegate: self)
     }
