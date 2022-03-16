@@ -77,6 +77,8 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         BlueGPS.shared.initSDK { response in
             if response.code != 200 {
                 print(response.message ?? "Generic Error Occurred")
+                webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView initFail: \(response.message ?? "Generic Error Occurred")"), callbackId: self.callbackId ?? "")
+
             } else {
                 BlueGPS.shared.getConfiguration { response in
                     if response.code == 200,
@@ -89,6 +91,8 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
                         }
                     } else {
                         print(response.message ?? "Generic Error Occurred")
+                        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView initFail: \(response.message ?? "Generic Error Occurred")"), callbackId: self.callbackId ?? "")
+
                     }
                 }
             }
