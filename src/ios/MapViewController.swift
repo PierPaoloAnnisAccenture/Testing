@@ -11,15 +11,15 @@ import SynapsesSDK
 class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDelegate,UITableViewDataSource {
     
     func mapViewInitDidComplete(_ operationId: String) {
-        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "MapView mapViewInitDidComplete: \(operationId ?? "")"), callbackId: self.callbackId ?? "")
+        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "MapView mapViewInitDidComplete: \(operationId )"), callbackId: self.callbackId ?? "")
     }
     
     func mapViewInitDidFail(_ error: Error) {
-            webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewInitDidFail: \(error.localizedDescription ?? "")"), callbackId: self.callbackId ?? "")
+        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewInitDidFail: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
     }
     
-    private var lastMapItem:MapPositionModel?
-    private var prevMapItem:MapPositionModel?
+    private var lastMapItem: MapPositionModel?
+    private var prevMapItem: MapPositionModel?
     
     func didReceiveEvent(_ event: MapEvent, payload: Any?) {
         if event.type == "mapClick" {
@@ -31,6 +31,7 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
     }
     
     func didReceiveError(_ error: Error) {
+        self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView didReceiveError: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
         print("received error: \(error.localizedDescription)")
     }
     
@@ -84,11 +85,13 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
                     {
                         BlueGPS.shared.startAdvertisingRegion(with: payload.iosadvConf) { manager, error in
                             if let error = error {
-                                print(error)
+                                self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewConfigurationFailed: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
+                            } else {
+                                self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok), callbackId: self.callbackId ?? "")
                             }
                         }
                     } else {
-                        print(response.message ?? "Generic Error Occurred")
+                        self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewConfigurationFailed: \(response.message ?? "Generic Error Occurred")"), callbackId: self.callbackId ?? "")
 
                     }
                 }
