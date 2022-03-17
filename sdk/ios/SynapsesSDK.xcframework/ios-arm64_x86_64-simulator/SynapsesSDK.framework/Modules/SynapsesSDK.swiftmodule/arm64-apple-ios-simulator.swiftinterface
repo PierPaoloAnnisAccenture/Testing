@@ -1,5 +1,5 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.5.2 (swiftlang-1300.0.47.5 clang-1300.0.29.30)
+// swift-compiler-version: Apple Swift version 5.6 (swiftlang-5.6.0.323.62 clang-1316.0.20.8)
 // swift-module-flags: -target arm64-apple-ios13.0-simulator -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name SynapsesSDK
 import Combine
 import CoreBluetooth
@@ -232,9 +232,6 @@ public enum AuthenticationStatus {
 @objc @_inheritsConvenienceInitializers @_hasMissingDesignatedInitializers public class BlueGPS : ObjectiveC.NSObject, CoreBluetooth.CBPeripheralManagerDelegate, Foundation.URLSessionDelegate {
   public static let shared: SynapsesSDK.BlueGPS
   public var environment: SynapsesSDK.EnvironmentModel!
-  public var authHeaders: (Swift.String, Swift.String)? {
-    get
-  }
   public var authStatus: SynapsesSDK.AuthenticationStatus {
     get
   }
@@ -242,8 +239,8 @@ public enum AuthenticationStatus {
     get
   }
   final public let peripheralManagerStatePublisher: Combine.PassthroughSubject<CoreBluetooth.CBManagerState, Swift.Never>
-  public func setupSDK(_ env: SynapsesSDK.EnvironmentModel? = nil, _ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
-  public func setEnvironment(_ env: SynapsesSDK.EnvironmentModel, _ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
+  public class func setupSDK(_ env: SynapsesSDK.EnvironmentModel? = nil)
+  public func setEnvironment(_ env: SynapsesSDK.EnvironmentModel? = nil, token: Swift.String? = nil, _ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
   public func setupLoggedUser(username: Swift.String, password: Swift.String, _ callback: ((SynapsesSDK.ResponseMessage) -> Swift.Void)? = nil)
   public func clearLoggedUser()
   public func checkConnection(_ callback: @escaping (SynapsesSDK.ResponseMessage) -> Swift.Void)
@@ -419,7 +416,8 @@ public struct SDKCredentialsModel : Swift.Codable {
   public var sdkCredential: SynapsesSDK.SynapsesCredentialModel?
   public var loggedUser: SynapsesSDK.EnvironmentLoggedUserModel?
   public var microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel?
-  public init(sdkCredentials: SynapsesSDK.SynapsesCredentialModel? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil)
+  public var token: Swift.String?
+  public init(sdkCredentials: SynapsesSDK.SynapsesCredentialModel? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil, token: Swift.String? = nil)
   public func encode(to encoder: Swift.Encoder) throws
   public init(from decoder: Swift.Decoder) throws
 }
@@ -697,31 +695,24 @@ extension SynapsesSDK.AnyCodable : Swift.Hashable {
   }
 }
 public struct EnvironmentModel : Swift.Codable {
-  public var useValidate: Swift.Bool?
-  public var sdkEndpoint: Swift.String
-  public var sdkKey: Swift.String?
-  public var sdkSecret: Swift.String?
-  public var timeout: Swift.Int
-  public var sdkToken: Swift.String?
-  public var loggedUser: SynapsesSDK.EnvironmentLoggedUserModel?
-  public var microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel?
   public var token: Swift.String? {
     get
   }
   public var accessToken: Swift.String? {
     get
   }
-  public init(useValidate: Swift.Bool = true, endpoint: Swift.String, key: Swift.String? = nil, secret: Swift.String? = nil, timeout: Swift.Int? = nil, token: Swift.String? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil)
+  public init(useBlueGPSAuth: Swift.Bool = true, endpoint: Swift.String, key: Swift.String? = nil, secret: Swift.String? = nil, timeout: Swift.Int? = nil, token: Swift.String? = nil, loggedUser: SynapsesSDK.EnvironmentLoggedUserModel? = nil, microsoftToken: SynapsesSDK.EnvironmentMicrosoftTokenModel? = nil)
   public func encode(to encoder: Swift.Encoder) throws
   public init(from decoder: Swift.Decoder) throws
 }
 extension SynapsesSDK.EnvironmentModel {
   public enum CodingKeys : Swift.String, Swift.CodingKey {
+    case useBlueGPSAuth
     case sdkEndpoint
     case sdkKey
     case sdkSecret
     case timeout
-    case sdkToken
+    case customToken
     case loggedUser
     case microsoftToken
     public init?(rawValue: Swift.String)
@@ -742,7 +733,7 @@ extension SynapsesSDK.EnvironmentModel {
 public struct SynapsesCredentialModel : Swift.Codable {
   public var sdkKey: Swift.String
   public var sdkSecret: Swift.String
-  public init(sdkKey: Swift.String, sdkSecret: Swift.String)
+  public init?(sdkKey: Swift.String?, sdkSecret: Swift.String?)
   public func encode(to encoder: Swift.Encoder) throws
   public init(from decoder: Swift.Decoder) throws
 }

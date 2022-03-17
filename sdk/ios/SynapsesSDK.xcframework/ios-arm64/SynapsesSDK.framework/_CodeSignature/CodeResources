@@ -6,35 +6,23 @@
 	<dict>
 		<key>Headers/SynapsesSDK-Swift.h</key>
 		<data>
-		ilouCgz7vV9i7X18tMpAd825FqI=
+		qtC5LEbA/IKRc9LKeyG9H7ksS7Q=
 		</data>
 		<key>Info.plist</key>
 		<data>
-		rcSZ6dSNI4eAWUlZpGvxziVhHGI=
+		LvlQ2cqvwcJnJZdWyFlx3w0RKQw=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<data>
-		UOUJvXBfIBo2h7wAKcG3HgSyDQs=
+		mnQhJ2XJJwV2bnqhqNE2vJ4rmRI=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<data>
-		QoISUywIu8VYfmpxLEXO+plo2W4=
+		Uz4S/WZKGoJOY/sbWR1scl3y7jw=
 		</data>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<data>
-		FXl4NeIAfR3j2FUuZ9IH21oa5kk=
-		</data>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
-		<data>
-		UOUJvXBfIBo2h7wAKcG3HgSyDQs=
-		</data>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
-		<data>
-		QoISUywIu8VYfmpxLEXO+plo2W4=
-		</data>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
-		<data>
-		FXl4NeIAfR3j2FUuZ9IH21oa5kk=
+		TWAN07QPh4lhbPswsE9lYjKZZac=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -59,49 +47,28 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			yLWXZj+R/QdA2Xk9TtUdqJLo8ye7tyzdT3FLyD553Ho=
+			jGDcpxycLH6U/5XjDc/dabHXFJSsBPxw3wj5LeYeouU=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			VoBWfEJ7DUHUUO0Biyg0/YhhF3p9Fv8KEbXxuHmAP54=
+			OvAbNrFbW0cZSjyHugVpC/gSgi1BerLgOz4F6YXgli8=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftinterface</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			TBtcISCk8EIqBwG517XetUCDbNJk/01AM55HoySzAj4=
+			2voOdpHIw7J7QWu/UWZRGEg4ksCeiRlfWL6373kYZV8=
 			</data>
 		</dict>
 		<key>Modules/SynapsesSDK.swiftmodule/arm64-apple-ios.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			wP5hAshevlV4YafvbTbAbLX4JU/7AhtkMAw2jPpRvi4=
-			</data>
-		</dict>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftdoc</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			VoBWfEJ7DUHUUO0Biyg0/YhhF3p9Fv8KEbXxuHmAP54=
-			</data>
-		</dict>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftinterface</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			TBtcISCk8EIqBwG517XetUCDbNJk/01AM55HoySzAj4=
-			</data>
-		</dict>
-		<key>Modules/SynapsesSDK.swiftmodule/arm64.swiftmodule</key>
-		<dict>
-			<key>hash2</key>
-			<data>
-			wP5hAshevlV4YafvbTbAbLX4JU/7AhtkMAw2jPpRvi4=
+			LyshhuJyTRd8x7i+KCN5UEBaVIMUji4q5aFaJjjwb0I=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
