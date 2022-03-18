@@ -8,38 +8,14 @@ import UIKit
 import Combine
 import SynapsesSDK
 
-class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDelegate,UITableViewDataSource {
-    
-    func mapViewInitDidComplete(_ operationId: String) {
-        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "MapView mapViewInitDidComplete: \(operationId )"), callbackId: self.callbackId ?? "")
-    }
-    
-    func mapViewInitDidFail(_ error: Error) {
-        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewInitDidFail: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
-    }
+class MapViewController: UIViewController, UITableViewDelegate,UITableViewDataSource {
     
     private var lastMapItem: MapPositionModel?
     private var prevMapItem: MapPositionModel?
     
-    func didReceiveEvent(_ event: MapEvent, payload: Any?) {
-        if event.type == "mapClick" {
-            prevMapItem = lastMapItem
-            lastMapItem = payload as? MapPositionModel
-            //focus on this item to do gotofrom
-        }
-        print("received event: \(event.type ?? "n/a") - \(payload.debugDescription)")
-    }
-    
-    func didReceiveError(_ error: Error) {
-        self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView didReceiveError: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
-        print("received error: \(error.localizedDescription)")
-    }
-    
-    var mapView: DynamicMapView?
     @IBOutlet var leftBarButtonItem: UIBarButtonItem?
     @IBOutlet var rightBarButtonItem: UIBarButtonItem?
     @IBOutlet var navigationBar: UINavigationItem?
-    var tableView: UITableView?
     
     private var rightbtnImage:UIImage?
     private var leftbtnImage:UIImage?
@@ -52,8 +28,13 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
     private var configuration: ConfigurationModel!
     private var dataSource = [FloorModel]()
     
+    private var mapView: DynamicMapView?
+    var tableView: UITableView?
+    
     var webConsole: CDVCommandDelegate?
     var callbackId: String?
+    var sourcePoint: MapPositionModel?
+    var destPoint: MapPositionModel?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,30 +54,6 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
         }
         mapView = DynamicMapView(frame: CGRect(x: 0.0, y: 76, width: 414, height: 820))
         self.view.addSubview(mapView!)
-
-        BlueGPS.shared.initSDK { response in
-            if response.code != 200 {
-                print(response.message ?? "Generic Error Occurred")
-
-            } else {
-                BlueGPS.shared.getConfiguration { response in
-                    if response.code == 200,
-                       let payload = response.payload?.value as? NetworkResponseConfiguration
-                    {
-                        BlueGPS.shared.startAdvertisingRegion(with: payload.iosadvConf) { manager, error in
-                            if let error = error {
-                                self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewConfigurationFailed: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
-                            } else {
-                                self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok), callbackId: self.callbackId ?? "")
-                            }
-                        }
-                    } else {
-                        self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewConfigurationFailed: \(response.message ?? "Generic Error Occurred")"), callbackId: self.callbackId ?? "")
-
-                    }
-                }
-            }
-        }
         
         tableView = UITableView()
         tableView?.register(UITableViewCell.self, forCellReuseIdentifier: "customViewCell")
@@ -470,5 +427,36 @@ class MapViewController: UIViewController, DynamicMapViewDelegate, UITableViewDe
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
+    }
+}
+
+extension MapViewController: DynamicMapViewDelegate {
+    
+    func mapViewInitDidComplete(_ operationId: String) {
+        if sourcePoint != nil && destPoint != nil {
+            webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "Successfully opened"), callbackId: self.callbackId)
+            mapView?.goto(source: sourcePoint!, dest: destPoint!)
+        } else {
+            webConsole?.send(CDVPluginResult(status: CDVCommandStatus.jsonException, messageAs: "Source Json Parameters are nil"), callbackId: self.callbackId)
+        }
+        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "MapView mapViewInitDidComplete: \(operationId )"), callbackId: self.callbackId ?? "")
+    }
+    
+    func mapViewInitDidFail(_ error: Error) {
+        webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView mapViewInitDidFail: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
+    }
+    
+    func didReceiveEvent(_ event: MapEvent, payload: Any?) {
+        if event.type == "mapClick" {
+            prevMapItem = lastMapItem
+            lastMapItem = payload as? MapPositionModel
+            //focus on this item to do gotofrom
+        }
+        print("received event: \(event.type ?? "n/a") - \(payload.debugDescription)")
+    }
+    
+    func didReceiveError(_ error: Error) {
+        self.webConsole?.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "MapView didReceiveError: \(error.localizedDescription )"), callbackId: self.callbackId ?? "")
+        print("received error: \(error.localizedDescription)")
     }
 }

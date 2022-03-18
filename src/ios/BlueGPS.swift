@@ -33,43 +33,14 @@ import SynapsesSDK
         
        // commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.error, messageAs: "Not Implemented Yet"), callbackId: command.callbackId)
         BlueGPS.setupSDK(env)
-        BlueGPS.shared.setEnvironment(env, token: sdkToken) { responseSetEnv in
+        BlueGPS.shared.setEnvironment(token: sdkToken) { responseSetEnv in
             if responseSetEnv.code == 200 || responseSetEnv.code == 201 {
-                BlueGPS.shared.initSDK { responseInit in
-                    if responseInit.code == 200 || responseInit.code == 201 {
-                        let payload = responseInit.payload?.value as? NetworkResponseLogin
-                        if BlueGPS.shared.authStatus == .authenticated {
-                            self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "InitSDK success"), callbackId: command.callbackId)
-                        } else {
-                            self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: User is not authenticated"), callbackId: command.callbackId)
-                        }
-//                        if payload == nil {
-//                            self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: payload is missing"), callbackId: command.callbackId)
-//                        } else {
-//                            self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "InitSDK success"), callbackId: command.callbackId)
-//                        }
-                    } else {
-                        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: InitSDK returned code: \(responseInit.code), message: \(responseInit.message ?? "")"), callbackId: command.callbackId)
-                    }
-                }
+                BlueGPSPlugin.sdkCredentials = SDKCredentialsModel(sdkCredentials: nil, loggedUser: nil, microsoftToken: nil, token: sdkToken)
+                self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "Succesfully initiliazed the sdk"), callbackId: command.callbackId)
             } else {
                 self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: SetEnv returned code: \(responseSetEnv.code), message: \(responseSetEnv.message ?? "")"), callbackId: command.callbackId)
             }
         }
-//        BlueGPS.setupSDK(EnvironmentModel(endpoint: endpoint, timeout: 30, token: sdkToken)) { responseSetup in
-//            if responseSetup.code == 200 || responseSetup.code == 201 {
-//                BlueGPS.shared.initSDK { responseInit in
-//                    if responseInit.code == 200 || responseSetup.code == 201 {
-//                        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "InitSDK success"), callbackId: command.callbackId)
-//                    } else {
-//                        self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: InitSDK returned code: \(responseInit.code), message: \(responseInit.message ?? "")"), callbackId: command.callbackId)
-//                    }
-//                }
-//            } else {
-//                //TODO: FAIL
-//                self.commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.instantiationException, messageAs: "Init Error: SetupSDK returned code: \(responseSetup.code), message: \(responseSetup.message ?? "")"), callbackId: command.callbackId)
-//            }
-//        }
     }
 
     @objc(login:) func login(command: CDVInvokedUrlCommand) {
@@ -344,20 +315,13 @@ import SynapsesSDK
                 let sourceModel = MapPositionModel(mapId: sourceMapId ?? 0, tagid: tagid, roomId: nil, areaId: nil, x: sourceX ?? 0.0, y: sourceY ?? 0.0, data: nil)
                 let destModel = MapPositionModel(mapId: destMapId ?? 0, tagid: tagid, roomId: nil, areaId: nil, x: destX ?? 0.0, y: destY ?? 0.0, data: nil)
                 
-                if sourceMapId != nil || sourceX != nil || sourceY != nil {
-                    if destMapId != nil || destX != nil || destY != nil {
-                        commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.ok, messageAs: "Successfully opened"), callbackId: command.callbackId)
-                    } else {
-                        commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.jsonException, messageAs: "Destination Json Parameters are nil"), callbackId: command.callbackId)
-                    }
-                } else {
-                    commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.jsonException, messageAs: "Source Json Parameters are nil"), callbackId: command.callbackId)
-                }
-                 
                 mapView = MapViewController()
                 
                 mapView?.webConsole = commandDelegate
                 mapView?.callbackId = command.callbackId
+                mapView?.sourcePoint = sourceModel
+                mapView?.destPoint = destModel
+                
                 
                 /*
                  "bookingType":"DESK",
@@ -369,11 +333,7 @@ import SynapsesSDK
                  */
                 
                 if #available(iOS 13, *){}
-                viewController.present(mapView!, animated: true, completion: {
-                    DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 2.0, execute: {
-                        self.mapView?.mapView?.goto(source: sourceModel, dest: destModel)
-                    })
-                })
+                viewController.present(mapView!, animated: true, completion: nil)
 
             } catch {
                 commandDelegate.send(CDVPluginResult(status: CDVCommandStatus.jsonException, messageAs: "Json Error: Problem with serialization of json - \(error.localizedDescription)"), callbackId: command.callbackId)
