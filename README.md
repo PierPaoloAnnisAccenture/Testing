@@ -63,7 +63,6 @@ Configuration
 Methods
 
 init
-
 initialize the plugin
 
 	BlueGPS.initToken(function(message) {
@@ -74,7 +73,6 @@ initialize the plugin
 	
 
 open map
-
 show the map in the view
 	
 	BlueGPS.openMapBlock(function(message) {
@@ -92,7 +90,6 @@ DestinationJSON example is bellow in the end
 	
 	
 close map
-
 Close the map view
 	
 	BlueGPS.closeBlock(function(message) {
