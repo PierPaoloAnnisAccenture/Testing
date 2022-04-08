@@ -95,6 +95,49 @@ Close the map view
 	    console.error(msg);
 	});
 
+ConfigurationJSON example
 
+	{
+	   "show":{
+	      "all":true,
+	      "desk":true
+	   },
+	   "style":{
+	      "icons":{
+		 "align":"center",
+		 "followZoom":true,
+		 "name":"example",
+		 "radiusMeter":5,
+		 "vAlign":"center"
+	      },
+	      "indication":{
+
+	      },
+	      "navigation":{
+		 "autoZoom":true,
+		 "iconDestination":"/api/public/resource/icons/commons/end.svg",
+		 "iconSource":"/api/public/resource/icons/commons/start.svg",
+		 "jumpRadiusMeter":30,
+		 "navigationStep":1.5,
+		 "stroke":"#dc8731",
+		 "strokeWidthMeter":10,
+		 "velocityOptions":{
+
+		 }
+	      }
+	   },
+	   "toolbox":{
+	      "layer":{
+
+	      },
+	      "mapControl":{
+
+	      }
+	   },
+	   "visualization":{
+
+	   },
+	   "tagId":""
+	}
 	
 
