@@ -3,6 +3,8 @@
 detail about version
 https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_Versions
 
+Configuration
+
 1. Install cordova version 10
   
   >> npm install -g cordova@10.0.0
@@ -53,8 +55,46 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   
   13 type the function that you want to test that it is inside WWW/blueGPS.js
   ex
-    >> BlueGPS.init(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "", "", "", false)
+    >> BlueGPS.initToken(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "token", "endpoint")
   
   
   
+
+Methods
+
+init
+initialize the plugin
+
+	BlueGPS.initToken(function(message) {
+    			console.log(message);
+		}, function(error) {
+    			console.error(msg);
+		},<<token>>,<<endpoint>>);
+	
+
+open map
+show the map in the view
+	
+	BlueGPS.openMapBlock(function(message) {
+	    console.log(message);
+	}, function(error) {
+	    console.error(msg);
+	},<<ConfigurationJSON>>, <<HeightTop>>, <<OriginJSON>>, <<DestinationJSON>>);
+	
+Note: 
+HeightTop is the position in pixel in top where put the map. It is valid only for Android.
+
+	
+	
+close map
+Close the map view
+	
+	BlueGPS.closeBlock(function(message) {
+	    console.log(message);
+	}, function(error) {
+	    console.error(msg);
+	});
+
+
+	
 
