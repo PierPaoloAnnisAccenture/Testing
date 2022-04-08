@@ -63,6 +63,7 @@ Configuration
 Methods
 
 init
+
 initialize the plugin
 
 	BlueGPS.initToken(function(message) {
@@ -73,6 +74,7 @@ initialize the plugin
 	
 
 open map
+
 show the map in the view
 	
 	BlueGPS.openMapBlock(function(message) {
@@ -82,11 +84,15 @@ show the map in the view
 	},<<ConfigurationJSON>>, <<HeightTop>>, <<OriginJSON>>, <<DestinationJSON>>);
 	
 Note: 
+ConfigurationJSON example is bellow in the end
 HeightTop is the position in pixel in top where put the map. It is valid only for Android.
+OriginJSON example is bellow in the end
+DestinationJSON example is bellow in the end
 
 	
 	
 close map
+
 Close the map view
 	
 	BlueGPS.closeBlock(function(message) {
@@ -94,6 +100,9 @@ Close the map view
 	}, function(error) {
 	    console.error(msg);
 	});
+
+
+Object
 
 ConfigurationJSON example
 
@@ -138,6 +147,20 @@ ConfigurationJSON example
 
 	   },
 	   "tagId":""
+	}
+
+OriginJSON or DestinationJSON example
+
+	{
+	   "bookingType":"DESK",
+	   "name":"Example",
+	   "floor":"1",
+	   "building":"ExampleBuilding",
+	   "bookedByMe":true,
+	   "id":"1",
+	   "mapId":1,
+	   "x":10.5,
+	   "y":11.5
 	}
 	
 
