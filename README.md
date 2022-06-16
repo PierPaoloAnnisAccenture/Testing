@@ -3,6 +3,8 @@
 detail about version
 https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_Versions
 
+Configuration
+
 1. Install cordova version 10
   
   >> npm install -g cordova@10.0.0
@@ -53,8 +55,109 @@ https://success.outsystems.com/Support/Release_Notes/Mobile_Apps_Build_Service_V
   
   13 type the function that you want to test that it is inside WWW/blueGPS.js
   ex
-    >> BlueGPS.init(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "", "", "", false)
+    >> BlueGPS.initToken(()=>{console.log("success")}, function(msg){console.log("error" + msg)}, "token", "endpoint")
   
   
   
+
+Methods
+
+init
+initialize the plugin
+
+	BlueGPS.initToken(function(message) {
+    			console.log(message);
+		}, function(error) {
+    			console.error(msg);
+		},<<token>>,<<endpoint>>);
+	
+
+open map
+show the map in the view
+	
+	BlueGPS.openMapBlock(function(message) {
+	    console.log(message);
+	}, function(error) {
+	    console.error(msg);
+	},<<ConfigurationJSON>>, <<HeightTop>>, <<OriginJSON>>, <<DestinationJSON>>);
+	
+Note: 
+ConfigurationJSON example is bellow in the end
+HeightTop is the position in pixel in top where put the map. It is valid only for Android.
+OriginJSON example is bellow in the end
+DestinationJSON example is bellow in the end
+
+	
+	
+close map
+Close the map view
+	
+	BlueGPS.closeBlock(function(message) {
+	    console.log(message);
+	}, function(error) {
+	    console.error(msg);
+	});
+
+
+Object
+
+ConfigurationJSON example
+
+	{
+	   "show":{
+	      "all":true,
+	      "desk":true
+	   },
+	   "style":{
+	      "icons":{
+		 "align":"center",
+		 "followZoom":true,
+		 "name":"example",
+		 "radiusMeter":5,
+		 "vAlign":"center"
+	      },
+	      "indication":{
+
+	      },
+	      "navigation":{
+		 "autoZoom":true,
+		 "iconDestination":"/api/public/resource/icons/commons/end.svg",
+		 "iconSource":"/api/public/resource/icons/commons/start.svg",
+		 "jumpRadiusMeter":30,
+		 "navigationStep":1.5,
+		 "stroke":"#dc8731",
+		 "strokeWidthMeter":10,
+		 "velocityOptions":{
+
+		 }
+	      }
+	   },
+	   "toolbox":{
+	      "layer":{
+
+	      },
+	      "mapControl":{
+
+	      }
+	   },
+	   "visualization":{
+
+	   },
+	   "tagId":""
+	}
+
+OriginJSON or DestinationJSON example
+
+	{
+	   "bookingType":"DESK",
+	   "name":"Example",
+	   "floor":"1",
+	   "building":"ExampleBuilding",
+	   "bookedByMe":true,
+	   "id":"1",
+	   "mapId":1,
+	   "x":10.5,
+	   "y":11.5
+	}
+	
 
