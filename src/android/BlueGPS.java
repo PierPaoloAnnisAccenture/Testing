@@ -822,8 +822,8 @@ public class BlueGPS extends CordovaPlugin {
                         cType = new TypeToken<Floor>() {
                         }.getType();
                         Floor floor = new Gson().fromJson(data.getPayload(), cType);
-                        floorName = floor.getLabel();
-                        floorView.setText(floor.getLabel());
+                        //floorName = floor.getLabel();
+                       // floorView.setText(floor.getLabel());
 
                     case PARK_CONF:
                         cType = new TypeToken<PayloadResponse>() {
@@ -927,7 +927,7 @@ public class BlueGPS extends CordovaPlugin {
         poiField.setX(position.getX());
         poiField.setY(position.getY());
         poiField.setMapId(position.getMapId());
-        poiField.setFloor(floorName);
+       // poiField.setFloor(floorName);
 
         return new PluginResult(status, gson.toJson(poiField));
     }
@@ -938,8 +938,8 @@ public class BlueGPS extends CordovaPlugin {
             @Override
             public Object invoke(Floor floor, Error error) {
                 if (floor != null) {
-                    floorView.setText(floor.getName());
-                    floorName = floor.getName();
+                  //  floorView.setText(floor.getName());
+                    //floorName = floor.getName();
                 }
                 return floor;
             }
